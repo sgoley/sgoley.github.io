@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>dbt Holidates - Scott Goley</title>
+  <meta name="description" content="Repository: [github.com/sgoley/dbt-holidates](https://github.com/sgoley/dbt-holidates) Upstream ecosystem: [dbt-labs/dbt-core](https://github.com/dbt-labs/dbt-core) `dbt_holidat...">
+  <link rel="stylesheet" href="../../assets/css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../../index.html">Home</a>
+        <a href="../../about.html">About</a>
+        <a href="../../projects.html">Projects</a>
+        <a href="../../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Article</p>
+      <h1>dbt Holidates</h1>
+      <div class="article-metadata">
+  By Scott Goley · Published 2026-05-11
+  <div class="tags"><span class="tag">dbt</span> <span class="tag">dbt-core</span> <span class="tag">holidays</span> <span class="tag">calendar</span> <span class="tag">analytics-engineering</span> <span class="tag">date-dimension</span></div>
+</div>
+    </section>
+
+    <article class="panel article-prose">
+<p>Repository: <a href="https://github.com/sgoley/dbt-holidates">github.com/sgoley/dbt-holidates</a> Upstream ecosystem: <a href="https://github.com/dbt-labs/dbt-core">dbt-labs/dbt-core</a></p>
+<p><code>dbt_holidates</code> is a dbt package that ships <strong>ready-to-use holiday calendar models</strong> plus a compile-time macro for generating holiday rows across configurable year ranges.</p>
+<h2>Included calendars</h2>
+<ul>
+<li>US Government holidays</li>
+<li>US Bank holidays</li>
+<li>US Market holidays</li>
+<li>Canada holidays</li>
+<li>China holidays</li>
+<li>unified <code>holidays</code> model (all calendars)</li>
+</ul>
+<p>All models share a consistent schema, so they can be joined or unioned safely in downstream marts.</p>
+<h2>Core use cases</h2>
+<ol>
+<li>Add holiday/observed-day flags to date dimensions</li>
+<li>Exclude holidays from business-day and SLA calculations</li>
+<li>Build multi-calendar analytics for global operations</li>
+<li>Reuse a single canonical package across multiple dbt projects</li>
+</ol>
+<h2>Package behavior</h2>
+<ul>
+<li>Default generation range: 2000-2035</li>
+<li>Year range is configurable via project vars</li>
+<li>Destination database/schema is configurable via vars</li>
+<li>Macro access: <code>dbt_holidates.get_holidays(...)</code></li>
+</ul>
+<h2>Install and run</h2>
+<pre><code>packages:
+  - git: &quot;https://github.com/sgoley/dbt-holidates.git&quot;
+    revision: v1.0.0</code></pre>
+<pre><code>dbt deps
+dbt run --select dbt_holidates
+dbt test --select dbt_holidates</code></pre>
+<h2>Why this matters for dbt-core projects</h2>
+<p>Holiday logic is one of the most repeated bits of analytics plumbing. This package standardizes that logic in a dbt-native way, reducing duplicated business-date SQL and improving consistency across reporting and operations models.</p>
+<h2>Related projects</h2>
+<ul>
+<li>[[proj-dbt-postgres-utils|dbt Postgres Utils]]</li>
+</ul>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/site.js"></script>
+</body>
+</html>

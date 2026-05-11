@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sub Notes (Public) - Scott Goley</title>
+  <meta name="description" content="Repository: [github.com/sgoley/sub-notes-public](https://github.com/sgoley/sub-notes-public) Sub Notes is a self-hosted, single-user application that ingests YouTube content, ge...">
+  <link rel="stylesheet" href="../../assets/css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../../index.html">Home</a>
+        <a href="../../about.html">About</a>
+        <a href="../../projects.html">Projects</a>
+        <a href="../../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Article</p>
+      <h1>Sub Notes (Public)</h1>
+      <div class="article-metadata">
+  By Scott Goley · Published 2026-05-11
+  <div class="tags"><span class="tag">ai</span> <span class="tag">notes</span> <span class="tag">youtube</span> <span class="tag">substack</span> <span class="tag">obsidian</span> <span class="tag">docker</span> <span class="tag">react</span> <span class="tag">bun</span></div>
+</div>
+    </section>
+
+    <article class="panel article-prose">
+<p>Repository: <a href="https://github.com/sgoley/sub-notes-public">github.com/sgoley/sub-notes-public</a></p>
+<p>Sub Notes is a self-hosted, single-user application that ingests YouTube content, generates AI summaries, and syncs output into an Obsidian vault.</p>
+<h2>What it does</h2>
+<ul>
+<li>subscribe to channels/feeds or process individual URLs</li>
+<li>generate markdown summaries with Gemini</li>
+<li>auto-tag summaries for organization and retrieval</li>
+<li>track token usage/cost metadata</li>
+<li>optionally sync summaries into local Obsidian notes</li>
+</ul>
+<h2>Architecture</h2>
+<pre><code>docker-compose.yml
+├── pocketbase   :7070   SQLite-backed data + admin
+├── backend      :3333   Bun API + processing pipeline
+└── frontend     :9090   React SPA served by nginx</code></pre>
+<h2>Tech stack</h2>
+<h3>Frontend</h3>
+<ul>
+<li>React + TypeScript + Vite</li>
+<li>Tailwind + shadcn/ui</li>
+<li>TanStack Query + React Router</li>
+</ul>
+<h3>Backend</h3>
+<ul>
+<li>Bun + TypeScript</li>
+<li>YouTube metadata/transcript handling</li>
+<li>Gemini API integration</li>
+<li>Obsidian file writing workflows</li>
+</ul>
+<h3>Data layer</h3>
+<ul>
+<li>PocketBase (SQLite) with collections for subscriptions, summaries, tags, and settings</li>
+<li>status lifecycle for generation (<code>pending -&gt; processing -&gt; completed/failed</code>)</li>
+</ul>
+<h2>Why this project matters</h2>
+<p>This repo is a practical example of a lightweight personal knowledge pipeline:</p>
+<ol>
+<li>ingest external media sources,</li>
+<li>transform into structured markdown artifacts,</li>
+<li>push outputs into a local notes system for long-term use.</li>
+</ol>
+<p>It also demonstrates a clean split between UI, processing API, and local-first persistence with simple Docker deployment.</p>
+<h2>Quick start</h2>
+<pre><code>cp .env.example .env
+docker compose up --build</code></pre>
+<p>Then open:</p>
+<ul>
+<li>app: <code>http://localhost:9090</code></li>
+<li>PocketBase admin: <code>http://localhost:7070/_/</code></li>
+</ul>
+<h2>Related projects</h2>
+<ul>
+<li>[[proj-homelab|Homelab Stacks (Public)]]</li>
+</ul>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/site.js"></script>
+</body>
+</html>

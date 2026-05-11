@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>dbt Postgres Utils - Scott Goley</title>
+  <meta name="description" content="Repository: [github.com/sgoley/dbt-postgres-utils](https://github.com/sgoley/dbt-postgres-utils) Upstream ecosystem: [dbt-labs/dbt-core](https://github.com/dbt-labs/dbt-core) `d...">
+  <link rel="stylesheet" href="../../assets/css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../../index.html">Home</a>
+        <a href="../../about.html">About</a>
+        <a href="../../projects.html">Projects</a>
+        <a href="../../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Article</p>
+      <h1>dbt Postgres Utils</h1>
+      <div class="article-metadata">
+  By Scott Goley · Published 2026-05-11
+  <div class="tags"><span class="tag">dbt</span> <span class="tag">dbt-core</span> <span class="tag">postgres</span> <span class="tag">analytics-engineering</span> <span class="tag">data-platform</span></div>
+</div>
+    </section>
+
+    <article class="panel article-prose">
+<p>Repository: <a href="https://github.com/sgoley/dbt-postgres-utils">github.com/sgoley/dbt-postgres-utils</a> Upstream ecosystem: <a href="https://github.com/dbt-labs/dbt-core">dbt-labs/dbt-core</a></p>
+<p><code>dbt_postgres_utils</code> is a <strong>dbt package for PostgreSQL-focused operational macros</strong> that sit around normal model builds: indexing, RBAC, constraints, custom SQL types, extensions, materialized views, FDW helpers, and date utilities.</p>
+<h2>What this package provides</h2>
+<h3>Performance + storage helpers</h3>
+<ul>
+<li><code>index</code> / <code>uindex</code> for index creation (including advanced index options)</li>
+<li>materialized view support + refresh helpers</li>
+</ul>
+<h3>Security + permissions (RBAC)</h3>
+<ul>
+<li>role/user creation helpers</li>
+<li>grant/revoke macros for schema and relation privileges</li>
+<li>convenience helpers for target-schema permission management in dbt runs</li>
+</ul>
+<h3>Database administration in dbt workflows</h3>
+<ul>
+<li>extension management (<code>create_extension</code>, <code>drop_extension</code>)</li>
+<li>custom type creation (<code>enum</code>, <code>composite</code>, <code>domain</code>)</li>
+<li>key/constraint helpers (<code>primary</code>, <code>unique</code>, <code>foreign key</code>)</li>
+<li>FDW macros for foreign server + mapping + schema import</li>
+</ul>
+<h3>Cross-dialect utility macros</h3>
+<ul>
+<li>portable date helpers like <code>dateadd</code>, <code>datediff</code>, and date-spine/date-dim patterns</li>
+</ul>
+<h2>Why this is useful for dbt-core users</h2>
+<p>In many analytics stacks, dbt models are only part of the operational story. This package helps keep PostgreSQL-specific governance and optimization logic <strong>inside dbt-native workflows</strong> rather than scattering ad hoc SQL scripts outside the project.</p>
+<h2>Typical usage pattern</h2>
+<p>Use macros in:</p>
+<ul>
+<li><code>on-run-start</code></li>
+<li><code>on-run-end</code></li>
+<li>model <code>post_hook</code> blocks</li>
+</ul>
+<p>That allows teams to co-locate data modeling and database-operational logic in one package-based workflow.</p>
+<h2>Installation</h2>
+<p>Use dbt Hub package metadata for current versions:</p>
+<pre><code>packages:
+  - package: sgoley/postgres_utils
+    version: [&quot;&gt;=0.1.0&quot;, &quot;&lt;1.0.0&quot;]</code></pre>
+<p>Then:</p>
+<pre><code>dbt deps</code></pre>
+<h2>Related projects</h2>
+<ul>
+<li>[[proj-dbt-holidates|dbt Holidates]]</li>
+</ul>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/site.js"></script>
+</body>
+</html>
