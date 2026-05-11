@@ -1,0 +1,77 @@
+name: Sync Streamlit Content and Generate Articles
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "streamlit/**"
+      - "scripts/generate_static_articles.py"
+      - ".github/workflows/generate-static-articles.yml"
+  repository_dispatch:
+    types: [streamlit-content-updated]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Update streamlit submodule from dispatch SHA
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          set -euo pipefail
+          SOURCE_REPO="${{ github.event.client_payload.streamlit_repo }}"
+          TARGET_SHA="${{ github.event.client_payload.streamlit_sha }}"
+          TARGET_REF="${{ github.event.client_payload.streamlit_ref }}"
+
+          if [ "${SOURCE_REPO}" != "sgoley/streamlit-openrouter-chat-embed" ]; then
+            echo "Unexpected dispatch source repo: ${SOURCE_REPO}"
+            exit 1
+          fi
+
+          if [ -z "${TARGET_SHA}" ]; then
+            echo "No streamlit_sha provided in dispatch payload."
+            exit 1
+          fi
+
+          git -C streamlit fetch --depth=1 origin "${TARGET_REF}"
+          git -C streamlit fetch --depth=1 origin "${TARGET_SHA}"
+          git -C streamlit checkout "${TARGET_SHA}"
+
+      - name: Generate static articles
+        run: python3 scripts/generate_static_articles.py
+
+      - name: Commit and push generated output
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add streamlit articles articles.html
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            MSG="chore: sync streamlit content and regenerate articles [skip ci]"
+          else
+            MSG="chore: regenerate static articles [skip ci]"
+          fi
+
+          git commit -m "${MSG}"
+          git push

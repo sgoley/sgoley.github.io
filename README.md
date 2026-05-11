@@ -29,6 +29,35 @@ Static personal website (HTML/CSS/JS) with:
    - content changes in `streamlit/content/`
    - generated output in `articles/` and `articles.html`
 
+## CI-to-CI automation (streamlit -> website)
+
+This repo now includes cross-repo automation:
+
+- `streamlit-openrouter-chat-embed` pushes to `content/**` trigger a dispatch event
+- this repo receives that dispatch, updates `streamlit` submodule to the exact SHA
+- runs `python3 scripts/generate_static_articles.py`
+- commits/pushes updated `streamlit` pointer + generated `articles/**` + `articles.html`
+
+### Required secret (in streamlit repo)
+
+In `sgoley/streamlit-openrouter-chat-embed`, add repository secret:
+
+- `WEBSITE_REPO_DISPATCH_TOKEN`
+
+Token requirements:
+
+- can call `repository_dispatch` on `sgoley/sgoley.github.io`
+- fine-grained PAT: access to repository `sgoley.github.io` with **Contents: Read and write** and **Metadata: Read**
+
+### Required setting (in website repo)
+
+In `sgoley/sgoley.github.io`:
+
+- **Settings -> Actions -> General -> Workflow permissions**
+- set to **Read and write permissions**
+
+This lets the generator workflow commit/push regenerated files.
+
 ## Important: `streamlit/` is a separate repo
 
 `streamlit/` points to its own project:

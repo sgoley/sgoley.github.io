@@ -69,9 +69,13 @@ def _excerpt(markdown_text: str, max_chars: int = 180) -> str:
     cleaned = []
     for line in markdown_text.splitlines():
         stripped = line.strip()
+        if stripped.startswith(">"):
+            stripped = re.sub(r"^>\s?", "", stripped).strip()
         if not stripped or stripped.startswith("#") or stripped.startswith("- ") or re.match(
             r"^\d+\.\s+", stripped
         ):
+            continue
+        if re.match(r"^\[![A-Za-z0-9_-]+\]", stripped):
             continue
         cleaned.append(stripped)
     text = " ".join(cleaned).strip()
@@ -137,7 +141,11 @@ def markdown_to_html(markdown_text: str) -> str:
             out.append(f"<{mode}>")
             list_mode = mode
 
-    for line in lines:
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+
         if line.strip().startswith("```"):
             flush_paragraph()
             close_list()
@@ -147,16 +155,55 @@ def markdown_to_html(markdown_text: str) -> str:
                 in_code = False
             else:
                 in_code = True
+            i += 1
             continue
 
         if in_code:
             code_buffer.append(line)
+            i += 1
             continue
 
-        stripped = line.strip()
+        if stripped.startswith(">"):
+            flush_paragraph()
+            close_list()
+
+            quote_lines: List[str] = []
+            while i < len(lines):
+                quote_line = lines[i]
+                quote_stripped = quote_line.strip()
+                if not quote_stripped.startswith(">"):
+                    break
+                quote_lines.append(re.sub(r"^\s*>\s?", "", quote_line))
+                i += 1
+
+            if quote_lines:
+                first_line = quote_lines[0].strip()
+                callout_match = re.match(r"^\[!([A-Za-z0-9_-]+)\][+-]?\s*(.*)$", first_line)
+                quote_markdown = "\n".join(quote_lines).strip()
+
+                if callout_match:
+                    callout_type = callout_match.group(1).lower()
+                    callout_title = (
+                        callout_match.group(2).strip() or callout_match.group(1).capitalize()
+                    )
+                    callout_body_markdown = "\n".join(quote_lines[1:]).strip()
+                    callout_body_html = (
+                        markdown_to_html(callout_body_markdown) if callout_body_markdown else ""
+                    )
+
+                    out.append(f'<aside class="callout callout-{callout_type}">')
+                    out.append(f'<p class="callout-title">{_inline_html(callout_title)}</p>')
+                    if callout_body_html:
+                        out.append(f'<div class="callout-body">{callout_body_html}</div>')
+                    out.append("</aside>")
+                elif quote_markdown:
+                    out.append(f"<blockquote>{markdown_to_html(quote_markdown)}</blockquote>")
+            continue
+
         if not stripped:
             flush_paragraph()
             close_list()
+            i += 1
             continue
 
         header_match = re.match(r"^(#{1,6})\s+(.+)$", stripped)
@@ -165,6 +212,7 @@ def markdown_to_html(markdown_text: str) -> str:
             close_list()
             level = len(header_match.group(1))
             out.append(f"<h{level}>{_inline_html(header_match.group(2).strip())}</h{level}>")
+            i += 1
             continue
 
         ul_match = re.match(r"^[-*+]\s+(.+)$", stripped)
@@ -172,6 +220,7 @@ def markdown_to_html(markdown_text: str) -> str:
             flush_paragraph()
             open_list("ul")
             out.append(f"<li>{_inline_html(ul_match.group(1).strip())}</li>")
+            i += 1
             continue
 
         ol_match = re.match(r"^\d+\.\s+(.+)$", stripped)
@@ -179,10 +228,12 @@ def markdown_to_html(markdown_text: str) -> str:
             flush_paragraph()
             open_list("ol")
             out.append(f"<li>{_inline_html(ol_match.group(1).strip())}</li>")
+            i += 1
             continue
 
         close_list()
         paragraph_buffer.append(stripped)
+        i += 1
 
     flush_paragraph()
     close_list()

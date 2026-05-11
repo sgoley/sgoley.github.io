@@ -333,6 +333,61 @@ h3 {
   background: transparent;
 }
 
+.article-prose blockquote {
+  margin: 0.9rem 0;
+  padding: 0.1rem 0 0.1rem 0.9rem;
+  border-left: 3px solid var(--line);
+  color: var(--muted);
+}
+
+.article-prose .callout {
+  margin: 0.9rem 0;
+  padding: 0.8rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #15151a;
+}
+
+.article-prose .callout-title {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.article-prose .callout-body {
+  margin-top: 0.45rem;
+}
+
+.article-prose .callout-body > *:first-child {
+  margin-top: 0;
+}
+
+.article-prose .callout-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.article-prose .callout-note {
+  border-left: 4px solid #4f8ffb;
+}
+
+.article-prose .callout-tip {
+  border-left: 4px solid #27c17a;
+}
+
+.article-prose .callout-warning,
+.article-prose .callout-caution {
+  border-left: 4px solid #f4b04f;
+}
+
+.article-prose .callout-important {
+  border-left: 4px solid #a78bfa;
+}
+
+.article-prose .callout-danger {
+  border-left: 4px solid #f87171;
+}
+
 @media (max-width: 900px) {
   .three-col,
   .two-col {
