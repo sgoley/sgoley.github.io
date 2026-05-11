@@ -388,6 +388,34 @@ h3 {
   border-left: 4px solid #f87171;
 }
 
+.article-prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0.8rem 0;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.link-preview-overlay {
+  position: fixed;
+  z-index: 9999;
+  width: min(360px, 42vw);
+  max-height: 280px;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0f0f12;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.link-preview-overlay img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 @media (max-width: 900px) {
   .three-col,
   .two-col {

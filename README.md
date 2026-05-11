@@ -2,14 +2,14 @@
 
 Static personal website (HTML/CSS/JS) with:
 
-- Generated article pages from markdown content
+- Generated article and project pages from markdown content
 - An embedded Streamlit chat app (hosted separately)
 
 ## Architecture
 
 - **Static site**: root HTML pages (`index.html`, `about.html`, `projects.html`, `articles.html`)
-- **Generated articles**: `articles/` (built from markdown)
-- **Article source markdown**: `streamlit/content/`
+- **Generated articles**: `articles/` (built from `streamlit/content/posts`)
+- **Generated projects**: `projects/` (built from `streamlit/content/projects`)
 - **Generator**: `scripts/generate_static_articles.py`
 - **Embedded app**: Streamlit URL in `index.html` (`data-streamlit-url`)
 
@@ -20,14 +20,29 @@ Static personal website (HTML/CSS/JS) with:
 
 ## Local workflow
 
-1. Edit markdown in `streamlit/content/` (usually `streamlit/content/posts/*.md`).
-2. Regenerate static pages:
+1. Edit markdown in:
+   - `streamlit/content/posts/*.md`
+   - `streamlit/content/projects/*.md`
+2. Regenerate static pages (articles + projects):
    ```bash
    python3 scripts/generate_static_articles.py
    ```
 3. Commit both:
    - content changes in `streamlit/content/`
-   - generated output in `articles/` and `articles.html`
+   - generated output in `articles/`, `projects/`, `articles.html`, and `projects.html`
+
+Wikilinks are supported across both collections:
+
+- `[[post-q&a]]` -> matching page in `articles/posts/...`
+- `[[project-1]]` -> matching page in `projects/...`
+
+Technical markdown support in generated pages includes:
+
+- fenced code blocks (```lang ... ```)
+- callouts (`> [!note]`, `> [!warning]`, etc.)
+- images (`![alt](image-url "optional title")`)
+- link image previews on hover via markdown link title:
+  - `[Demo](https://example.com "https://example.com/preview.png")`
 
 ## CI-to-CI automation (streamlit -> website)
 

@@ -60,7 +60,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add streamlit articles articles.html
+          git add streamlit articles projects articles.html projects.html
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
@@ -68,9 +68,9 @@ jobs:
           fi
 
           if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
-            MSG="chore: sync streamlit content and regenerate articles [skip ci]"
+            MSG="chore: sync streamlit content and regenerate static pages [skip ci]"
           else
-            MSG="chore: regenerate static articles [skip ci]"
+            MSG="chore: regenerate static pages [skip ci]"
           fi
 
           git commit -m "${MSG}"

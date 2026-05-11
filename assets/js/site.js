@@ -56,4 +56,61 @@
       });
     });
   }
+
+  const previewLinks = document.querySelectorAll("a.link-preview[data-preview-image]");
+  if (previewLinks.length > 0) {
+    const overlay = document.createElement("div");
+    overlay.className = "link-preview-overlay";
+    overlay.hidden = true;
+
+    const previewImage = document.createElement("img");
+    previewImage.alt = "Link preview";
+    overlay.appendChild(previewImage);
+    document.body.appendChild(overlay);
+
+    const placeOverlay = (event) => {
+      const gap = 14;
+      const width = overlay.offsetWidth || 320;
+      const height = overlay.offsetHeight || 220;
+      let left = event.clientX + gap;
+      let top = event.clientY + gap;
+
+      if (left + width > window.innerWidth - 8) {
+        left = event.clientX - width - gap;
+      }
+      if (top + height > window.innerHeight - 8) {
+        top = event.clientY - height - gap;
+      }
+
+      overlay.style.left = `${Math.max(8, left)}px`;
+      overlay.style.top = `${Math.max(8, top)}px`;
+    };
+
+    const hideOverlay = () => {
+      overlay.hidden = true;
+      previewImage.removeAttribute("src");
+    };
+
+    previewLinks.forEach((link) => {
+      const previewSrc = link.getAttribute("data-preview-image");
+      if (!previewSrc) {
+        return;
+      }
+
+      link.addEventListener("mouseenter", (event) => {
+        previewImage.src = previewSrc;
+        overlay.hidden = false;
+        placeOverlay(event);
+      });
+
+      link.addEventListener("mousemove", (event) => {
+        if (!overlay.hidden) {
+          placeOverlay(event);
+        }
+      });
+
+      link.addEventListener("mouseleave", hideOverlay);
+      link.addEventListener("blur", hideOverlay);
+    });
+  }
 })();

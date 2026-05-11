@@ -39,7 +39,8 @@ logs/
 *.log
 
 # IDE/editor
-.vscode/
+.vscode/*
+!.vscode/mcp.json
 .idea/
 *.iml
 
