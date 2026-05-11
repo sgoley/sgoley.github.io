@@ -44,6 +44,12 @@ Technical markdown support in generated pages includes:
 - link image previews on hover via markdown link title:
   - `[Demo](https://example.com "https://example.com/preview.png")`
 
+Project markdown additionally supports iframe embeds with a shortcode:
+
+```md
+{{< iframe src="https://example.com/live-demo" title="Live demo" height="860" >}}
+```
+
 ## CI-to-CI automation (streamlit -> website)
 
 This repo now includes cross-repo automation:

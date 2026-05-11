@@ -397,6 +397,17 @@ h3 {
   border: 1px solid var(--line);
 }
 
+.article-prose .embed-frame-wrap {
+  margin: 0.9rem 0;
+}
+
+.article-prose .embed-frame {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #0f0f12;
+}
+
 .link-preview-overlay {
   position: fixed;
   z-index: 9999;

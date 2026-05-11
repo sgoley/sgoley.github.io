@@ -8,6 +8,11 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Dict, List
 
+IFRAME_SHORTCODE_PATTERN = re.compile(r"^\{\{<\s*iframe\s+(.+?)\s*>\}\}$")
+IFRAME_ATTR_PATTERN = re.compile(
+    r"""([A-Za-z][\w-]*)=(?:"([^"]*)"|'([^']*)'|([^\s]+))"""
+)
+
 
 @dataclass
 class StaticDoc:
@@ -66,6 +71,8 @@ def _parse_frontmatter(markdown_text: str) -> tuple[Dict[str, Any], str]:
 
 def _clean_excerpt_line(line: str) -> str:
     stripped = line.strip()
+    if IFRAME_SHORTCODE_PATTERN.match(stripped):
+        return ""
     if stripped.startswith(">"):
         stripped = re.sub(r"^>\s?", "", stripped).strip()
     if re.match(r"^\[![A-Za-z0-9_-]+\]", stripped):
@@ -285,9 +292,59 @@ def _inline_html(raw_text: str, resolve_link: Callable[[str, str | None], str | 
     return text
 
 
+def _parse_shortcode_attrs(raw_attrs: str) -> Dict[str, str] | None:
+    attrs: Dict[str, str] = {}
+    cursor = 0
+
+    for match in IFRAME_ATTR_PATTERN.finditer(raw_attrs):
+        if raw_attrs[cursor : match.start()].strip():
+            return None
+        key = match.group(1).lower()
+        value = match.group(2) or match.group(3) or match.group(4) or ""
+        attrs[key] = html.unescape(value).strip()
+        cursor = match.end()
+
+    if raw_attrs[cursor:].strip():
+        return None
+
+    return attrs
+
+
+def _render_iframe_shortcode(raw_attrs: str) -> str | None:
+    attrs = _parse_shortcode_attrs(raw_attrs)
+    if attrs is None:
+        return None
+
+    src = attrs.get("src", "").strip()
+    if not src:
+        return None
+
+    if not re.match(r"^(https?://|/|\.{1,2}/)", src):
+        return None
+
+    title = attrs.get("title", "Embedded demo")
+    height_value = attrs.get("height", "760")
+    try:
+        height = int(height_value)
+    except ValueError:
+        return None
+    height = max(320, min(height, 1800))
+
+    return (
+        '<div class="embed-frame-wrap">'
+        f'<iframe class="embed-frame" src="{html.escape(src, quote=True)}" '
+        f'title="{html.escape(title, quote=True)}" loading="lazy" '
+        f'referrerpolicy="strict-origin-when-cross-origin" allowfullscreen '
+        f'style="height: {height}px;"></iframe>'
+        "</div>"
+    )
+
+
 def markdown_to_html(
     markdown_text: str,
     resolve_link: Callable[[str, str | None], str | None],
+    *,
+    allow_iframe_embed: bool = False,
 ) -> str:
     lines = markdown_text.splitlines()
     out: List[str] = []
@@ -364,7 +421,11 @@ def markdown_to_html(
                     )
                     callout_body_markdown = "\n".join(quote_lines[1:]).strip()
                     callout_body_html = (
-                        markdown_to_html(callout_body_markdown, resolve_link)
+                        markdown_to_html(
+                            callout_body_markdown,
+                            resolve_link,
+                            allow_iframe_embed=allow_iframe_embed,
+                        )
                         if callout_body_markdown
                         else ""
                     )
@@ -375,7 +436,11 @@ def markdown_to_html(
                         out.append(f'<div class="callout-body">{callout_body_html}</div>')
                     out.append("</aside>")
                 elif quote_markdown:
-                    out.append(f"<blockquote>{markdown_to_html(quote_markdown, resolve_link)}</blockquote>")
+                    out.append(
+                        "<blockquote>"
+                        f"{markdown_to_html(quote_markdown, resolve_link, allow_iframe_embed=allow_iframe_embed)}"
+                        "</blockquote>"
+                    )
             continue
 
         if not stripped:
@@ -383,6 +448,17 @@ def markdown_to_html(
             close_list()
             i += 1
             continue
+
+        if allow_iframe_embed:
+            iframe_match = IFRAME_SHORTCODE_PATTERN.match(stripped)
+            if iframe_match:
+                iframe_html = _render_iframe_shortcode(iframe_match.group(1))
+                if iframe_html:
+                    flush_paragraph()
+                    close_list()
+                    out.append(iframe_html)
+                    i += 1
+                    continue
 
         header_match = re.match(r"^(#{1,6})\s+(.+)$", stripped)
         if header_match:
@@ -668,7 +744,11 @@ def main() -> None:
 
     for doc in all_docs:
         resolver = _make_link_resolver(doc, by_source_key, by_slug)
-        body_html = markdown_to_html(doc.body_markdown, resolver)
+        body_html = markdown_to_html(
+            doc.body_markdown,
+            resolver,
+            allow_iframe_embed=doc.kind == "project",
+        )
         doc.output_path.parent.mkdir(parents=True, exist_ok=True)
         doc.output_path.write_text(render_doc_page(doc, body_html), encoding="utf-8")
 
