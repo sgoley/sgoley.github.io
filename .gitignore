@@ -1,0 +1,70 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+
+# Virtual envs
+.venv/
+venv/
+env/
+ENV/
+
+# Testing and tooling
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.tox/
+.cache/
+
+# Logs
+logs/
+*.log
+
+# IDE/editor
+.vscode/
+.idea/
+*.iml
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Secrets and env
+/.env
+/.env.*
+*.env
+*.secret
+/secrets.toml
+/.streamlit/secrets.toml
+
+# Allow example envs
+!.env.example
+
+
+# Project data
+/data/
+tmp/
+
+# Exclude full Docker-Deployment folder
+/Docker-Deployment/*
+
+# Docs to exclude
+/PLANNING.md
+/TASK.md
