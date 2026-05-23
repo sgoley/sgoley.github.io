@@ -3,161 +3,91 @@
 Static personal website (HTML/CSS/JS) with:
 
 - Generated article and project pages from markdown content
-- An embedded Streamlit chat app (hosted separately)
+- Native in-page chat UI powered by an OpenRouter backend proxy (Cloudflare Worker)
 
 ## Architecture
 
-- **Static site**: root HTML pages (`index.html`, `about.html`, `projects.html`, `articles.html`)
-- **Generated articles**: `articles/` (built from `streamlit/content/posts`)
-- **Generated projects**: `projects/` (built from `streamlit/content/projects`)
+- **Static site**: root pages (`index.html`, `about.html`, `projects.html`, `articles.html`)
+- **Markdown source of truth**:
+  - `content/posts/*.md`
+  - `content/projects/*.md`
+- **Prompt template**: `prompts/default_system.txt`
 - **Generator**: `scripts/generate_static_articles.py`
-- **Embedded app**: Streamlit URL in `index.html` (`data-streamlit-url`)
+  - builds `articles/**` and `projects/**`
+  - updates `articles.html` and `projects.html`
+  - builds chat context file: `assets/data/chat-context.json`
+- **Frontend chat client**: `assets/js/site.js` (native embedded chat)
+- **OpenRouter proxy**: `workers/openrouter-chat-proxy/` (Cloudflare Worker)
 
-## Prerequisites
+## Markdown authoring support
 
-- Python 3.10+ (for article generation script)
-- Git
+Generated pages support:
 
-## Local workflow
-
-1. Edit markdown in:
-   - `streamlit/content/posts/*.md`
-   - `streamlit/content/projects/*.md`
-2. Regenerate static pages (articles + projects):
-   ```bash
-   python3 scripts/generate_static_articles.py
-   ```
-3. Commit both:
-   - content changes in `streamlit/content/`
-   - generated output in `articles/`, `projects/`, `articles.html`, and `projects.html`
-
-Wikilinks are supported across both collections:
-
-- `[[post-q&a]]` -> matching page in `articles/posts/...`
-- `[[project-1]]` -> matching page in `projects/...`
-
-Technical markdown support in generated pages includes:
-
-- fenced code blocks (```lang ... ```)
-- callouts (`> [!note]`, `> [!warning]`, etc.)
-- images (`![alt](image-url "optional title")`)
-- link image previews on hover via markdown link title:
-  - `[Demo](https://example.com "https://example.com/preview.png")`
-
-Project markdown additionally supports iframe embeds with a shortcode:
+- Headings, paragraphs, lists, blockquotes, code fences
+- Callouts (`> [!note]`, `> [!warning]`, etc.)
+- Links and images
+- Tables (pipe-table markdown)
+- Wikilinks across docs (for example `[[post-q&a]]`)
+- Project iframe shortcode:
 
 ```md
 {{< iframe src="https://example.com/live-demo" title="Live demo" height="860" >}}
 ```
 
-## CI-to-CI automation (streamlit -> website)
+## Local workflow
 
-This repo now includes cross-repo automation:
+1. Edit markdown in `content/**` and prompt text in `prompts/default_system.txt`.
+2. Regenerate static output:
+   ```bash
+   python3 scripts/generate_static_articles.py
+   ```
+3. Commit both source and generated files:
+   - `content/**`
+   - `prompts/default_system.txt`
+   - `articles/**`, `projects/**`, `articles.html`, `projects.html`
+   - `assets/data/chat-context.json`
 
-- `streamlit-openrouter-chat-embed` pushes to `content/**` trigger a dispatch event
-- this repo receives that dispatch, updates `streamlit` submodule to the exact SHA
-- runs `python3 scripts/generate_static_articles.py`
-- commits/pushes updated `streamlit` pointer + generated `articles/**` + `articles.html`
+## Native chat setup (Cloudflare Worker + OpenRouter)
 
-### Required secret (in streamlit repo)
+### 1) Deploy the Worker
 
-In `sgoley/streamlit-openrouter-chat-embed`, add repository secret:
-
-- `WEBSITE_REPO_DISPATCH_TOKEN`
-
-Token requirements:
-
-- can call `repository_dispatch` on `sgoley/sgoley.github.io`
-- fine-grained PAT: access to repository `sgoley.github.io` with **Contents: Read and write** and **Metadata: Read**
-
-### Required setting (in website repo)
-
-In `sgoley/sgoley.github.io`:
-
-- **Settings -> Actions -> General -> Workflow permissions**
-- set to **Read and write permissions**
-
-This lets the generator workflow commit/push regenerated files.
-
-## Important: `streamlit/` is a separate repo
-
-`streamlit/` points to its own project:
-
-- https://github.com/sgoley/streamlit-openrouter-chat-embed
-
-If you want this repo to **include** `streamlit/` while keeping it separately versioned, use a **git submodule** (recommended).
-
-### Recommended submodule setup
-
-If starting fresh:
+From `workers/openrouter-chat-proxy/`:
 
 ```bash
-git submodule add https://github.com/sgoley/streamlit-openrouter-chat-embed.git streamlit
-git commit -m "Add streamlit app as submodule"
+npx wrangler secret put OPENROUTER_API_KEY
+npx wrangler deploy
 ```
 
-For new clones:
+Optional vars in `wrangler.toml`:
 
-```bash
-git clone <your-website-repo-url>
-cd <repo>
-git submodule update --init --recursive
-```
+- `OPENROUTER_MODEL`
+- `OPENROUTER_SITE_TITLE`
+- `ALLOWED_ORIGINS` (comma-separated)
 
-If `streamlit/` already exists locally as its own cloned repo, convert it before first push:
+### 2) Point the website chat to your Worker
 
-```bash
-# optional: back up local uncommitted streamlit changes first
-mv streamlit ../streamlit-backup
-git submodule add https://github.com/sgoley/streamlit-openrouter-chat-embed.git streamlit
-git commit -m "Track streamlit app as submodule"
-```
-
-Then copy any needed local changes from `../streamlit-backup` into `streamlit/`, commit in the streamlit repo, and update the submodule pointer in this repo.
-
-## Deploy static site to GitHub Pages
-
-1. Push this repository to GitHub.
-2. In GitHub: **Settings -> Pages**.
-3. Under **Build and deployment**, choose:
-   - **Source**: `Deploy from a branch`
-   - **Branch**: `main` (or your default branch)
-   - **Folder**: `/ (root)`
-4. Save and wait for Pages deploy.
-
-### URL behavior
-
-- If repo is named `<username>.github.io`, site URL is:
-  - `https://<username>.github.io`
-- Otherwise:
-  - `https://<username>.github.io/<repo-name>/`
-
-## Deploy Streamlit app to Streamlit Community Cloud
-
-Use the separate repo:
-
-- https://github.com/sgoley/streamlit-openrouter-chat-embed
-
-Deployment settings:
-
-- **Main file path**: `src/app.py`
-- **Python dependencies**: `requirements.txt`
-- **Secrets / env vars**: set in Streamlit Cloud (at minimum `OPENROUTER_API_KEY`)
-
-Reference env variables are documented in:
-
-- `streamlit/.env.example`
-
-## Connect deployed Streamlit app to this site
-
-Set the iframe source in `index.html`:
+Set `data-chat-endpoint` in `index.html`:
 
 ```html
-<iframe data-streamlit-url="https://YOUR-APP.streamlit.app/?embed=true"></iframe>
+<div data-chat-endpoint="https://YOUR-WORKER.workers.dev/chat"></div>
 ```
 
-Or pass at runtime:
+Or override at runtime with:
 
-- `?streamlit=https://YOUR-APP.streamlit.app`
+- `?chat_api=https://YOUR-WORKER.workers.dev/chat`
 
-Then commit and push `index.html` so GitHub Pages serves the updated embed URL.
+## GitHub Pages deploy
+
+1. Push repository to GitHub.
+2. In **Settings -> Pages**:
+   - Source: `Deploy from a branch`
+   - Branch: `main`
+   - Folder: `/ (root)`
+
+## Automation
+
+Workflow `.github/workflows/generate-static-articles.yml` regenerates static pages and chat context on pushes to:
+
+- `content/**`
+- `prompts/**`
+- `scripts/generate_static_articles.py`

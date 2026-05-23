@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import html
+import json
 import posixpath
 import re
 from dataclasses import dataclass
@@ -340,6 +341,22 @@ def _render_iframe_shortcode(raw_attrs: str) -> str | None:
     )
 
 
+def _split_table_row(row: str) -> List[str]:
+    normalized = row.strip()
+    if normalized.startswith("|"):
+        normalized = normalized[1:]
+    if normalized.endswith("|"):
+        normalized = normalized[:-1]
+    return [cell.strip() for cell in normalized.split("|")]
+
+
+def _is_table_delimiter(row: str) -> bool:
+    cells = _split_table_row(row)
+    if not cells:
+        return False
+    return all(re.match(r"^:?-{3,}:?$", cell) for cell in cells)
+
+
 def markdown_to_html(
     markdown_text: str,
     resolve_link: Callable[[str, str | None], str | None],
@@ -459,6 +476,35 @@ def markdown_to_html(
                     out.append(iframe_html)
                     i += 1
                     continue
+
+        if i + 1 < len(lines) and "|" in stripped and _is_table_delimiter(lines[i + 1]):
+            flush_paragraph()
+            close_list()
+
+            header_cells = _split_table_row(stripped)
+            i += 2  # skip header + delimiter
+
+            body_rows: List[List[str]] = []
+            while i < len(lines):
+                row_line = lines[i].strip()
+                if not row_line or "|" not in row_line:
+                    break
+                body_rows.append(_split_table_row(row_line))
+                i += 1
+
+            out.append("<table>")
+            out.append("<thead><tr>")
+            out.extend(f"<th>{_inline_html(cell, resolve_link)}</th>" for cell in header_cells)
+            out.append("</tr></thead>")
+            if body_rows:
+                out.append("<tbody>")
+                for row in body_rows:
+                    out.append("<tr>")
+                    out.extend(f"<td>{_inline_html(cell, resolve_link)}</td>" for cell in row)
+                    out.append("</tr>")
+                out.append("</tbody>")
+            out.append("</table>")
+            continue
 
         header_match = re.match(r"^(#{1,6})\s+(.+)$", stripped)
         if header_match:
@@ -639,6 +685,56 @@ def render_collection_index(
 """
 
 
+def _load_system_prompt_template(repo_root: Path) -> str:
+    prompt_path = repo_root / "prompts" / "default_system.txt"
+    if prompt_path.exists():
+        return prompt_path.read_text(encoding="utf-8").strip()
+    return (
+        "You are the personal website assistant for Scott Goley's website.\n"
+        "Ground answers in markdown content from content/."
+    )
+
+
+def _build_catalog_lines(docs: List[StaticDoc]) -> str:
+    if not docs:
+        return "- No markdown files are currently available."
+    return "\n".join(
+        f"- {doc.title} (slug: {doc.source_path.with_suffix('').as_posix()}, path: {doc.source_path.as_posix()})"
+        for doc in docs
+    )
+
+
+def _write_chat_context_payload(repo_root: Path, docs: List[StaticDoc]) -> None:
+    prompt_template = _load_system_prompt_template(repo_root)
+    catalog_lines = _build_catalog_lines(docs)
+    system_prompt = (
+        prompt_template.replace("{{ARTICLE_CATALOG}}", catalog_lines)
+        if "{{ARTICLE_CATALOG}}" in prompt_template
+        else f"{prompt_template}\n\nAvailable projects, articles, and posts:\n{catalog_lines}"
+    )
+
+    payload = {
+        "system_prompt_template": prompt_template,
+        "system_prompt": system_prompt,
+        "documents": [
+            {
+                "kind": doc.kind,
+                "title": doc.title,
+                "source_path": doc.source_path.as_posix(),
+                "slug": doc.source_path.with_suffix("").as_posix(),
+                "href": doc.href,
+                "excerpt": doc.excerpt,
+                "markdown": doc.body_markdown,
+            }
+            for doc in docs
+        ],
+    }
+
+    output_path = repo_root / "assets" / "data" / "chat-context.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def _collect_docs(
     repo_root: Path,
     *,
@@ -647,7 +743,7 @@ def _collect_docs(
     keep_section_path_in_output: bool,
     kind: str,
 ) -> List[StaticDoc]:
-    content_root = repo_root / "streamlit" / "content"
+    content_root = repo_root / "content"
     source_root = content_root / section
     if not source_root.exists():
         return []
@@ -756,10 +852,10 @@ def main() -> None:
         render_collection_index(
             articles,
             page_title="Articles",
-            meta_description="Generated article index from streamlit/content/posts markdown files.",
+            meta_description="Generated article index from content/posts markdown files.",
             eyebrow="Writing",
             heading="Articles and notes",
-            intro="These pages are generated from markdown files in <code>streamlit/content/posts</code>.",
+            intro="These pages are generated from markdown files in <code>content/posts</code>.",
             cta_text="Read article",
         ),
         encoding="utf-8",
@@ -769,14 +865,15 @@ def main() -> None:
         render_collection_index(
             projects,
             page_title="Projects",
-            meta_description="Generated project index from streamlit/content/projects markdown files.",
+            meta_description="Generated project index from content/projects markdown files.",
             eyebrow="Projects",
             heading="Project walkthroughs and builds",
-            intro="These pages are generated from markdown files in <code>streamlit/content/projects</code>.",
+            intro="These pages are generated from markdown files in <code>content/projects</code>.",
             cta_text="Open project",
         ),
         encoding="utf-8",
     )
+    _write_chat_context_payload(repo_root, all_docs)
 
     print(f"Generated {len(articles)} article pages into articles/")
     print(f"Generated {len(projects)} project pages into projects/")
@@ -784,7 +881,7 @@ def main() -> None:
         print(
             f"Removed stale pages: articles={removed_articles}, projects={removed_projects}"
         )
-    print("Updated articles.html and projects.html indexes")
+    print("Updated articles.html, projects.html, and assets/data/chat-context.json")
 
 
 if __name__ == "__main__":

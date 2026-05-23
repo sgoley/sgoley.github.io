@@ -1,0 +1,9 @@
+name = "sgoley-openrouter-chat-proxy"
+main = "src/index.js"
+compatibility_date = "2026-05-22"
+
+[vars]
+OPENROUTER_MODEL = "openai/gpt-oss-120b"
+OPENROUTER_SITE_TITLE = "Scott Goley Website Chat"
+# Comma-separated list. Example: "https://scottgoley.com,https://sgoley.github.io"
+ALLOWED_ORIGINS = "https://scottgoley.com"

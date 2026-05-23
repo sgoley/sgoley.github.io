@@ -130,7 +130,155 @@
 <p>---</p>
 <h2>5) Full container inventory (current Compose)</h2>
 <blockquote><p>Scope: all containers defined in <code>docker-compose.yml</code> in this repo.</p></blockquote>
-<p>| Container | Role | Exposure pattern | |---|---|---| | <code>homeassistant</code> | Home automation core | Via Caddy hostname | | <code>airflow-postgres</code> | Airflow metadata DB | Internal only | | <code>airflow-init</code> | Airflow bootstrap/migrations | Internal one-shot job | | <code>airflow-apiserver</code> | Airflow API/UI backend | Via Caddy hostname | | <code>airflow-scheduler</code> | Airflow scheduling | Internal only | | <code>airflow-dag-processor</code> | Airflow DAG parsing | Internal only | | <code>airflow-triggerer</code> | Airflow async trigger service | Internal only | | <code>n8n-postgres</code> | n8n DB | Internal only | | <code>n8n</code> | Automation engine | Via Caddy hostname(s) | | <code>portainer</code> | Docker management UI | Via Caddy hostname | | <code>sftpgo</code> | Managed SFTP service for workflow file exchange | SFTP endpoint + restricted Caddy hostname | | <code>uptime-kuma</code> | Monitoring UI/check engine | Via Caddy hostname | | <code>caddy</code> | Reverse proxy ingress | Primary entrypoint | | <code>watchtower</code> | Automated image update runner | Internal daemon | | <code>samba</code> | SMB/CIFS file sharing for host storage | LAN IP over SMB (reachable remotely via Tailnet subnet route) | | <code>opencode</code> | Headless coding/web assistant service | Via restricted Caddy route | | <code>langfuse-postgres</code> | Langfuse DB | Internal only | | <code>langfuse-clickhouse</code> | Langfuse analytics store | Internal only | | <code>langfuse-redis</code> | Langfuse cache/queue backend | Internal only | | <code>langfuse-minio</code> | Langfuse object storage backend | Internal only | | <code>langfuse-worker</code> | Langfuse async workers | Internal only | | <code>langfuse-web</code> | Langfuse web/API surface | Via restricted Caddy route | | <a href="https://github.com/sgoley/unofficial-ts-aperture-langfuse-relay"><code>aperture-langfuse-relay</code></a> | Receives Aperture hooks, forwards ingestion to Langfuse | Tailnet-native endpoint | | <code>golink</code> | Private tailnet shortlinks | Tailnet-native endpoint | | <code>ollama</code> <em>(optional)</em> | Local model serving | Via Caddy hostname (when enabled) | | <a href="https://github.com/sgoley/sub-notes-public"><code>subnotes-pocketbase</code></a> | Subnotes data backend | Via Caddy hostname | | <a href="https://github.com/sgoley/sub-notes-public"><code>subnotes-backend</code></a> | Subnotes API/transcript processing | Via Caddy hostname | | <a href="https://github.com/sgoley/sub-notes-public"><code>subnotes-frontend</code></a> | Subnotes UI | Via Caddy hostname |</p>
+<table>
+<thead><tr>
+<th>Container</th>
+<th>Role</th>
+<th>Exposure pattern</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>homeassistant</code></td>
+<td>Home automation core</td>
+<td>Via Caddy hostname</td>
+</tr>
+<tr>
+<td><code>airflow-postgres</code></td>
+<td>Airflow metadata DB</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>airflow-init</code></td>
+<td>Airflow bootstrap/migrations</td>
+<td>Internal one-shot job</td>
+</tr>
+<tr>
+<td><code>airflow-apiserver</code></td>
+<td>Airflow API/UI backend</td>
+<td>Via Caddy hostname</td>
+</tr>
+<tr>
+<td><code>airflow-scheduler</code></td>
+<td>Airflow scheduling</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>airflow-dag-processor</code></td>
+<td>Airflow DAG parsing</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>airflow-triggerer</code></td>
+<td>Airflow async trigger service</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>n8n-postgres</code></td>
+<td>n8n DB</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>n8n</code></td>
+<td>Automation engine</td>
+<td>Via Caddy hostname(s)</td>
+</tr>
+<tr>
+<td><code>portainer</code></td>
+<td>Docker management UI</td>
+<td>Via Caddy hostname</td>
+</tr>
+<tr>
+<td><code>sftpgo</code></td>
+<td>Managed SFTP service for workflow file exchange</td>
+<td>SFTP endpoint + restricted Caddy hostname</td>
+</tr>
+<tr>
+<td><code>uptime-kuma</code></td>
+<td>Monitoring UI/check engine</td>
+<td>Via Caddy hostname</td>
+</tr>
+<tr>
+<td><code>caddy</code></td>
+<td>Reverse proxy ingress</td>
+<td>Primary entrypoint</td>
+</tr>
+<tr>
+<td><code>watchtower</code></td>
+<td>Automated image update runner</td>
+<td>Internal daemon</td>
+</tr>
+<tr>
+<td><code>samba</code></td>
+<td>SMB/CIFS file sharing for host storage</td>
+<td>LAN IP over SMB (reachable remotely via Tailnet subnet route)</td>
+</tr>
+<tr>
+<td><code>opencode</code></td>
+<td>Headless coding/web assistant service</td>
+<td>Via restricted Caddy route</td>
+</tr>
+<tr>
+<td><code>langfuse-postgres</code></td>
+<td>Langfuse DB</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>langfuse-clickhouse</code></td>
+<td>Langfuse analytics store</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>langfuse-redis</code></td>
+<td>Langfuse cache/queue backend</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>langfuse-minio</code></td>
+<td>Langfuse object storage backend</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>langfuse-worker</code></td>
+<td>Langfuse async workers</td>
+<td>Internal only</td>
+</tr>
+<tr>
+<td><code>langfuse-web</code></td>
+<td>Langfuse web/API surface</td>
+<td>Via restricted Caddy route</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sgoley/unofficial-ts-aperture-langfuse-relay"><code>aperture-langfuse-relay</code></a></td>
+<td>Receives Aperture hooks, forwards ingestion to Langfuse</td>
+<td>Tailnet-native endpoint</td>
+</tr>
+<tr>
+<td><code>golink</code></td>
+<td>Private tailnet shortlinks</td>
+<td>Tailnet-native endpoint</td>
+</tr>
+<tr>
+<td><code>ollama</code> <em>(optional)</em></td>
+<td>Local model serving</td>
+<td>Via Caddy hostname (when enabled)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sgoley/sub-notes-public"><code>subnotes-pocketbase</code></a></td>
+<td>Subnotes data backend</td>
+<td>Via Caddy hostname</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sgoley/sub-notes-public"><code>subnotes-backend</code></a></td>
+<td>Subnotes API/transcript processing</td>
+<td>Via Caddy hostname</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sgoley/sub-notes-public"><code>subnotes-frontend</code></a></td>
+<td>Subnotes UI</td>
+<td>Via Caddy hostname</td>
+</tr>
+</tbody>
+</table>
 <p>---</p>
 <h2>6) Internal service mesh (Docker network view)</h2>
 <pre><code>                    ┌───────────────────────────────────────────────┐
@@ -174,7 +322,62 @@
 <p>---</p>
 <h2>8) Golink shortcuts currently enabled</h2>
 <p>These private shortlinks are served by the <code>golink</code> Tailnet-native service and resolve to internal app URLs.</p>
-<p>| Short | Destination | |---|---| | <code>airflow</code> | <code>https://airflow.homelab.internal</code> | | <code>ha</code> | <code>https://ha.homelab.internal</code> | | <code>langfuse</code> | <code>https://langfuse.homelab.internal</code> | | <code>lf</code> | <code>https://langfuse.homelab.internal</code> | | <code>n8n</code> | <code>https://n8n.homelab.internal</code> | | <code>ollama</code> | <code>https://ollama.homelab.internal</code> | | <code>port</code> | <code>https://portainer.homelab.internal</code> | | <code>portainer</code> | <code>https://portainer.homelab.internal</code> | | <code>sftp</code> | <code>https://sftpgo.homelab.internal/</code> | | <code>sftpgo</code> | <code>https://sftpgo.homelab.internal/</code> | | <code>subnotes</code> | <code>https://subnotes.homelab.internal/</code> | | <code>uptime</code> | <code>https://uptime.homelab.internal</code> |</p>
+<table>
+<thead><tr>
+<th>Short</th>
+<th>Destination</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>airflow</code></td>
+<td><code>https://airflow.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>ha</code></td>
+<td><code>https://ha.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>langfuse</code></td>
+<td><code>https://langfuse.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>lf</code></td>
+<td><code>https://langfuse.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>n8n</code></td>
+<td><code>https://n8n.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>ollama</code></td>
+<td><code>https://ollama.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td><code>https://portainer.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>portainer</code></td>
+<td><code>https://portainer.homelab.internal</code></td>
+</tr>
+<tr>
+<td><code>sftp</code></td>
+<td><code>https://sftpgo.homelab.internal/</code></td>
+</tr>
+<tr>
+<td><code>sftpgo</code></td>
+<td><code>https://sftpgo.homelab.internal/</code></td>
+</tr>
+<tr>
+<td><code>subnotes</code></td>
+<td><code>https://subnotes.homelab.internal/</code></td>
+</tr>
+<tr>
+<td><code>uptime</code></td>
+<td><code>https://uptime.homelab.internal</code></td>
+</tr>
+</tbody>
+</table>
 <p>---</p>
 <h2>9) AI observability pipeline (Aperture -&gt; relay -&gt; Langfuse)</h2>
 <pre><code>Model client(s) -&gt; Tailscale Aperture -&gt; webhook event

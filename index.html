@@ -6,7 +6,7 @@
         <title>Scott Goley - Home</title>
         <meta
             name="description"
-            content="Personal site with embedded Streamlit chat, projects, and writing."
+            content="Personal site with native embedded chat, projects, and writing."
         />
         <link rel="stylesheet" href="assets/css/site.css" />
     </head>
@@ -42,23 +42,40 @@
             <section class="container panel" id="chat">
                 <div class="panel-header">
                     <h2>Chat Assistant</h2>
-                    <p>Ask questions about my articles and notes.</p>
+                    <p>Ask questions about my markdown posts, projects, and notes.</p>
                 </div>
 
-                <iframe
-                    id="streamlit-embed"
-                    class="chat-embed"
-                    title="Embedded chat assistant"
-                    loading="lazy"
-                    allow="clipboard-write"
-                    data-streamlit-url="https://stlt-openrouter-chat-embed.streamlit.app/?embed=true"
-                ></iframe>
+                <div
+                    id="native-chat"
+                    class="native-chat"
+                    data-chat-endpoint="YOUR-CLOUDFLARE-WORKER-URL/chat"
+                    data-chat-model="openai/gpt-oss-120b"
+                >
+                    <div id="chat-thread" class="chat-thread" aria-live="polite"></div>
 
-                <p id="embed-note" class="embed-note">
-                    Chat app URL not configured. Set
-                    <code>data-streamlit-url</code> in
+                    <form id="chat-form" class="chat-compose" autocomplete="off">
+                        <label class="visually-hidden" for="chat-input"
+                            >Message</label
+                        >
+                        <textarea
+                            id="chat-input"
+                            name="message"
+                            rows="2"
+                            maxlength="2400"
+                            placeholder="Ask about projects, posts, and notes..."
+                            required
+                        ></textarea>
+                        <button type="submit" class="btn btn-primary">
+                            Send
+                        </button>
+                    </form>
+                </div>
+
+                <p id="chat-note" class="embed-note">
+                    Chat endpoint not configured. Set
+                    <code>data-chat-endpoint</code> in
                     <code>index.html</code> or pass
-                    <code>?streamlit=https://your-app.streamlit.app</code>.
+                    <code>?chat_api=https://your-worker.workers.dev/chat</code>.
                 </p>
             </section>
 
