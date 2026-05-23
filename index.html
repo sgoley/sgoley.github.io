@@ -42,18 +42,29 @@
             <section class="container panel" id="chat">
                 <div class="panel-header">
                     <h2>Chat Assistant</h2>
-                    <p>Ask questions about my markdown posts, projects, and notes.</p>
+                    <p>
+                        Ask questions about my markdown posts, projects, and
+                        notes.
+                    </p>
                 </div>
 
                 <div
                     id="native-chat"
                     class="native-chat"
-                    data-chat-endpoint="YOUR-CLOUDFLARE-WORKER-URL/chat"
-                    data-chat-model="openai/gpt-oss-120b"
+                    data-chat-endpoint="sgoley-github-io.scottmgoley.workers.dev/chat"
+                    data-chat-model="mistralai/mistral-nemo"
                 >
-                    <div id="chat-thread" class="chat-thread" aria-live="polite"></div>
+                    <div
+                        id="chat-thread"
+                        class="chat-thread"
+                        aria-live="polite"
+                    ></div>
 
-                    <form id="chat-form" class="chat-compose" autocomplete="off">
+                    <form
+                        id="chat-form"
+                        class="chat-compose"
+                        autocomplete="off"
+                    >
                         <label class="visually-hidden" for="chat-input"
                             >Message</label
                         >
