@@ -1,7 +1,7 @@
 ---
 title: Investing Start/Finish Doodle
 author: Scott Goley
-status: draft
+status: published
 published: 2026-05-11
 tags: [doodle, investing, javascript, visualization]
 ---
@@ -12,14 +12,14 @@ Inspired by the article from the NY Times: ["In Investing, It's When You Start a
 
 ## Demo
 
-{{< iframe src="https://YOUR-DEPLOYED-DOODLE-URL.example" title="Investing Start/Finish live demo" height="920" >}}
+{{< iframe src="/assets/doodles/investing-start-finish/" title="Investing Start/Finish live demo" height="920" >}}
 
 If your browser blocks embeds from that host, open it directly:
-[Open live demo](https://YOUR-DEPLOYED-DOODLE-URL.example)
+[Open live demo](/assets/doodles/investing-start-finish/)
 
 Repository: [github.com/sgoley/doodles/investing-start-finish](https://github.com/sgoley/doodles/tree/main/investing-start-finish)
 
-This page is ready for a live embedded demo once the doodle is deployed to a public URL.
+This page embeds the live demo hosted directly within this site.
 
 ## Commentary
 

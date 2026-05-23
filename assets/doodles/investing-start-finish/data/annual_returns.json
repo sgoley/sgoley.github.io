@@ -1,0 +1,792 @@
+{
+  "source": "https://www.stern.nyu.edu/~adamodar/pc/datasets/histretSP.xlsx",
+  "description": "Annual S&P 500 and gold returns with inflation-adjusted real return variants.",
+  "startYear": 1928,
+  "endYear": 2025,
+  "series": [
+    {
+      "year": 1928,
+      "sp500NominalReturn": 0.43811155152887893,
+      "sp500RealReturn": 0.45493157903462444,
+      "goldNominalReturn": 0.0009689922480620172,
+      "goldRealReturn": 0.012676238437769438,
+      "inflation": -0.0115607
+    },
+    {
+      "year": 1929,
+      "sp500NominalReturn": -0.0829794661190966,
+      "sp500RealReturn": -0.08831102325510076,
+      "goldNominalReturn": -0.0014520813165538327,
+      "goldRealReturn": -0.007257638645753572,
+      "inflation": 0.005848
+    },
+    {
+      "year": 1930,
+      "sp500NominalReturn": -0.25123636363636365,
+      "sp500RealReturn": -0.20007858972429649,
+      "goldNominalReturn": 0.0009694619486184664,
+      "goldRealReturn": 0.0693586931296879,
+      "inflation": -0.0639535
+    },
+    {
+      "year": 1931,
+      "sp500NominalReturn": -0.4383754889178619,
+      "sp500RealReturn": -0.3806743417915991,
+      "goldNominalReturn": -0.17384987893462467,
+      "goldRealReturn": -0.08897144371084342,
+      "inflation": -0.0931677
+    },
+    {
+      "year": 1932,
+      "sp500NominalReturn": -0.08642364532019696,
+      "sp500RealReturn": 0.01818430468817467,
+      "goldNominalReturn": 0.21277842907385724,
+      "goldRealReturn": 0.3516461489200595,
+      "inflation": -0.1027397
+    },
+    {
+      "year": 1933,
+      "sp500NominalReturn": 0.49982225433526023,
+      "sp500RealReturn": 0.4884599464877515,
+      "goldNominalReturn": 0.2725954567423874,
+      "goldRealReturn": 0.2629545667615565,
+      "inflation": 0.007633600000000001
+    },
+    {
+      "year": 1934,
+      "sp500NominalReturn": -0.011885656970912803,
+      "sp500RealReturn": -0.02663361771214723,
+      "goldNominalReturn": 0.3175085453854918,
+      "goldRealReturn": 0.29784425810875703,
+      "inflation": 0.0151515
+    },
+    {
+      "year": 1935,
+      "sp500NominalReturn": 0.4674042105263158,
+      "sp500RealReturn": 0.42487081916467706,
+      "goldNominalReturn": 0.004324012683770695,
+      "goldRealReturn": -0.02478678444965776,
+      "inflation": 0.029850699999999997
+    },
+    {
+      "year": 1936,
+      "sp500NominalReturn": 0.3194341027550261,
+      "sp500RealReturn": 0.30058498468892636,
+      "goldNominalReturn": 0.000861079219288019,
+      "goldRealReturn": -0.013436981298154071,
+      "inflation": 0.014492799999999998
+    },
+    {
+      "year": 1937,
+      "sp500NominalReturn": -0.3533672875436554,
+      "sp500RealReturn": -0.371329289871034,
+      "goldNominalReturn": -0.0022942357327214724,
+      "goldRealReturn": -0.03000825779593075,
+      "inflation": 0.028571399999999997
+    },
+    {
+      "year": 1938,
+      "sp500NominalReturn": 0.29282654028436017,
+      "sp500RealReturn": 0.3297644718299584,
+      "goldNominalReturn": 0.0017246335153779935,
+      "goldRealReturn": 0.030345360880854155,
+      "inflation": -0.0277778
+    },
+    {
+      "year": 1939,
+      "sp500NominalReturn": -0.010975646879756443,
+      "sp500RealReturn": -0.010975646879756495,
+      "goldNominalReturn": -0.012338593974175027,
+      "goldRealReturn": -0.012338593974175027,
+      "inflation": 0.0
+    },
+    {
+      "year": 1940,
+      "sp500NominalReturn": -0.10672873194221515,
+      "sp500RealReturn": -0.1130640269044394,
+      "goldNominalReturn": -0.016560139453805967,
+      "goldRealReturn": -0.023534931789526592,
+      "inflation": 0.0071429
+    },
+    {
+      "year": 1941,
+      "sp500NominalReturn": -0.1277145557655955,
+      "sp500RealReturn": -0.2065016424822217,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.09032259707804335,
+      "inflation": 0.09929080000000001
+    },
+    {
+      "year": 1942,
+      "sp500NominalReturn": 0.19173762945914843,
+      "sp500RealReturn": 0.09301378276406314,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.08284025296733277,
+      "inflation": 0.0903226
+    },
+    {
+      "year": 1943,
+      "sp500NominalReturn": 0.25061310133060394,
+      "sp500RealReturn": 0.214675941850212,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.02873563330030382,
+      "inflation": 0.0295858
+    },
+    {
+      "year": 1944,
+      "sp500NominalReturn": 0.1903067694944301,
+      "sp500RealReturn": 0.1635583093010624,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.022471904620628758,
+      "inflation": 0.0229885
+    },
+    {
+      "year": 1945,
+      "sp500NominalReturn": 0.358210843373494,
+      "sp500RealReturn": 0.3283600687446706,
+      "goldNominalReturn": 0.025406203840472763,
+      "goldRealReturn": 0.002869813674559518,
+      "inflation": 0.0224719
+    },
+    {
+      "year": 1946,
+      "sp500NominalReturn": -0.08429147465437781,
+      "sp500RealReturn": -0.22484209777969133,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.15348838547971855,
+      "inflation": 0.1813187
+    },
+    {
+      "year": 1947,
+      "sp500NominalReturn": 0.052,
+      "sp500RealReturn": -0.033418809614836564,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.08119658708634658,
+      "inflation": 0.08837210000000001
+    },
+    {
+      "year": 1948,
+      "sp500NominalReturn": 0.057045751633986834,
+      "sp500RealReturn": 0.026343207745872954,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.02904561495153246,
+      "inflation": 0.0299145
+    },
+    {
+      "year": 1949,
+      "sp500NominalReturn": 0.18303223684210526,
+      "sp500RealReturn": 0.20809649399333563,
+      "goldNominalReturn": -0.08700662633246903,
+      "goldRealReturn": -0.06766353492520882,
+      "inflation": -0.0207469
+    },
+    {
+      "year": 1950,
+      "sp500NominalReturn": 0.30805539011316263,
+      "sp500RealReturn": 0.23480432778056382,
+      "goldNominalReturn": 0.09561375828337004,
+      "goldRealReturn": 0.034259420915802696,
+      "inflation": 0.059322
+    },
+    {
+      "year": 1951,
+      "sp500NominalReturn": 0.2367846304454234,
+      "sp500RealReturn": 0.16677795325039924,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.05660377358490576,
+      "inflation": 0.06
+    },
+    {
+      "year": 1952,
+      "sp500NominalReturn": 0.18150988641144306,
+      "sp500RealReturn": 0.172659589954141,
+      "goldNominalReturn": -0.003456221198156584,
+      "goldRealReturn": -0.010920998240237956,
+      "inflation": 0.0075472
+    },
+    {
+      "year": 1953,
+      "sp500NominalReturn": -0.012082047421904465,
+      "sp500RealReturn": -0.01942712658748813,
+      "goldNominalReturn": 0.006936416184971206,
+      "goldRealReturn": -0.0005500635093058648,
+      "inflation": 0.007490599999999999
+    },
+    {
+      "year": 1954,
+      "sp500NominalReturn": 0.525633212414349,
+      "sp500RealReturn": 0.5370611080465644,
+      "goldNominalReturn": 0.0057405281285876075,
+      "goldRealReturn": 0.013274119882501934,
+      "inflation": -0.0074348999999999995
+    },
+    {
+      "year": 1955,
+      "sp500NominalReturn": 0.3259733185102835,
+      "sp500RealReturn": 0.3210256810271326,
+      "goldNominalReturn": -0.00028538812785383616,
+      "goldRealReturn": -0.0040156483202002935,
+      "inflation": 0.0037452999999999996
+    },
+    {
+      "year": 1956,
+      "sp500NominalReturn": 0.07439511873350935,
+      "sp500RealReturn": 0.04325327810478674,
+      "goldNominalReturn": -0.0011418783899515006,
+      "goldRealReturn": -0.030094244136505854,
+      "inflation": 0.029850699999999997
+    },
+    {
+      "year": 1957,
+      "sp500NominalReturn": -0.1045736018855796,
+      "sp500RealReturn": -0.1297968745775132,
+      "goldNominalReturn": -0.0011431837667904565,
+      "goldRealReturn": -0.02927998865561332,
+      "inflation": 0.0289855
+    },
+    {
+      "year": 1958,
+      "sp500NominalReturn": 0.43719954988747184,
+      "sp500RealReturn": 0.41233455268669106,
+      "goldNominalReturn": 0.0042918454935620964,
+      "goldRealReturn": -0.013083413167574887,
+      "inflation": 0.0176056
+    },
+    {
+      "year": 1959,
+      "sp500NominalReturn": 0.12056457163557326,
+      "sp500RealReturn": 0.1015073922423877,
+      "goldNominalReturn": 0.0,
+      "goldRealReturn": -0.017006765942430002,
+      "inflation": 0.017301
+    },
+    {
+      "year": 1960,
+      "sp500NominalReturn": 0.00336535314743695,
+      "sp500RealReturn": -0.010102596979616685,
+      "goldNominalReturn": 0.004843304843304974,
+      "goldRealReturn": -0.008644483500872324,
+      "inflation": 0.0136054
+    },
+    {
+      "year": 1961,
+      "sp500NominalReturn": 0.2663771295818275,
+      "sp500RealReturn": 0.25793462712533866,
+      "goldNominalReturn": -0.0005670541536717533,
+      "goldRealReturn": -0.0072299311934599375,
+      "inflation": 0.006711399999999999
+    },
+    {
+      "year": 1962,
+      "sp500NominalReturn": -0.08811460517120888,
+      "sp500RealReturn": -0.10011306760688599,
+      "goldNominalReturn": -0.0005673758865248901,
+      "goldRealReturn": -0.013717772707681597,
+      "inflation": 0.0133333
+    },
+    {
+      "year": 1963,
+      "sp500NominalReturn": 0.22611927099841514,
+      "sp500RealReturn": 0.20627911586808634,
+      "goldNominalReturn": -0.003973885892704865,
+      "goldRealReturn": -0.020090843749223986,
+      "inflation": 0.0164474
+    },
+    {
+      "year": 1964,
+      "sp500NominalReturn": 0.16415455878432425,
+      "sp500RealReturn": 0.15296080818588997,
+      "goldNominalReturn": 0.00028498147620403813,
+      "goldRealReturn": -0.009333106195674068,
+      "inflation": 0.0097087
+    },
+    {
+      "year": 1965,
+      "sp500NominalReturn": 0.12399242477876114,
+      "sp500RealReturn": 0.10278498724603002,
+      "goldNominalReturn": 0.0005698005698004938,
+      "goldRealReturn": -0.01830890454860623,
+      "inflation": 0.0192308
+    },
+    {
+      "year": 1966,
+      "sp500NominalReturn": -0.0997095423563779,
+      "sp500RealReturn": -0.12981044334842384,
+      "goldNominalReturn": 0.0002847380410024858,
+      "goldRealReturn": -0.03315943723375714,
+      "inflation": 0.0345912
+    },
+    {
+      "year": 1967,
+      "sp500NominalReturn": 0.23802966513133328,
+      "sp500RealReturn": 0.20150965889815775,
+      "goldNominalReturn": -0.005123825789923098,
+      "goldRealReturn": -0.034471171097303466,
+      "inflation": 0.030395099999999998
+    },
+    {
+      "year": 1968,
+      "sp500NominalReturn": 0.10814862651601535,
+      "sp500RealReturn": 0.05820394022676845,
+      "goldNominalReturn": 0.12474964234620889,
+      "goldRealReturn": 0.07405674186629985,
+      "inflation": 0.0471976
+    },
+    {
+      "year": 1969,
+      "sp500NominalReturn": -0.08241371076449064,
+      "sp500RealReturn": -0.13595983505822917,
+      "goldNominalReturn": 0.05011447468837438,
+      "goldRealReturn": -0.011165386229300633,
+      "inflation": 0.0619718
+    },
+    {
+      "year": 1970,
+      "sp500NominalReturn": 0.03561144905496419,
+      "sp500RealReturn": -0.019031349582383283,
+      "goldNominalReturn": -0.09447674418604646,
+      "goldRealReturn": -0.14225559500314577,
+      "inflation": 0.0557029
+    },
+    {
+      "year": 1971,
+      "sp500NominalReturn": 0.14221150298426474,
+      "sp500RealReturn": 0.10608317636955311,
+      "goldNominalReturn": 0.1669341894060994,
+      "goldRealReturn": 0.13002388039363777,
+      "inflation": 0.0326633
+    },
+    {
+      "year": 1972,
+      "sp500NominalReturn": 0.18755362915074925,
+      "sp500RealReturn": 0.14843417143877868,
+      "goldNominalReturn": 0.4878496102705183,
+      "goldRealReturn": 0.43883803851323067,
+      "inflation": 0.0340633
+    },
+    {
+      "year": 1973,
+      "sp500NominalReturn": -0.14308047437526472,
+      "sp500RealReturn": -0.21170821152937158,
+      "goldNominalReturn": 0.7295839753466871,
+      "goldRealReturn": 0.5910675442273103,
+      "inflation": 0.0870588
+    },
+    {
+      "year": 1974,
+      "sp500NominalReturn": -0.2590178575089697,
+      "sp500RealReturn": -0.34039738544399956,
+      "goldNominalReturn": 0.6614699331848553,
+      "goldRealReturn": 0.4789963874847092,
+      "inflation": 0.1233766
+    },
+    {
+      "year": 1975,
+      "sp500NominalReturn": 0.36995137106184356,
+      "sp500RealReturn": 0.2810896148027431,
+      "goldNominalReturn": -0.24798927613941024,
+      "goldRealReturn": -0.29676837520782007,
+      "inflation": 0.0693642
+    },
+    {
+      "year": 1976,
+      "sp500NominalReturn": 0.23830999002106662,
+      "sp500RealReturn": 0.1808626741322752,
+      "goldNominalReturn": -0.04099821746880572,
+      "goldRealReturn": -0.08548794845938446,
+      "inflation": 0.0486486
+    },
+    {
+      "year": 1977,
+      "sp500NominalReturn": -0.06979704075935232,
+      "sp500RealReturn": -0.12821557651257187,
+      "goldNominalReturn": 0.2263940520446095,
+      "goldRealReturn": 0.1493741457271871,
+      "inflation": 0.06701030000000001
+    },
+    {
+      "year": 1978,
+      "sp500NominalReturn": 0.0650928391167193,
+      "sp500RealReturn": -0.023009344888349492,
+      "goldNominalReturn": 0.3701121551985451,
+      "goldRealReturn": 0.25677943079023136,
+      "inflation": 0.0901771
+    },
+    {
+      "year": 1979,
+      "sp500NominalReturn": 0.18519490167516386,
+      "sp500RealReturn": 0.046123827695606634,
+      "goldNominalReturn": 1.2654867256637168,
+      "goldRealReturn": 0.9996539317669744,
+      "inflation": 0.13293939999999999
+    },
+    {
+      "year": 1980,
+      "sp500NominalReturn": 0.3173524550676301,
+      "sp500RealReturn": 0.17081032265336682,
+      "goldNominalReturn": 0.15185546875,
+      "goldRealReturn": 0.023723201660559523,
+      "inflation": 0.125163
+    },
+    {
+      "year": 1981,
+      "sp500NominalReturn": -0.04702390247495576,
+      "sp500RealReturn": -0.12508680722209453,
+      "goldNominalReturn": -0.3259855871131836,
+      "goldRealReturn": -0.3811973841855645,
+      "inflation": 0.0892236
+    },
+    {
+      "year": 1982,
+      "sp500NominalReturn": 0.20419055079559353,
+      "sp500RealReturn": 0.1597736553214577,
+      "goldNominalReturn": 0.15622641509433977,
+      "goldRealReturn": 0.11357868979060792,
+      "inflation": 0.0382979
+    },
+    {
+      "year": 1983,
+      "sp500NominalReturn": 0.22337155858930619,
+      "sp500RealReturn": 0.17868774202662507,
+      "goldNominalReturn": -0.16797214969538743,
+      "goldRealReturn": -0.1983620828085325,
+      "inflation": 0.0379098
+    },
+    {
+      "year": 1984,
+      "sp500NominalReturn": 0.0614614199963621,
+      "sp500RealReturn": 0.02113997225396158,
+      "goldNominalReturn": -0.193776150627615,
+      "goldRealReturn": -0.2244019578390133,
+      "inflation": 0.0394867
+    },
+    {
+      "year": 1985,
+      "sp500NominalReturn": 0.3123514948576895,
+      "sp500RealReturn": 0.26432399842665566,
+      "goldNominalReturn": 0.0600064871878041,
+      "goldRealReturn": 0.0212139396273614,
+      "inflation": 0.0379867
+    },
+    {
+      "year": 1986,
+      "sp500NominalReturn": 0.18494578758046187,
+      "sp500RealReturn": 0.17207754817900445,
+      "goldNominalReturn": 0.18956548347613222,
+      "goldRealReturn": 0.17664707523710388,
+      "inflation": 0.010979000000000001
+    },
+    {
+      "year": 1987,
+      "sp500NominalReturn": 0.05812721641821871,
+      "sp500RealReturn": 0.013198062839471447,
+      "goldNominalReturn": 0.24527331189710622,
+      "goldRealReturn": 0.1923977455099859,
+      "inflation": 0.0443439
+    },
+    {
+      "year": 1988,
+      "sp500NominalReturn": 0.16537192812044688,
+      "sp500RealReturn": 0.11604914078756723,
+      "goldNominalReturn": -0.1525511258004545,
+      "goldRealReturn": -0.18841825078350316,
+      "inflation": 0.0441941
+    },
+    {
+      "year": 1989,
+      "sp500NominalReturn": 0.31475183638196724,
+      "sp500RealReturn": 0.25636479525221123,
+      "goldNominalReturn": -0.028397318708104802,
+      "goldRealReturn": -0.0715453898075773,
+      "inflation": 0.04647300000000001
+    },
+    {
+      "year": 1990,
+      "sp500NominalReturn": -0.03064451612903212,
+      "sp500RealReturn": -0.08642950578884989,
+      "goldNominalReturn": -0.031108881083793394,
+      "goldRealReturn": -0.08686714721995992,
+      "inflation": 0.061062599999999995
+    },
+    {
+      "year": 1991,
+      "sp500NominalReturn": 0.3023484313487976,
+      "sp500RealReturn": 0.2636273511528897,
+      "goldNominalReturn": -0.08557742102537547,
+      "goldRealReturn": -0.11276479205538092,
+      "inflation": 0.0306428
+    },
+    {
+      "year": 1992,
+      "sp500NominalReturn": 0.07493727972380064,
+      "sp500RealReturn": 0.04463604430467716,
+      "goldNominalReturn": -0.057341073198357684,
+      "goldRealReturn": -0.08391353523846312,
+      "inflation": 0.0290065
+    },
+    {
+      "year": 1993,
+      "sp500NominalReturn": 0.0996705147919488,
+      "sp500RealReturn": 0.07025550545448711,
+      "goldNominalReturn": 0.17677981375788532,
+      "goldRealReturn": 0.1453022132000732,
+      "inflation": 0.027484099999999997
+    },
+    {
+      "year": 1994,
+      "sp500NominalReturn": 0.013259206774573897,
+      "sp500RealReturn": -0.013138355357956155,
+      "goldNominalReturn": -0.02169751116783658,
+      "goldRealReturn": -0.04718437628654759,
+      "inflation": 0.026749000000000002
+    },
+    {
+      "year": 1995,
+      "sp500NominalReturn": 0.3719519890260631,
+      "sp500RealReturn": 0.33798835872924404,
+      "goldNominalReturn": 0.009784735812133016,
+      "goldRealReturn": -0.015213191025555073,
+      "inflation": 0.0253841
+    },
+    {
+      "year": 1996,
+      "sp500NominalReturn": 0.2268096601886579,
+      "sp500RealReturn": 0.18735986610915445,
+      "goldNominalReturn": -0.04586563307493541,
+      "goldRealReturn": -0.076547168704173,
+      "inflation": 0.0332248
+    },
+    {
+      "year": 1997,
+      "sp500NominalReturn": 0.33103653103653097,
+      "sp500RealReturn": 0.3087562643915296,
+      "goldNominalReturn": -0.21408259986459044,
+      "goldRealReturn": -0.22723809847613274,
+      "inflation": 0.017023999999999997
+    },
+    {
+      "year": 1998,
+      "sp500NominalReturn": 0.28337953278443584,
+      "sp500RealReturn": 0.2630208989148277,
+      "goldNominalReturn": -0.008270158511371362,
+      "goldRealReturn": -0.024002265985943905,
+      "inflation": 0.016119
+    },
+    {
+      "year": 1999,
+      "sp500NominalReturn": 0.20885350992084475,
+      "sp500RealReturn": 0.17724953967845303,
+      "goldNominalReturn": 0.00851285615010422,
+      "goldRealReturn": -0.017853457082443236,
+      "inflation": 0.026845599999999997
+    },
+    {
+      "year": 2000,
+      "sp500NominalReturn": -0.09031818955249278,
+      "sp500RealReturn": -0.12011811714907628,
+      "goldNominalReturn": -0.05443583118001727,
+      "goldRealReturn": -0.08541121558931675,
+      "inflation": 0.0338681
+    },
+    {
+      "year": 2001,
+      "sp500NominalReturn": -0.11849759142000185,
+      "sp500RealReturn": -0.13196703258202003,
+      "goldNominalReturn": 0.007469484423392236,
+      "goldRealReturn": -0.007924745712438619,
+      "inflation": 0.0155172
+    },
+    {
+      "year": 2002,
+      "sp500NominalReturn": -0.219660479579127,
+      "sp500RealReturn": -0.23777781491854666,
+      "goldNominalReturn": 0.2556962025316456,
+      "goldRealReturn": 0.22654239372105067,
+      "inflation": 0.0237691
+    },
+    {
+      "year": 2003,
+      "sp500NominalReturn": 0.2835580005001023,
+      "sp500RealReturn": 0.25987870620485265,
+      "goldNominalReturn": 0.1988767281105992,
+      "goldRealReturn": 0.17675964819866996,
+      "inflation": 0.0187949
+    },
+    {
+      "year": 2004,
+      "sp500NominalReturn": 0.10742775944096193,
+      "sp500RealReturn": 0.07251150392381955,
+      "goldNominalReturn": 0.046486486486486456,
+      "goldRealReturn": 0.013491657482160191,
+      "inflation": 0.0325556
+    },
+    {
+      "year": 2005,
+      "sp500NominalReturn": 0.048344775232688535,
+      "sp500RealReturn": 0.013719561653127155,
+      "goldNominalReturn": 0.1776859504132231,
+      "goldRealReturn": 0.13878879698995594,
+      "inflation": 0.0341566
+    },
+    {
+      "year": 2006,
+      "sp500NominalReturn": 0.15612557979315703,
+      "sp500RealReturn": 0.12748025275162322,
+      "goldNominalReturn": 0.23196881091617927,
+      "goldRealReturn": 0.20144431590416034,
+      "inflation": 0.0254065
+    },
+    {
+      "year": 2007,
+      "sp500NominalReturn": 0.054847352464217694,
+      "sp500RealReturn": 0.013484320919813664,
+      "goldNominalReturn": 0.3192246835443038,
+      "goldRealReturn": 0.26749479857836445,
+      "inflation": 0.0408127
+    },
+    {
+      "year": 2008,
+      "sp500NominalReturn": -0.3655234411179819,
+      "sp500RealReturn": -0.3661028864694602,
+      "goldNominalReturn": 0.04317841079460272,
+      "goldRealReturn": 0.0422257122710159,
+      "inflation": 0.0009141
+    },
+    {
+      "year": 2009,
+      "sp500NominalReturn": 0.2593523387766398,
+      "sp500RealReturn": 0.22598912881739341,
+      "goldNominalReturn": 0.25035929864903705,
+      "goldRealReturn": 0.21723433550659532,
+      "inflation": 0.0272133
+    },
+    {
+      "year": 2010,
+      "sp500NominalReturn": 0.14821092278719414,
+      "sp500RealReturn": 0.13128999211710024,
+      "goldNominalReturn": 0.2924137931034483,
+      "goldRealReturn": 0.27336777659535616,
+      "inflation": 0.014957199999999999
+    },
+    {
+      "year": 2011,
+      "sp500NominalReturn": 0.0209837473362805,
+      "sp500RealReturn": -0.008391850797329181,
+      "goldNominalReturn": 0.1202419067947349,
+      "goldRealReturn": 0.08801046711483163,
+      "inflation": 0.0296242
+    },
+    {
+      "year": 2012,
+      "sp500NominalReturn": 0.15890585241730293,
+      "sp500RealReturn": 0.1390743403371646,
+      "goldNominalReturn": 0.056843442362654706,
+      "goldRealReturn": 0.038758449996525224,
+      "inflation": 0.0174102
+    },
+    {
+      "year": 2013,
+      "sp500NominalReturn": 0.32145085858125483,
+      "sp500RealReturn": 0.30189970987813086,
+      "goldNominalReturn": -0.27614182692307687,
+      "goldRealReturn": -0.28685146375133763,
+      "inflation": 0.0150174
+    },
+    {
+      "year": 2014,
+      "sp500NominalReturn": 0.13524421649462237,
+      "sp500RealReturn": 0.12672068716826312,
+      "goldNominalReturn": 0.001245330012453305,
+      "goldRealReturn": -0.0062721220117401,
+      "inflation": 0.0075649
+    },
+    {
+      "year": 2015,
+      "sp500NominalReturn": 0.013788916411676138,
+      "sp500RealReturn": 0.006446686544000491,
+      "goldNominalReturn": -0.12106135986733002,
+      "goldRealReturn": -0.12742695474705923,
+      "inflation": 0.007295199999999999
+    },
+    {
+      "year": 2016,
+      "sp500NominalReturn": 0.11773080874798171,
+      "sp500RealReturn": 0.09501344090037445,
+      "goldNominalReturn": 0.0810377358490566,
+      "goldRealReturn": 0.05906613793816384,
+      "inflation": 0.0207462
+    },
+    {
+      "year": 2017,
+      "sp500NominalReturn": 0.2160548143449928,
+      "sp500RealReturn": 0.1909370002599109,
+      "goldNominalReturn": 0.12662535997905566,
+      "goldRealReturn": 0.10335472612137497,
+      "inflation": 0.0210908
+    },
+    {
+      "year": 2018,
+      "sp500NominalReturn": -0.04226869289088544,
+      "sp500RealReturn": -0.060219994641246166,
+      "goldNominalReturn": -0.009295120061967421,
+      "goldRealReturn": -0.027864464212368434,
+      "inflation": 0.0191016
+    },
+    {
+      "year": 2019,
+      "sp500NominalReturn": 0.31211679996808755,
+      "sp500RealReturn": 0.2828030819026066,
+      "goldNominalReturn": 0.19077404222048466,
+      "goldRealReturn": 0.16417121650085864,
+      "inflation": 0.0228513
+    },
+    {
+      "year": 2020,
+      "sp500NominalReturn": 0.18023201827422478,
+      "sp500RealReturn": 0.16437313967454337,
+      "goldNominalReturn": 0.2416940249507551,
+      "goldRealReturn": 0.22500927610921995,
+      "inflation": 0.0136201
+    },
+    {
+      "year": 2021,
+      "sp500NominalReturn": 0.2846885175196416,
+      "sp500RealReturn": 0.20023517001659386,
+      "goldNominalReturn": -0.037544286394162185,
+      "goldRealReturn": -0.10081456999129479,
+      "inflation": 0.07036400000000001
+    },
+    {
+      "year": 2022,
+      "sp500NominalReturn": -0.18037505927178585,
+      "sp500RealReturn": -0.23006945628530695,
+      "goldNominalReturn": 0.005494203615185933,
+      "goldRealReturn": -0.05546956855218199,
+      "inflation": 0.06454399999999999
+    },
+    {
+      "year": 2023,
+      "sp500NominalReturn": 0.26060684985024096,
+      "sp500RealReturn": 0.21972035972773551,
+      "goldNominalReturn": 0.13262116824217252,
+      "goldRealReturn": 0.09588576242284375,
+      "inflation": 0.0335212
+    },
+    {
+      "year": 2024,
+      "sp500NominalReturn": 0.24878611262526726,
+      "sp500RealReturn": 0.2137327816515029,
+      "goldNominalReturn": 0.25957034171004567,
+      "goldRealReturn": 0.22421429824806283,
+      "inflation": 0.0288806
+    },
+    {
+      "year": 2025,
+      "sp500NominalReturn": 0.17723658237597398,
+      "sp500RealReturn": 0.14589542576496184,
+      "goldNominalReturn": 0.6621579179194517,
+      "goldRealReturn": 0.6179068706808344,
+      "inflation": 0.027350799999999998
+    }
+  ]
+}

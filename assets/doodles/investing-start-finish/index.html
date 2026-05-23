@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>In Investing: When You Start and Finish (1928–2025)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="copy">
+        <h1>In Investing: When You Start and When You Finish</h1>
+        <div class="tabs" role="tablist" aria-label="Asset view">
+          <button id="tab-sp500" class="tab-btn active" role="tab" aria-selected="true">S&amp;P 500</button>
+          <button id="tab-gold" class="tab-btn" role="tab" aria-selected="false">Gold (per oz)</button>
+        </div>
+        <p>
+          <span id="descriptionLine1"
+            >A simple NYT-style recreation using annual S&amp;P 500 total
+            returns, inflation-adjusted to <strong>real returns</strong>,
+            extended through <strong>2025</strong>.</span
+          >
+        </p>
+        <p>
+          <span id="descriptionLine2"
+            >Each square is one start-year / end-year combination. Colors
+            encode annualized real return for that interval.</span
+          >
+        </p>
+
+        <div class="legend">
+          <h2 id="legendTitle">Annualized real return</h2>
+          <div class="bar" aria-hidden="true"></div>
+          <div class="ticks" id="legendTicks">
+            <span>0%</span>
+            <span>+3%</span>
+            <span>+7%</span>
+            <span>+10%+</span>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="card">
+            <h3>Best 20-year period</h3>
+            <p id="best20">Loading…</p>
+          </div>
+          <div class="card">
+            <h3>Worst 20-year period</h3>
+            <p id="worst20">Loading…</p>
+          </div>
+        </div>
+
+        <p class="note">
+          <span id="noteText"
+            >Note: this version uses inflation adjustment, but does not include
+            taxes/fees drag from the original graphic.</span
+          >
+        </p>
+      </section>
+
+      <section class="chart-wrap">
+        <div class="axis-title top">And withdrawn in (end year)</div>
+        <div class="axis-title left">Money invested in (start year)</div>
+        <canvas id="chart" width="920" height="920"></canvas>
+        <div id="tooltip" class="tooltip" hidden></div>
+      </section>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
