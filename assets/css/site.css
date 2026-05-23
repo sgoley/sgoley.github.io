@@ -201,19 +201,74 @@ h3 {
   border: 1px solid var(--line);
   padding: 0.6rem 0.75rem;
   line-height: 1.4;
-  white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .chat-message-assistant {
   align-self: flex-start;
   background: #1a1a20;
+  white-space: normal;
 }
 
 .chat-message-user {
   align-self: flex-end;
   background: rgba(79, 143, 251, 0.2);
   border-color: rgba(79, 143, 251, 0.45);
+  white-space: pre-wrap;
+}
+
+.chat-message-assistant p {
+  margin: 0.3rem 0 0.5rem;
+}
+
+.chat-message-assistant p:first-child {
+  margin-top: 0;
+}
+
+.chat-message-assistant p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-message-assistant ul,
+.chat-message-assistant ol {
+  margin: 0.3rem 0 0.6rem 1.1rem;
+  padding: 0;
+}
+
+.chat-message-assistant li + li {
+  margin-top: 0.2rem;
+}
+
+.chat-message-assistant code {
+  padding: 0.12rem 0.3rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.92em;
+}
+
+.chat-message-assistant pre {
+  overflow-x: auto;
+  padding: 0.65rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #0f0f12;
+  margin: 0.4rem 0 0.55rem;
+}
+
+.chat-message-assistant pre code {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.chat-message-assistant a {
+  color: var(--accent-2);
+}
+
+.chat-error {
+  color: #ffb4b4;
+  margin: 0;
 }
 
 .chat-compose {

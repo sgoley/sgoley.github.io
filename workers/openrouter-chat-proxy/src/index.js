@@ -17,7 +17,7 @@ function corsHeaders(request, env) {
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     Vary: "Origin",
   };
 }
@@ -120,7 +120,10 @@ export default {
     if (request.method === "GET" && pathname === "/healthz") {
       return jsonResponse({ status: "ok" }, 200, headers);
     }
-    if (request.method === "POST" && pathname === "/chat") {
+    if (request.method === "GET" && pathname === "/") {
+      return jsonResponse({ service: "openrouter-chat-proxy", routes: ["/chat", "/healthz"] }, 200, headers);
+    }
+    if (request.method === "POST" && (pathname === "/chat" || pathname === "/")) {
       return handleChat(request, env, headers);
     }
 

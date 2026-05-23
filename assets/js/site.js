@@ -16,15 +16,148 @@
     const params = new URLSearchParams(window.location.search);
     const endpointFromParam = (params.get("chat_api") || "").trim();
     const endpointFromData = (chatRoot.dataset.chatEndpoint || "").trim();
-    const endpoint = endpointFromParam || endpointFromData;
     const model = (chatRoot.dataset.chatModel || "openai/gpt-oss-120b").trim();
     const note = document.getElementById("chat-note");
     const thread = document.getElementById("chat-thread");
     const form = document.getElementById("chat-form");
     const input = document.getElementById("chat-input");
     const endpointPlaceholder = "YOUR-CLOUDFLARE-WORKER-URL";
+    const configuredEndpoint = endpointFromParam || endpointFromData;
+    const looksLikeDomain = (value) =>
+      /^[a-z0-9.-]+\.[a-z]{2,}(?:[/:?#]|$)/i.test(value);
+    const normalizeEndpoint = (value) => {
+      const trimmed = String(value || "").trim();
+      if (!trimmed || trimmed.includes(endpointPlaceholder)) {
+        return "";
+      }
+
+      let candidate = trimmed;
+      if (!/^https?:\/\//i.test(candidate) && !candidate.startsWith("/")) {
+        candidate = looksLikeDomain(candidate)
+          ? `https://${candidate}`
+          : `/${candidate.replace(/^\/+/, "")}`;
+      }
+
+      try {
+        const url = candidate.startsWith("/")
+          ? new URL(candidate, window.location.origin)
+          : new URL(candidate);
+        if (!url.pathname || url.pathname === "/") {
+          url.pathname = "/chat";
+        }
+        return url.toString();
+      } catch {
+        return "";
+      }
+    };
+    const endpoint = normalizeEndpoint(configuredEndpoint) || `${window.location.origin}/chat`;
     let chatContext = null;
     const history = [];
+
+    const escapeHtml = (value) =>
+      String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+
+    const renderInlineMarkdown = (value) => {
+      let html = escapeHtml(value);
+      html = html.replace(
+        /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
+      );
+      html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+      html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+      return html;
+    };
+
+    const renderAssistantMarkdown = (markdownText) => {
+      const lines = String(markdownText || "").replace(/\r/g, "").split("\n");
+      const out = [];
+      let inCode = false;
+      let codeLines = [];
+      let paragraphLines = [];
+      let listType = null;
+
+      const closeList = () => {
+        if (listType) {
+          out.push(`</${listType}>`);
+          listType = null;
+        }
+      };
+
+      const flushParagraph = () => {
+        if (paragraphLines.length === 0) {
+          return;
+        }
+        out.push(`<p>${renderInlineMarkdown(paragraphLines.join(" "))}</p>`);
+        paragraphLines = [];
+      };
+
+      const openList = (nextType) => {
+        if (listType !== nextType) {
+          closeList();
+          out.push(`<${nextType}>`);
+          listType = nextType;
+        }
+      };
+
+      lines.forEach((line) => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("```")) {
+          flushParagraph();
+          closeList();
+          if (inCode) {
+            out.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+            inCode = false;
+            codeLines = [];
+          } else {
+            inCode = true;
+          }
+          return;
+        }
+
+        if (inCode) {
+          codeLines.push(line);
+          return;
+        }
+
+        if (!trimmed) {
+          flushParagraph();
+          closeList();
+          return;
+        }
+
+        const unordered = trimmed.match(/^[-*+]\s+(.+)$/);
+        if (unordered) {
+          flushParagraph();
+          openList("ul");
+          out.push(`<li>${renderInlineMarkdown(unordered[1])}</li>`);
+          return;
+        }
+
+        const ordered = trimmed.match(/^\d+\.\s+(.+)$/);
+        if (ordered) {
+          flushParagraph();
+          openList("ol");
+          out.push(`<li>${renderInlineMarkdown(ordered[1])}</li>`);
+          return;
+        }
+
+        closeList();
+        paragraphLines.push(trimmed);
+      });
+
+      if (inCode) {
+        out.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+      }
+      flushParagraph();
+      closeList();
+      return out.join("\n");
+    };
 
     const setEmptyState = () => {
       if (!thread || thread.childElementCount > 0) {
@@ -57,6 +190,21 @@
       thread.appendChild(bubble);
       thread.scrollTop = thread.scrollHeight;
       return bubble;
+    };
+
+    const renderAssistantBubble = (bubble, text, finalize = false) => {
+      if (!bubble) {
+        return;
+      }
+      if (!finalize) {
+        bubble.textContent = text;
+        return;
+      }
+      if (text.startsWith("Request error:")) {
+        bubble.innerHTML = `<p class="chat-error">${escapeHtml(text)}</p>`;
+        return;
+      }
+      bubble.innerHTML = renderAssistantMarkdown(text);
     };
 
     const setFormBusy = (busy) => {
@@ -170,15 +318,42 @@
                 if (delta) {
                   onChunk(delta);
                 }
-              } catch (error) {
-                if (error instanceof Error) {
-                  throw error;
-                }
+              } catch {
+                return;
               }
             });
           boundary = buffer.indexOf("\n\n");
         }
       }
+    };
+
+    const parseHttpError = async (response) => {
+      const statusLabel = `${response.status}${response.statusText ? ` ${response.statusText}` : ""}`;
+      const raw = (await response.text()).trim();
+      if (!raw) {
+        return `Request failed (${statusLabel})`;
+      }
+
+      try {
+        const parsed = JSON.parse(raw);
+        const fromJson = parsed?.error?.message || parsed?.error || parsed?.message;
+        if (fromJson) {
+          return `${fromJson} (${statusLabel})`;
+        }
+      } catch {
+        // ignore non-JSON payloads
+      }
+
+      const textOnly = raw
+        .replace(/<script[\s\S]*?<\/script>/gi, " ")
+        .replace(/<style[\s\S]*?<\/style>/gi, " ")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (textOnly) {
+        return `${textOnly} (${statusLabel})`;
+      }
+      return `Request failed (${statusLabel})`;
     };
 
     const loadContext = async () => {
@@ -191,25 +366,27 @@
       chatContext = await response.json();
     };
 
-    const endpointMissing = !endpoint || endpoint.includes(endpointPlaceholder);
-    if (endpointMissing) {
-      if (note) {
+    if (note) {
+      if (!configuredEndpoint || configuredEndpoint.includes(endpointPlaceholder)) {
         note.hidden = false;
-      }
-      setFormBusy(true);
-      setEmptyState();
-    } else {
-      if (note) {
+        note.innerHTML =
+          'Using default <code>/chat</code> on this domain. Override with <code>?chat_api=https://your-worker.workers.dev/chat</code>.';
+      } else if (!normalizeEndpoint(configuredEndpoint)) {
+        note.hidden = false;
+        note.innerHTML =
+          "Configured chat endpoint is invalid. Fix <code>data-chat-endpoint</code> or use <code>?chat_api=...</code>.";
+      } else {
         note.hidden = true;
       }
-      setEmptyState();
-      loadContext().catch((error) => {
-        const message = error instanceof Error ? error.message : "Unable to load chat context.";
-        appendMessage("assistant", `Context load warning: ${message}`);
-      });
     }
 
-    if (form && input && !endpointMissing) {
+    setEmptyState();
+    loadContext().catch((error) => {
+      const message = error instanceof Error ? error.message : "Unable to load chat context.";
+      appendMessage("assistant", `Context load warning: ${message}`);
+    });
+
+    if (form && input) {
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const userText = input.value.trim();
@@ -241,15 +418,13 @@
           });
 
           if (!response.ok) {
-            const detail = await response.text();
-            throw new Error(detail || `Request failed (${response.status})`);
+            const detail = await parseHttpError(response);
+            throw new Error(detail);
           }
 
           await streamAssistantReply(response, (chunk) => {
             assistantText += chunk;
-            if (assistantBubble) {
-              assistantBubble.textContent = assistantText || "...";
-            }
+            renderAssistantBubble(assistantBubble, assistantText || "...", false);
           });
 
           assistantText = assistantText.trim() || "I wasn't able to generate a response.";
@@ -259,14 +434,15 @@
               ? `Request error: ${error.message}`
               : "Request error: unknown failure.";
         } finally {
-          if (assistantBubble) {
-            assistantBubble.textContent = assistantText;
-          }
+          renderAssistantBubble(assistantBubble, assistantText, true);
           history.push({ role: "assistant", content: assistantText });
           setFormBusy(false);
           input.focus();
         }
       });
+    } else {
+      setFormBusy(true);
+      appendMessage("assistant", "Chat input is unavailable on this page.");
     }
   }
 
