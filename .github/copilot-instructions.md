@@ -10,33 +10,10 @@ python3 scripts/generate_static_articles.py
 
 This regenerates:
 
-- `articles/posts/*.html` from `streamlit/content/posts/*.md`
-- `projects/*.html` from `streamlit/content/projects/*.md`
+- `articles/posts/*.html` from `content/posts/*.md`
+- `projects/*.html` from `content/projects/*.md`
 - `articles.html` and `projects.html` index pages
-
-### Streamlit app local run
-
-```bash
-cd streamlit
-source .venv/bin/activate
-streamlit run src/app.py
-```
-
-### Streamlit tests (from `streamlit/`)
-
-Run full suite:
-
-```bash
-source .venv/bin/activate
-pytest -q
-```
-
-Run one test:
-
-```bash
-source .venv/bin/activate
-pytest -q tests/test_content_service.py::test_list_and_get_articles
-```
+- `assets/data/chat-context.json` from markdown + `prompts/default_system.txt`
 
 ### Linting
 
@@ -62,12 +39,14 @@ and configure:
 
 - Root HTML pages (`index.html`, `about.html`) are hand-authored static pages.
 - `scripts/generate_static_articles.py` is the build step for markdown-driven content.
-- Markdown source of truth lives in the `streamlit` submodule:
-  - `streamlit/content/posts/` -> generated into `articles/posts/`
-  - `streamlit/content/projects/` -> generated into `projects/`
+- Markdown source of truth lives in:
+  - `content/posts/` -> generated into `articles/posts/`
+  - `content/projects/` -> generated into `projects/`
+- Prompt source of truth: `prompts/default_system.txt`
 - The generator also refreshes top-level TOCs:
   - `articles.html`
   - `projects.html`
+  - `assets/data/chat-context.json`
 
 ### 2) Markdown rendering pipeline (custom parser)
 
@@ -80,25 +59,19 @@ The generator includes custom parsing for:
 - markdown images
 - link-hover image previews when markdown link title is an image URL
 
-### 3) Embedded Streamlit chat app (separate repo, checked in as submodule)
+### 3) Native chat + Worker proxy
 
-- `streamlit/src/app.py` wires UI + services and is embedded by `index.html`.
-- `ContentService` enforces a strict `content/**` boundary.
-- `ChatService` uses tool-calling (`lookup_articles`, `get_article`) to ground answers in markdown.
-- `SafetyService` applies prompt-injection and blocked-term checks before LLM calls.
-
-### 4) Cross-repo CI automation
-
-- In `streamlit` repo: `.github/workflows/dispatch-website-regeneration.yml` dispatches `streamlit-content-updated`.
-- In website repo: `.github/workflows/generate-static-articles.yml` receives dispatch, updates submodule SHA, regenerates static pages, and commits generated output.
+- `index.html` + `assets/js/site.js` + `assets/css/site.css` provide native in-page chat UI.
+- `workers/openrouter-chat-proxy/` is the Cloudflare Worker proxy to OpenRouter.
+- `assets/data/chat-context.json` is generated from markdown + prompt source and loaded by the native chat.
 
 ## Key conventions in this repository
 
 1. **Treat generated files as build artifacts.**  
    Do not hand-edit `articles/**`, `projects/**`, `articles.html`, or `projects.html`; edit markdown source and rerun generator.
 
-2. **`streamlit/` is a git submodule, not a normal folder.**  
-   Content and app changes usually happen in the streamlit repo; website repo then tracks the updated submodule pointer.
+2. **Edit source, not generated output.**  
+   Content edits belong in `content/**` and prompt edits in `prompts/default_system.txt`.
 
 3. **Keep markdown references in wiki-link style when cross-linking content.**  
    Prefer `[[slug]]` / `[[path/to/slug]]` for internal links so the generator can remap paths correctly.

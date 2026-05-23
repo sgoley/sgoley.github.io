@@ -1,0 +1,39 @@
+---
+title: Work experience at Deutsche Bank Securities
+author: Scott Goley
+published: 2026-01-01
+tags: [career,finance,trading,work-experience]
+---
+
+## Deutsche Bank Securities
+
+### Client Service Analyst
+
+**June 2015 - October 2015**
+
+* Settlements of failing trades and client service for high volume of equity trades (domestic and international)
+* Collaborative issue resolution on a systemic scale
+* Analytics work including: daily summaries, monthly summaries, and data management/cleaning for other analytics teams
+* Introduction of VBA macros and shortcuts to expedite manual processes and reduce labor costs
+
+### Trade Support Analyst
+
+**October 2015 - December 2016**
+
+Directly supported 12 "High-touch" Equity sales-traders in NYC and 4 in London in middle office capacity. Managed all post-execution issues for 100+ US institutional clients. Operational flow ranged from $10M-$1B per day in equity volume.
+
+* Trade desk support including trade capture, amendments, and cancellations
+* Booking and allocation through Electronic Trade Confirmation systems (Fidessa Oasys and CTM) and manual entry
+* VBA automated implementation of T+0/T+1 break and position reporting
+* International market exposure with primary responsibilities for Japan and Emerging markets
+* Position statements and reconciliation through DTCC settlement systems and ADP book nostro system
+* New account setup and KYC documentation for new and existing clients
+
+### Commentary
+
+> My time at Deutsche Bank Securities was a formative experience that provided me with a deep understanding of the operational and client service aspects of the equity trading business. The fast-paced environment and high volume of trades allowed me to develop strong problem-solving skills and the ability to manage complex situations effectively. I also had the opportunity to work closely with sales-traders and clients, which enhanced my communication skills and understanding of client needs. This was a period of high volatility in the financial markets (including events like the Brexit Referendum and the 2016 US Presidential Election) which provided a unique learning environment for understanding market dynamics and risk management. Overall, my experience at Deutsche Bank Securities was invaluable in taking my interest in finance and trading far above just the level of interest and into a deeper understanding of the industry, trade settlement cycle, and the establishment of many future professional relationships that I still maintain to this day. I left the position because of my own interest in pursuing the intersection of statistics, programming, and finance which I had discussed with mentors at the bank and was encouraged to pursue. Timing wise, this was fortuitous as the bank would announce a significant restructuring of its equities business just a few years later, which included exiting the global equities trading business and significantly reducing its presence in the US equities market.
+
+### Relevant Links
+
+* https://www.ft.com/content/94f979d8-a0a2-11e9-974c-ad1c6ab5efd1?syn-25a6b1a6=1
+* https://www.wsj.com/articles/deutsche-bank-to-exit-global-equities-trading-business-11562512302?eafs_enabled=false
