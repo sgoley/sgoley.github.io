@@ -387,6 +387,17 @@
     });
 
     if (form && input) {
+      input.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") {
+          return;
+        }
+        if (event.shiftKey || event.isComposing) {
+          return;
+        }
+        event.preventDefault();
+        form.requestSubmit();
+      });
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const userText = input.value.trim();
