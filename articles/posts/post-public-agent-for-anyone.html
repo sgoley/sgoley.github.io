@@ -4,10 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Public agent for anyone - Scott Goley</title>
-  <meta name="description" content="This post explains how the website assistant works. The website chat interface is a **single-screen, embeddable chat widget** designed to be integrated into static websites via...">
+  <meta name="description" content="This post explains how the website assistant works. The website chat interface is a **single-screen, native in-page chat panel** on the homepage. It uses a modern dark theme, re...">
   <link rel="stylesheet" href="../../assets/css/site.css">
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK7DSRV');</script>
+<!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BFSYS2PX3G');
+</script>
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="brand" href="../../index.html">Scott Goley</a>
@@ -26,7 +46,7 @@
       <h1>Public agent for anyone</h1>
       <div class="article-metadata">
   By Scott Goley · Published 2026-05-09
-  <div class="tags"><span class="tag">streamlit</span> <span class="tag">openrouter</span> <span class="tag">agents</span></div>
+  <div class="tags"><span class="tag">openrouter</span> <span class="tag">cloudflare-workers</span> <span class="tag">agents</span></div>
 </div>
     </section>
 
@@ -34,49 +54,49 @@
 <p>This post explains how the website assistant works.</p>
 <h2>Stack</h2>
 <ul>
-<li><strong>Streamlit</strong> for the responsive, embedded UI</li>
+<li><strong>Native JavaScript chat UI</strong> embedded directly in the homepage</li>
+<li><strong>Cloudflare Worker</strong> as the OpenRouter proxy backend</li>
 <li><strong>OpenRouter</strong> as the LLM backend (supporting 200+ models)</li>
-<li><strong>Markdown files</strong> as the content source (scoped to <code>/content</code> directory only)</li>
+<li><strong>Markdown files</strong> as the content source (scoped to <code>/content</code> only)</li>
 </ul>
 <h2>Overview</h2>
-<p>The website chat interface is a <strong>single-screen, embeddable chat widget</strong> designed to be integrated into static websites via an <code>&lt;iframe&gt;</code>. It provides an iMessage-style conversation UI with blue user bubbles and dark gray assistant bubbles, all styled with a modern dark theme.</p>
+<p>The website chat interface is a <strong>single-screen, native in-page chat panel</strong> on the homepage. It uses a modern dark theme, real-time streaming responses, and markdown-style rendering in assistant bubbles.</p>
 <h2>What It Does</h2>
 <p>This is a <strong>secure, content-aware assistant</strong> that:</p>
 <ol>
-<li><strong>Indexes all markdown files</strong> in the repository&#x27;s <code>content/</code> directory</li>
-<li><strong>Searches for relevant articles</strong> based on user questions using keyword matching</li>
-<li><strong>Fetches full article content</strong> when needed to provide grounded, contextual answers</li>
+<li><strong>Builds context from markdown files</strong> in the repository <code>content/</code> directory</li>
+<li><strong>Selects relevant documents</strong> for each user question using keyword matching</li>
+<li><strong>Sends grounded context + conversation history</strong> to the model through the Worker proxy</li>
 <li><strong>Maintains conversation history</strong> to enable follow-up questions within the same session</li>
-<li><strong>Never accesses</strong> source code, environment secrets, or files outside the <code>/content</code> boundary</li>
+<li><strong>Never accesses</strong> source code, secrets, or files outside the <code>content/</code> boundary for chat grounding</li>
 </ol>
 <h2>Security &amp; Scope</h2>
 <p>The chat interface enforces a <strong>strict content boundary</strong>:</p>
 <ul>
 <li>✅ <strong>Accessible</strong>: All files matching <code>content/*<em>/</em>.md</code></li>
-<li>❌ <strong>Not accessible</strong>: Source code, <code>.env</code> files, secrets, configuration files, or any path outside <code>content/</code></li>
-<li>✅ <strong>Startup validation</strong>: If <code>CONTENT_DIR</code> is misconfigured, the app fails fast with a clear error</li>
+<li>❌ <strong>Not accessible for grounding</strong>: Source code, <code>.env</code> files, secrets, configuration files, or any path outside <code>content/</code></li>
+<li>✅ <strong>Proxy key isolation</strong>: OpenRouter API key lives in Cloudflare Worker secrets, never in browser JavaScript</li>
 </ul>
 <p>This design ensures users can safely expose the chat widget publicly without revealing sensitive project information.</p>
 <h2>Interaction Model</h2>
 <p>The assistant can:</p>
 <ol>
 <li><strong>Search</strong> relevant articles by keyword from user queries</li>
-<li><strong>Retrieve</strong> full article content by file slug</li>
-<li><strong>Answer questions</strong> grounded in the retrieved markdown files</li>
+<li><strong>Attach</strong> selected markdown excerpts to the system context</li>
+<li><strong>Answer questions</strong> grounded in those markdown files</li>
 <li><strong>Remember context</strong> across multiple messages in a session</li>
 </ol>
 <h2>Features &amp; Customization</h2>
 <ul>
-<li><strong>Iframe-ready</strong>: Embed via <code>https://YOUR-STREAMLIT-APP.streamlit.app/?embed=true</code></li>
-<li><strong>Configurable LLM</strong>: Switch models via <code>OPENROUTER_MODEL</code> env var</li>
-<li><strong>Content limit controls</strong>: Set <code>MAX_ARTICLE_CONTEXT_CHARS</code> to control context window</li>
-<li><strong>Safety modes</strong>: Optional content filtering with configurable blocked terms</li>
-<li><strong>Message limits</strong>: User input and context are size-limited to prevent abuse</li>
+<li><strong>Native UI</strong>: no iframe required</li>
+<li><strong>Keyboard UX</strong>: Enter sends, Shift+Enter adds a newline</li>
+<li><strong>Configurable model</strong>: override model via page config or Worker defaults</li>
+<li><strong>Streaming replies</strong>: token streaming from OpenRouter through the Worker proxy</li>
+<li><strong>Grounded context file</strong>: generated from markdown + prompt template</li>
 </ul>
 <h2>Learn More</h2>
-<p>For detailed documentation, implementation details, and deployment instructions, visit the GitHub repository:</p>
-<p><strong>→ <a href="https://github.com/sgoley/streamlit-openrouter-chat-embed">streamlit-openrouter-chat-embed</a></strong></p>
-<p>The repo includes setup guides, environment configuration examples, embedding instructions, and contribution guidelines.</p>
+<p>For implementation details and deployment instructions, see this repository:</p>
+<p><strong>→ <a href="https://github.com/sgoley/sgoley.github.io">sgoley.github.io</a></strong></p>
     </article>
   </main>
 

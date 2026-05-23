@@ -13,6 +13,34 @@ IFRAME_SHORTCODE_PATTERN = re.compile(r"^\{\{<\s*iframe\s+(.+?)\s*>\}\}$")
 IFRAME_ATTR_PATTERN = re.compile(
     r"""([A-Za-z][\w-]*)=(?:"([^"]*)"|'([^']*)'|([^\s]+))"""
 )
+GTM_CONTAINER_ID = "GTM-TK7DSRV"
+GTM_HEAD_SNIPPET = (
+    "<!-- Google Tag Manager -->\n"
+    "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n"
+    "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n"
+    "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n"
+    f"'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n"
+    f"}})(window,document,'script','dataLayer','{GTM_CONTAINER_ID}');</script>\n"
+    "<!-- End Google Tag Manager -->"
+)
+GTM_BODY_SNIPPET = (
+    "<!-- Google Tag Manager (noscript) -->\n"
+    f'<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_CONTAINER_ID}"\n'
+    'height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>\n'
+    "<!-- End Google Tag Manager (noscript) -->"
+)
+GA_MEASUREMENT_ID = "G-BFSYS2PX3G"
+GA_HEAD_SNIPPET = (
+    "<!-- Google tag (gtag.js) -->\n"
+    f'<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>\n'
+    "<script>\n"
+    "  window.dataLayer = window.dataLayer || [];\n"
+    "  function gtag(){dataLayer.push(arguments);}\n"
+    "  gtag('js', new Date());\n"
+    "\n"
+    f"  gtag('config', '{GA_MEASUREMENT_ID}');\n"
+    "</script>"
+)
 
 
 @dataclass
@@ -580,8 +608,11 @@ def render_doc_page(doc: StaticDoc, body_html: str) -> str:
   <title>{html.escape(doc.title)} - Scott Goley</title>
   <meta name="description" content="{html.escape(doc.excerpt, quote=True)}">
   <link rel="stylesheet" href="{doc.path_prefix}assets/css/site.css">
+  {GTM_HEAD_SNIPPET}
+  {GA_HEAD_SNIPPET}
 </head>
 <body>
+  {GTM_BODY_SNIPPET}
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="brand" href="{doc.path_prefix}index.html">Scott Goley</a>
@@ -647,8 +678,11 @@ def render_collection_index(
   <title>{html.escape(page_title)} - Scott Goley</title>
   <meta name="description" content="{html.escape(meta_description, quote=True)}">
   <link rel="stylesheet" href="assets/css/site.css">
+  {GTM_HEAD_SNIPPET}
+  {GA_HEAD_SNIPPET}
 </head>
 <body>
+  {GTM_BODY_SNIPPET}
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="brand" href="index.html">Scott Goley</a>

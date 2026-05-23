@@ -254,8 +254,15 @@
       const basePrompt =
         chatContext?.system_prompt ||
         "You are the personal website assistant. Ground answers in provided markdown excerpts.";
+      const groundingGuardrails = [
+        "Grounding requirements:",
+        "1) Use only facts present in the provided markdown context and catalog.",
+        "2) If a requested fact is missing, say that it is not available in site content.",
+        "3) Do not infer or invent implementation details (framework, backend, environment variables, or source code behavior).",
+        "4) Do not claim access to code/config/secrets outside content.",
+      ].join("\n");
       if (docs.length === 0) {
-        return basePrompt;
+        return `${basePrompt}\n\n${groundingGuardrails}`;
       }
       const excerptBlock = docs
         .map((doc) => {
@@ -269,7 +276,7 @@
           ].join("\n");
         })
         .join("\n\n---\n\n");
-      return `${basePrompt}\n\nContext excerpts:\n${excerptBlock}`;
+      return `${basePrompt}\n\n${groundingGuardrails}\n\nContext excerpts:\n${excerptBlock}`;
     };
 
     const streamAssistantReply = async (response, onChunk) => {
@@ -387,15 +394,28 @@
     });
 
     if (form && input) {
+      const submitFromKeyboard = () => {
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit();
+          return;
+        }
+        const submitButton = form.querySelector('button[type="submit"], button:not([type])');
+        if (submitButton instanceof HTMLElement) {
+          submitButton.click();
+          return;
+        }
+        form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+      };
+
       input.addEventListener("keydown", (event) => {
         if (event.key !== "Enter") {
           return;
         }
-        if (event.shiftKey || event.isComposing) {
+        if (event.shiftKey || event.isComposing || event.repeat) {
           return;
         }
         event.preventDefault();
-        form.requestSubmit();
+        submitFromKeyboard();
       });
 
       form.addEventListener("submit", async (event) => {
