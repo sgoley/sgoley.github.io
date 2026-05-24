@@ -1,4 +1,65 @@
 (() => {
+  const root = document.documentElement;
+  const navWrap = document.querySelector(".nav-wrap");
+  const themeStorageKey = "sgoley-theme";
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+  const readStoredTheme = () => {
+    try {
+      return localStorage.getItem(themeStorageKey);
+    } catch (error) {
+      console.warn("Unable to read saved theme preference.", error);
+      return null;
+    }
+  };
+
+  const writeStoredTheme = (theme) => {
+    try {
+      localStorage.setItem(themeStorageKey, theme);
+    } catch (error) {
+      console.warn("Unable to save theme preference.", error);
+    }
+  };
+
+  const applyTheme = (theme) => {
+    const normalizedTheme = theme === "light" ? "light" : "dark";
+    root.dataset.theme = normalizedTheme;
+
+    const toggle = document.querySelector("[data-theme-toggle]");
+    if (toggle) {
+      const nextTheme = normalizedTheme === "dark" ? "light" : "dark";
+      toggle.textContent = `${nextTheme} mode`;
+      toggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+      toggle.setAttribute("title", `Switch to ${nextTheme} mode`);
+    }
+  };
+
+  const savedTheme = readStoredTheme();
+  const hasSavedTheme = savedTheme === "dark" || savedTheme === "light";
+  const preferredTheme = mediaQuery.matches ? "dark" : "light";
+  applyTheme(hasSavedTheme ? savedTheme : preferredTheme);
+
+  if (navWrap) {
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "theme-toggle";
+    toggle.setAttribute("data-theme-toggle", "");
+    toggle.addEventListener("click", () => {
+      const currentTheme = root.dataset.theme === "light" ? "light" : "dark";
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+      writeStoredTheme(nextTheme);
+    });
+    navWrap.appendChild(toggle);
+    applyTheme(root.dataset.theme);
+  }
+
+  if (!hasSavedTheme) {
+    mediaQuery.addEventListener("change", (event) => {
+      applyTheme(event.matches ? "dark" : "light");
+    });
+  }
+
   const current = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".site-nav a").forEach((link) => {
     const href = link.getAttribute("href");

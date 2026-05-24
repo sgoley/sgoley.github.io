@@ -34,18 +34,40 @@ Generated pages support:
 {{< iframe src="https://example.com/live-demo" title="Live demo" height="860" >}}
 ```
 
-## Local workflow
+## Run locally
 
-1. Edit markdown in `content/**` and prompt text in `prompts/default_system.txt`.
-2. Regenerate static output:
+1. Generate static pages from markdown:
    ```bash
    python3 scripts/generate_static_articles.py
    ```
-3. Commit both source and generated files:
+2. Serve the repo root with a local static server:
+   ```bash
+   python3 -m http.server 8000
+   ```
+3. Open:
+   - `http://localhost:8000/`
+   - `http://localhost:8000/articles.html`
+   - `http://localhost:8000/projects.html`
+
+### Local editing workflow
+
+1. Edit markdown in `content/**` and prompt text in `prompts/default_system.txt`.
+2. Re-run:
+   ```bash
+   python3 scripts/generate_static_articles.py
+   ```
+3. Refresh the browser.
+4. Commit both source and generated files:
    - `content/**`
    - `prompts/default_system.txt`
    - `articles/**`, `projects/**`, `articles.html`, `projects.html`
    - `assets/data/chat-context.json`
+
+### Chat while running locally
+
+- The homepage chat defaults to `/chat`, which is not provided by `python3 -m http.server`.
+- To use chat locally, pass a live Worker endpoint in the URL:
+  - `http://localhost:8000/?chat_api=https://YOUR-WORKER.workers.dev/chat`
 
 ## Native chat setup (Cloudflare Worker + OpenRouter)
 
