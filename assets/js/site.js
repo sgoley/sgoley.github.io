@@ -28,7 +28,14 @@
     const toggle = document.querySelector("[data-theme-toggle]");
     if (toggle) {
       const nextTheme = normalizedTheme === "dark" ? "light" : "dark";
-      toggle.textContent = `${nextTheme} mode`;
+      const icon = toggle.querySelector(".theme-toggle-icon");
+      const label = toggle.querySelector(".theme-toggle-label");
+      if (icon) {
+        icon.textContent = normalizedTheme === "dark" ? "☾" : "☀";
+      }
+      if (label) {
+        label.textContent = `Switch to ${nextTheme} mode`;
+      }
       toggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
       toggle.setAttribute("title", `Switch to ${nextTheme} mode`);
     }
@@ -44,6 +51,8 @@
     toggle.type = "button";
     toggle.className = "theme-toggle";
     toggle.setAttribute("data-theme-toggle", "");
+    toggle.innerHTML =
+      '<span class="theme-toggle-icon" aria-hidden="true"></span><span class="theme-toggle-label visually-hidden"></span>';
     toggle.addEventListener("click", () => {
       const currentTheme = root.dataset.theme === "light" ? "light" : "dark";
       const nextTheme = currentTheme === "dark" ? "light" : "dark";

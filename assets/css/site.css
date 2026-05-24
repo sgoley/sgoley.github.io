@@ -113,13 +113,22 @@ a:hover {
   border: 1px solid var(--line);
   background: var(--panel);
   color: var(--ink);
-  padding: 0.35rem 0.62rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font: inherit;
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-size: 1.05rem;
   line-height: 1;
   cursor: pointer;
   transition: 120ms ease;
+}
+
+.theme-toggle-icon {
+  display: inline-block;
+  transform: translateY(-1px);
 }
 
 .theme-toggle:hover {
