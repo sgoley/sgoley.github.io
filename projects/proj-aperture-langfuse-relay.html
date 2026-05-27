@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aperture → Langfuse Relay - Scott Goley</title>
+  <meta name="description" content="Repository: [github.com/sgoley/unofficial-ts-aperture-langfuse-relay](https://github.com/sgoley/unofficial-ts-aperture-langfuse-relay) A compact Go service that runs inside a Ta...">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK7DSRV');</script>
+<!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BFSYS2PX3G');
+</script>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Project</p>
+      <h1>Aperture → Langfuse Relay</h1>
+      <div class="article-metadata">
+  By Scott Goley · Published 2026-05-27
+  <div class="tags"><span class="tag">go</span> <span class="tag">tailscale</span> <span class="tag">langfuse</span> <span class="tag">aperture</span> <span class="tag">ai</span> <span class="tag">observability</span> <span class="tag">docker</span> <span class="tag">homelab</span></div>
+</div>
+    </section>
+
+    <article class="panel article-prose">
+<p>Repository: <a href="https://github.com/sgoley/unofficial-ts-aperture-langfuse-relay">github.com/sgoley/unofficial-ts-aperture-langfuse-relay</a></p>
+<p>A compact Go service that runs inside a Tailscale tailnet and translates <a href="https://tailscale.com/aperture">Aperture</a> webhook payloads into <a href="https://langfuse.com">Langfuse</a> ingestion events. This allows AI observability traces to flow from Aperture&#x27;s LLM proxy through a private tailnet endpoint into a self-hosted Langfuse instance — without exposing any service to the public internet.</p>
+<h2>What it does</h2>
+<ul>
+<li>accepts Aperture webhook calls at <code>POST /hooks/aperture</code></li>
+<li>optionally validates incoming requests with <code>Authorization: Bearer &lt;APERTURE_API_KEY&gt;</code></li>
+<li>maps each Aperture request into a <code>trace-create</code> + <code>generation-create</code> event pair</li>
+<li>preserves full request/response context for meaningful Langfuse traces</li>
+<li>queues events in-memory, returns <code>202</code> immediately, then forwards async to Langfuse</li>
+<li>retries transient Langfuse failures (<code>429</code>/<code>5xx</code>) with bounded exponential backoff</li>
+<li>joins the tailnet directly via embedded <code>tsnet</code> — no separate <code>tailscaled</code> required</li>
+</ul>
+<h2>Architecture</h2>
+<pre><code>Model clients
+    -&gt; Tailscale Aperture (LLM proxy)
+        -&gt; webhook event
+            -&gt; aperture-langfuse-relay  (tsnet tailnet node)
+                -&gt; in-memory queue + worker pool
+                    -&gt; Langfuse /api/public/ingestion
+                        -&gt; Postgres + ClickHouse + Redis + MinIO
+                            -&gt; Langfuse UI / evaluations</code></pre>
+<p>The relay joins the tailnet as a named <code>tsnet</code> node so Aperture can reach it over MagicDNS (<code>http://&lt;TSNET_HOSTNAME&gt;:8080/hooks/aperture</code>) without exposing anything to the public internet.</p>
+<h2>Deployment options</h2>
+<table>
+<thead><tr>
+<th>Mode</th>
+<th>When to use</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Docker Compose + tsnet</td>
+<td>Recommended — runs as a private tailnet node in a container</td>
+</tr>
+<tr>
+<td>Host process (systemd) + tsnet</td>
+<td>VM or bare metal with a process manager</td>
+</tr>
+<tr>
+<td>Host <code>tailscaled</code> + Funnel</td>
+<td>Public endpoint; acceptable only with <code>APERTURE_API_KEY</code> rotation</td>
+</tr>
+</tbody>
+</table>
+<h3>Docker Compose (recommended)</h3>
+<pre><code>cp .env.example .env
+# set LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, APERTURE_API_KEY, TS_AUTHKEY
+docker compose up -d --build
+docker compose logs -f</code></pre>
+<p>tsnet identity is stored in a persistent volume (<code>tsnet-state</code>) so the node stays registered across restarts.</p>
+<h2>Tech stack</h2>
+<ul>
+<li><strong>Go</strong> — single binary, multi-stage Docker build</li>
+<li><strong>tsnet</strong> — embedded Tailscale client; no host <code>tailscaled</code> dependency</li>
+<li>In-memory queue with configurable worker pool (<code>WORKER_COUNT</code>, <code>QUEUE_SIZE</code>)</li>
+<li>Retry logic with jitter/backoff (<code>RETRY_MAX_ATTEMPTS</code>, <code>RETRY_BASE_DELAY</code>, <code>RETRY_MAX_DELAY</code>)</li>
+<li>Health endpoints: <code>/healthz</code> (process alive) and <code>/readyz</code> (relay usable + tsnet backend running)</li>
+</ul>
+<h2>Key environment variables</h2>
+<table>
+<thead><tr>
+<th>Variable</th>
+<th>Purpose</th>
+<th>Default</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>TSNET_ENABLED</code></td>
+<td>Run as embedded tailnet node</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>TSNET_HOSTNAME</code></td>
+<td>Node name in the tailnet</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TSNET_STATE_DIR</code></td>
+<td>Persistent identity directory</td>
+<td><code>./.tsnet</code></td>
+</tr>
+<tr>
+<td><code>TS_AUTHKEY</code></td>
+<td>Non-interactive auth for first boot</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>APERTURE_API_KEY</code></td>
+<td>Optional shared secret for incoming hooks</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>LANGFUSE_PUBLIC_KEY</code></td>
+<td>Langfuse API credential</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>LANGFUSE_SECRET_KEY</code></td>
+<td>Langfuse API credential</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>LISTEN_ADDR</code></td>
+<td>Bind address</td>
+<td><code>:8080</code></td>
+</tr>
+<tr>
+<td><code>QUEUE_SIZE</code></td>
+<td>In-memory event queue depth</td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>WORKER_COUNT</code></td>
+<td>Async forwarding workers</td>
+<td><code>2</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Aperture configuration</h2>
+<pre><code>&quot;hooks&quot;: {
+  &quot;langfuse-relay&quot;: {
+    &quot;url&quot;: &quot;http://aperture-langfuse-relay:8080/hooks/aperture&quot;,
+    &quot;apikey&quot;: &quot;&lt;same-value-as-APERTURE_API_KEY&gt;&quot;,
+    &quot;authorization&quot;: &quot;bearer&quot;,
+    &quot;timeout&quot;: &quot;10s&quot;
+  }
+}</code></pre>
+<h2>Why this project matters</h2>
+<p>Langfuse is the observability layer for an LLM usage stack; Aperture is Tailscale&#x27;s LLM proxy. The two products don&#x27;t integrate natively, and a direct public webhook between them would expose the Langfuse ingestion API. This relay keeps the path private by running inside the tailnet, adds a sensible queue-and-retry layer in front of Langfuse, and requires no changes to either Aperture or Langfuse configuration beyond adding a webhook target.</p>
+<p>It is a practical example of using <code>tsnet</code> to embed a Tailscale node directly in an application — no host daemon, no sidecar, no port forwarding.</p>
+<h2>Related projects</h2>
+<ul>
+<li><a href="proj-homelab.html">Homelab Stacks (Public)</a></li>
+<li><a href="proj-unofficial-tailscale-skills.html">Unofficial Tailscale Skills</a></li>
+</ul>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>
