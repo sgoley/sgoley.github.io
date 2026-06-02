@@ -101,4 +101,4 @@ It is a practical example of using `tsnet` to embed a Tailscale node directly in
 ## Related projects
 
 * [[proj-homelab|Homelab Stacks (Public)]]
-* [[proj-unofficial-tailscale-skills|Unofficial Tailscale Skills]]
+* [[proj-skills|Skills (Agentic Simulation + Tailscale Utilities)]]

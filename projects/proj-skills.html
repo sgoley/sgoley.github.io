@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skills (Agentic Simulation + Tailscale Utilities) - Scott Goley</title>
+  <meta name="description" content="Repository: github.com/sgoley/skills skills is a broader evolution of the earlier Tailscale-only skill pack: one repository that combines high-stakes decision and simulation wor...">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK7DSRV');</script>
+<!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BFSYS2PX3G');
+</script>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Project</p>
+      <h1>Skills (Agentic Simulation + Tailscale Utilities)</h1>
+      <div class="article-metadata">
+  By Scott Goley · Published 2026-06-01
+  <div class="tags"><span class="tag">ai</span> <span class="tag">llm</span> <span class="tag">agent-skills</span> <span class="tag">scenario-planning</span> <span class="tag">game-theory</span> <span class="tag">tailscale</span> <span class="tag">devops</span></div>
+</div>
+    </section>
+
+    <article class="panel article-prose">
+<p>Repository: <a href="https://github.com/sgoley/skills">github.com/sgoley/skills</a></p>
+<p><code>skills</code> is a broader evolution of the earlier Tailscale-only skill pack: one repository that combines high-stakes decision and simulation workflows with practical infrastructure utility skills.</p>
+<h2>What it does</h2>
+<ul>
+<li>installs as a single package via <code>gh skill install sgoley/skills</code></li>
+<li>provides reusable skill specs for both strategic preparation and day-to-day operations</li>
+<li>organizes guidance into two categories: <code>agentic-game-simulation/</code> and <code>utils/</code></li>
+<li>includes structured workflows, required output formats, and practical command examples</li>
+<li>is designed for agents that support the Agent Skills format</li>
+</ul>
+<h2>Repository structure</h2>
+<pre><code>skills/
+├── agentic-game-simulation/
+│   ├── write-character-sheet/
+│   │   ├── SKILL.md
+│   │   ├── REFERENCE.md
+│   │   └── EXAMPLES.md
+│   └── game-theory-scenario/
+│       ├── SKILL.md
+│       ├── REFERENCE.md
+│       └── EXAMPLES.md
+└── utils/
+    ├── tailscale-cli/SKILL.md
+    ├── tailscale-dns/SKILL.md
+    ├── tailscale-exit-nodes/SKILL.md
+    ├── tailscale-funnel/SKILL.md
+    ├── tailscale-serve/SKILL.md
+    └── tailscale-ssh/SKILL.md</code></pre>
+<h2>Core category: agentic-game-simulation</h2>
+<h3><code>write-character-sheet</code></h3>
+<p>A structured self-profiling workflow that runs an interview, captures constraints and context, and converts responses into evidence-weighted scores plus narrative guidance. Output includes core and derived stats, habits to keep/change, goals by horizon, resources/support, influential inputs, and daily structure.</p>
+<h3><code>game-theory-scenario</code></h3>
+<p>A scenario-planning workflow for high-stakes interactions. It interviews for context and artifacts, maps actor incentives and pressure points, builds 3-6 branch pathways (cooperative, neutral, adversarial, mixed), and outputs a readiness pack with response menus, risk/escalation plans, and rehearsal drills.</p>
+<h2>Utility category: Tailscale operations</h2>
+<table>
+<thead><tr>
+<th>Skill</th>
+<th>Focus</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>tailscale-cli</code></td>
+<td>Device lifecycle, diagnostics, authentication, routes, certs, and core CLI workflows</td>
+</tr>
+<tr>
+<td><code>tailscale-dns</code></td>
+<td>MagicDNS, nameservers, split DNS, search domains, and DNS troubleshooting</td>
+</tr>
+<tr>
+<td><code>tailscale-exit-nodes</code></td>
+<td>Advertising and using exit nodes, LAN access options, and security tradeoffs</td>
+</tr>
+<tr>
+<td><code>tailscale-funnel</code></td>
+<td>Public sharing via encrypted tunnels, policy prerequisites, cert requirements, and port constraints</td>
+</tr>
+<tr>
+<td><code>tailscale-serve</code></td>
+<td>Internal tailnet sharing of files/services with status and access patterns</td>
+</tr>
+<tr>
+<td><code>tailscale-ssh</code></td>
+<td>SSH enablement, ACL-based authorization, check mode, and operational troubleshooting</td>
+</tr>
+</tbody>
+</table>
+<h2>End-to-end workflow</h2>
+<ol>
+<li>Build the <strong>player model</strong> with <code>/write-character-sheet</code>.</li>
+<li>Build the <strong>scenario map</strong> with <code>/game-theory-scenario</code>.</li>
+<li>Stress-test likely branches and prepare fallback moves.</li>
+<li>Execute in the real world, then iterate your model.</li>
+<li>Use utility skills (especially Tailscale) for secure networking and service exposure when needed.</li>
+</ol>
+<h2>Why this project matters</h2>
+<p>Many assistants are good at abstract strategy or concrete commands, but not both in one reusable skillset. This repository intentionally combines:</p>
+<ul>
+<li><strong>human systems modeling</strong> (incentives, behavior, constraints, branch logic)</li>
+<li><strong>infrastructure execution</strong> (networking, access control, DNS, service sharing)</li>
+</ul>
+<p>That makes <code>skills</code> useful as both a planning framework and an operator runbook library, with the Tailscale set now one utility slice of a larger agentic toolkit rather than the whole project.</p>
+<h2>Related projects</h2>
+<ul>
+<li><a href="proj-homelab.html">Homelab Stacks (Public)</a></li>
+<li><a href="proj-aperture-langfuse-relay.html">Aperture → Langfuse Relay</a></li>
+</ul>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>
