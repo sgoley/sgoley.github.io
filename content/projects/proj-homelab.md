@@ -24,7 +24,7 @@ This is a single-host Docker Compose homelab that runs:
 - Secure managed file transfer (SFTP)
 - [Internal operations tools](https://github.com/sgoley/maitredb)
 - AI tooling + observability
-- [Private networking/access via Tailscale](https://github.com/sgoley/unofficial-tailscale-skills)
+- [Private networking/access via Tailscale](https://github.com/sgoley/skills)
 
 Design goals:
 
