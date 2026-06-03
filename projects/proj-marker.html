@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marker - Scott Goley</title>
+  <meta name="description" content="Repository: `/Users/admin/Storage/Git/homelab/marker` Marker is a small FastAPI app for turning local ebook/library files into Markdown. It scans a configured library, lets you...">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK7DSRV');</script>
+<!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BFSYS2PX3G');
+</script>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Project</p>
+      <h1>Marker</h1>
+      <div class="article-metadata">
+  By Scott Goley · Published 2026-06-02
+  <div class="tags"><span class="tag">homelab</span> <span class="tag">ebooks</span> <span class="tag">markdown</span> <span class="tag">fastapi</span> <span class="tag">python</span> <span class="tag">automation</span></div>
+</div>
+    </section>
+
+    <article class="panel article-prose">
+<p>Repository: <code>/Users/admin/Storage/Git/homelab/marker</code></p>
+<p>Marker is a small FastAPI app for turning local ebook/library files into Markdown. It scans a configured library, lets you browse and filter files in the browser, queues conversion jobs, and writes Markdown into a matching output tree while keeping the source folder structure intact.</p>
+<h2>What it supports</h2>
+<ul>
+<li>PDF conversion with <code>marker-pdf</code> when available, with <code>pypdf</code> fallback</li>
+<li>EPUB conversion via <code>ebooklib</code></li>
+<li>MOBI/AZW3 conversion via Calibre&#x27;s <code>ebook-convert</code></li>
+<li>DOCX conversion via <code>pandoc</code></li>
+<li>Plain text, Markdown, and HTML sources</li>
+</ul>
+<h2>How it works</h2>
+<ol>
+<li>Scan the ebook library root for supported files.</li>
+<li>Filter, sort, and select files in the web UI.</li>
+<li>Queue conversion jobs through the API.</li>
+<li>Write Markdown output to a mirrored directory layout.</li>
+<li>Store job history and local service state on disk.</li>
+</ol>
+<h2>Repository shape</h2>
+<table>
+<thead><tr>
+<th>Area</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>run.py</code></td>
+<td>Uvicorn entrypoint</td>
+</tr>
+<tr>
+<td><code>service/</code></td>
+<td>FastAPI routes, scanner, queue, conversion, and writer logic</td>
+</tr>
+<tr>
+<td><code>web/</code></td>
+<td>Browser UI</td>
+</tr>
+<tr>
+<td><code>data/</code></td>
+<td>Local job history/state</td>
+</tr>
+<tr>
+<td><code>output/</code></td>
+<td>Converted Markdown output</td>
+</tr>
+</tbody>
+</table>
+<h2>Why it matters</h2>
+<p>Marker makes a homelab ebook library searchable and exportable without manually copying content between tools. It is especially useful when you want a local-first conversion workflow that preserves organization and keeps the generated Markdown on your own storage.</p>
+<h2>Related projects</h2>
+<ul>
+<li><a href="proj-homelab.html">Homelab Stacks (Public)</a></li>
+</ul>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>
