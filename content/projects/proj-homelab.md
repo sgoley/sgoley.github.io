@@ -296,3 +296,8 @@ Why this split exists:
 ## 13) Reader takeaway
 
 This homelab is built as a private-first, reverse-proxied, Tailnet-enabled application platform: one host, many services, one ingress model, and a clear split between internal-only backends and user-facing entrypoints.
+
+## Related projects
+
+* [[proj-marker|Marker]]
+* [[proj-rss-box|RSS Box]]
