@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RSS Box - Scott Goley</title>
+  <meta name="description" content="Repository: /Users/admin/Storage/Git/homelab/rss-box RSS Box is a private monorepo for an inbox-style RSS and content processing app. It combines a Fastify API, a React/Vite web...">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK7DSRV');</script>
+<!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BFSYS2PX3G');
+</script>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Project</p>
+      <h1>RSS Box</h1>
+      <div class="article-metadata">
+  By Scott Goley · Published 2026-06-02
+  <div class="tags"><span class="tag">rss</span> <span class="tag">inbox</span> <span class="tag">react</span> <span class="tag">fastify</span> <span class="tag">postgres</span> <span class="tag">redis</span> <span class="tag">ai</span></div>
+</div>
+    </section>
+
+    <article class="panel article-prose">
+<p>Repository: <code>/Users/admin/Storage/Git/homelab/rss-box</code></p>
+<p>RSS Box is a private monorepo for an inbox-style RSS and content processing app. It combines a Fastify API, a React/Vite web app, Postgres, Redis, and background jobs so feeds and other inbound sources can be collected, processed, and surfaced in one place.</p>
+<h2>What it includes</h2>
+<ul>
+<li><code>packages/api</code> for feed ingestion, email/newsletter parsing, job orchestration, and content processing</li>
+<li><code>packages/web</code> for the browser UI</li>
+<li>Postgres for durable application data</li>
+<li>Redis + BullMQ for queues and asynchronous work</li>
+<li>Optional OpenRouter integration for AI-assisted processing</li>
+</ul>
+<h2>Deployment shape</h2>
+<p>The repo is built around Docker Compose. The API container depends on Postgres and Redis, and the stack is configured through environment variables for database, queue, API key, and encryption settings.</p>
+<h2>Why it matters</h2>
+<p>RSS Box is the kind of tool that turns a noisy stream of feeds, newsletters, and inbound articles into a manageable personal workflow. It centralizes reading, triage, and processing behind one local app instead of spreading that work across multiple services.</p>
+<h2>Related projects</h2>
+<ul>
+<li><a href="proj-homelab.html">Homelab Stacks (Public)</a></li>
+</ul>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Regional Housing Crisis: GFC Peak to the 2026 Market</title>
+    <link rel="stylesheet" href="./styles.css" />
+
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <header class="app-navbar">
+      <div class="nav-wrap">
+        <div class="navbar-brand">
+          <span class="logo-icon">🏠</span>
+          <span class="logo-text">Regional Housing Analysis (1975–2026)</span>
+        </div>
+        <nav class="nav-tabs" role="tablist">
+          <button class="nav-tab active" data-tab="heatmap-tab" role="tab" aria-selected="true">Holding Matrix</button>
+          <button class="nav-tab" data-tab="twinpeaks-tab" role="tab" aria-selected="false">Twin Peaks (City Trends)</button>
+          <button class="nav-tab" data-tab="variance-tab" role="tab" aria-selected="false">Within-City Variance</button>
+          <button class="nav-tab" data-tab="context-tab" role="tab" aria-selected="false">Economics &amp; Credit</button>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
+          <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+          <span class="theme-toggle-label visually-hidden">Switch to light mode</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- TAB 1: HOLDING MATRIX HEATMAP -->
+    <div id="heatmap-tab" class="tab-content active">
+      <main class="layout">
+        <section class="copy">
+          <header class="header-group">
+            <span class="eyebrow">Interactive Data Doodle</span>
+            <h1>The Regional Housing Crisis</h1>
+          </header>
+
+          <p class="intro">
+            Analyze start-to-finish annualized housing returns from **1975 through 2026** (or 2000+ for metro areas). 
+            Compare the severity of the Great Financial Crisis (GFC) crash against the massive post-pandemic rise and today's fragile, elevated market.
+          </p>
+
+          <!-- Search controls -->
+          <div class="control-group">
+            <label for="region-search" class="control-label">Search State or Metro Area</label>
+            <div class="search-wrapper">
+              <input 
+                type="text" 
+                id="region-search" 
+                placeholder="Search e.g. Florida, Phoenix..." 
+                autocomplete="off"
+              />
+              <button id="clear-search" class="clear-btn" aria-label="Clear search" hidden>&times;</button>
+              <div id="search-dropdown" class="dropdown-list" hidden></div>
+            </div>
+          </div>
+
+          <div class="tabs-label">Quick Presets</div>
+          <div class="tabs" role="tablist" aria-label="Quick regions">
+            <button id="preset-us" class="tab-btn active" role="tab" aria-selected="true">United States</button>
+            <button id="preset-ca" class="tab-btn" role="tab" aria-selected="false">California</button>
+            <button id="preset-fl" class="tab-btn" role="tab" aria-selected="false">Florida</button>
+            <button id="preset-nv" class="tab-btn" role="tab" aria-selected="false">Nevada</button>
+            <button id="preset-tx" class="tab-btn" role="tab" aria-selected="false">Texas</button>
+          </div>
+
+          <div class="toggle-group">
+            <span class="toggle-label">Adjust for Inflation</span>
+            <label class="switch">
+              <input type="checkbox" id="inflation-toggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <!-- Legend -->
+          <div class="legend">
+            <h2 id="legendTitle">Annualized Nominal Return</h2>
+            <div class="bar" aria-hidden="true"></div>
+            <div class="ticks" id="legendTicks">
+              <span>-10%</span>
+              <span>0%</span>
+              <span>+3%</span>
+              <span>+7%</span>
+              <span>+12%+</span>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats">
+            <h2>Region Profiles &amp; Cycles</h2>
+            <div class="card">
+              <h3>Great Financial Crisis Crash</h3>
+              <p id="gfc-crash">Loading…</p>
+              <span class="card-note">Peak to trough decline (approx. 2006–2012)</span>
+            </div>
+            <div class="card">
+              <h3>COVID Boom to 2026</h3>
+              <p id="covid-boom">Loading…</p>
+              <span class="card-note">Growth period (approx. 2019–2026)</span>
+            </div>
+            <div class="card">
+              <h3>Worst 5-Year Window</h3>
+              <p id="worst-5yr">Loading…</p>
+            </div>
+            <div class="card">
+              <h3>Best 5-Year Window</h3>
+              <p id="best-5yr">Loading…</p>
+            </div>
+          </div>
+
+          <p class="note">
+            Note: Returns calculated using Zillow Home Value Index (ZHVI). Real returns utilize CPI-U. 2026 reflects values through April 2026.
+          </p>
+        </section>
+
+        <section class="chart-wrap">
+          <div class="axis-title top">Sold in (end year)</div>
+          <div class="axis-title left">Purchased in (start year)</div>
+          <canvas id="chart" width="920" height="1020"></canvas>
+          <div id="tooltip" class="tooltip" hidden></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- TAB 2: TWIN PEAKS CITY COMPARISON -->
+    <div id="twinpeaks-tab" class="tab-content">
+      <main class="layout full-width-layout">
+        <section class="copy panel-narrow">
+          <header class="header-group">
+            <span class="eyebrow">Metro Trends</span>
+            <h1>Twin Peaks Index</h1>
+          </header>
+          <p class="intro">
+            This dashboard stacks the Home Price Index (HPI) over time (2000–2026), indexed to <strong>100 in 2000</strong>.
+          </p>
+          <p class="body-text">
+            Notice how some cities (e.g. <strong>Las Vegas</strong> or <strong>Miami</strong>) show clear "twin peaks" with a massive GFC crash, while others (like <strong>San Francisco</strong> or <strong>Seattle</strong>) were far more resilient during GFC but experienced a towering post-pandemic surge.
+          </p>
+          
+          <div class="sorting-controls">
+            <span class="control-label">Sort Metros By</span>
+            <div class="btn-group">
+              <button id="sort-gfc" class="tab-btn active">GFC Crash Severity</button>
+              <button id="sort-growth" class="tab-btn">Total Growth (to 2026)</button>
+            </div>
+          </div>
+
+          <div class="selected-details-panel">
+            <h2>Detailed View</h2>
+            <div id="trend-details-content">
+              <p class="muted-msg">Click any row in the table to display full HPI time-series details here.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="main-panel scrollable-panel">
+          <div class="table-container">
+            <table class="sparkline-table" id="sparkline-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Metro Area</th>
+                  <th style="width: 15%; text-align: right;">GFC Crash Drop</th>
+                  <th style="width: 15%; text-align: right;">Total Growth (to 2026)</th>
+                  <th style="width: 45%; text-align: center;">HPI Trend (2000–2026) (Indexed to 100)</th>
+                </tr>
+              </thead>
+              <tbody id="sparkline-table-body">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- TAB 3: WITHIN-CITY ZIP CODE VARIANCE -->
+    <div id="variance-tab" class="tab-content">
+      <main class="layout">
+        <section class="copy">
+          <header class="header-group">
+            <span class="eyebrow">Local Analysis</span>
+            <h1>Within-City Variance</h1>
+          </header>
+          <p class="intro">
+            Even inside a single city, crash severity varied dramatically. Denser, higher-demand urban cores were often highly resilient, while sprawling suburban fringe ZIP codes collapsed.
+          </p>
+
+          <!-- Search controls for city -->
+          <div class="control-group">
+            <label for="city-variance-search" class="control-label">Select City</label>
+            <div class="search-wrapper">
+              <input 
+                type="text" 
+                id="city-variance-search" 
+                placeholder="Search e.g. Orlando, FL..." 
+                autocomplete="off"
+                value="Orlando, FL"
+              />
+              <button id="clear-variance-search" class="clear-btn" aria-label="Clear search">&times;</button>
+              <div id="variance-dropdown" class="dropdown-list" hidden></div>
+            </div>
+          </div>
+
+          <!-- Dynamic Analysis Card -->
+          <div class="insights-panel" id="variance-insights">
+            <h2>Density Correlation</h2>
+            <p id="density-stat-text">Loading...</p>
+            <p id="density-explainer" class="note" style="margin-top: 8px;">
+              Denser urban ZIP codes typically hold values better due to limited land and strong rental demand, acting as a floor. Outer suburban rings often suffer from speculative supply overhang.
+            </p>
+          </div>
+        </section>
+
+        <!-- Main panel: Split into Bar Chart and Scatter Plot -->
+        <section class="main-panel split-grid">
+          <div class="panel-card scrollable-card">
+            <h2>GFC Crash Drop by ZIP Code</h2>
+            <div class="bar-chart-container" id="zip-bar-chart">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+          <div class="panel-card">
+            <h2>Density vs. Crash Severity</h2>
+            <div class="scatter-container">
+              <canvas id="scatter-chart" width="460" height="420"></canvas>
+              <div class="scatter-axis-label bottom">Population Density (people / sq km)</div>
+              <div class="scatter-axis-label left-rotated">GFC Peak-to-Trough Decline (%)</div>
+              <div id="scatter-tooltip" class="tooltip" hidden></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- TAB 4: ECONOMICS & CREDIT CONTEXT -->
+    <div id="context-tab" class="tab-content">
+      <main class="layout full-width-layout">
+        <section class="copy panel-narrow">
+          <header class="header-group">
+            <span class="eyebrow">Macro View</span>
+            <h1>Why 2026 is Not 2008</h1>
+          </header>
+          <div class="context-narrative">
+            <p>
+              Many observers look at the elevated housing prices today (2026) and worry about a repeat of the 2008 mortgage meltdown. 
+              However, structural macroeconomic fundamentals demonstrate that the current market has a robust "floor" that did not exist during the subprime bubble.
+            </p>
+            <h3>1. The Supply Shortage is Real</h3>
+            <p>
+              In 2006, the market was over-built. Speculative construction outpaced household formation. 
+              Today, a decade-long deficit of housing starts has left the United States millions of homes short of organic demand.
+            </p>
+            <h3>2. Fixed Rates &amp; High Credit Scores</h3>
+            <p>
+              The GFC was triggered by fragile subprime loans with adjustable rates. 
+              Post-GFC lending regulations mean today's homeowners are highly qualified. 
+              Although homeowners face low mobility due to the "lock-in effect" (locked into 3% mortgages), they are highly unlikely to face systemic defaults.
+            </p>
+            <blockquote>
+              "Strict underwriting standards, low construction volumes, and declining household sizes are preventing a systemic default wave."
+              <cite>— Synthesis, [[Housing-Crisis-and-Economics]]</cite>
+            </blockquote>
+          </div>
+        </section>
+
+        <section class="main-panel flex-row scrollable-panel">
+          <div class="context-card">
+            <h2>Supply Side: U.S. Housing Starts by Category</h2>
+            <div class="context-img-wrapper">
+              <img 
+                src="./context/AYOC7-u-s-housing-starts-by-category__1_.png.avif" 
+                alt="U.S. Housing Starts Chart" 
+                class="context-img"
+              />
+            </div>
+            <p class="caption">
+              <strong>Supply Constraints</strong>: Post-2008 single-family building starts crashed to historical lows and remained depressed for over a decade. Even with recent upticks, construction is barely keeping pace with household formation.
+            </p>
+          </div>
+          
+          <div class="context-card">
+            <h2>Credit Market: Independent Lender Share</h2>
+            <div class="context-img-wrapper">
+              <img 
+                src="./context/SvTwe-banks-lost-mortgage-market-share-to-independent-lenders-after-the-2008-mortgage-meltdown-.png.avif" 
+                alt="Mortgage Lender Market Share Chart" 
+                class="context-img"
+              />
+            </div>
+            <p class="caption">
+              <strong>Financial Restructuring</strong>: Traditional banks retreated from mortgage origination due to post-crisis regulations. Independent lenders stepped in, enforcing tight credit criteria, leading to highly resilient homeowner loan profiles today.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Main JavaScript App -->
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
