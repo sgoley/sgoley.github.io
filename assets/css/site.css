@@ -66,6 +66,13 @@ body {
   line-height: 1.5;
 }
 
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
 a {
   color: var(--accent-2);
   text-decoration: none;
@@ -197,6 +204,32 @@ h3 {
   color: var(--muted);
 }
 
+.async-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+}
+
+.async-hero::after {
+  content: "";
+  position: absolute;
+  right: -5rem;
+  bottom: -7rem;
+  width: min(44vw, 360px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(85, 196, 255, 0.36), transparent 34%),
+    conic-gradient(from 120deg, rgba(79, 143, 251, 0.2), transparent, rgba(85, 196, 255, 0.2));
+  filter: blur(4px);
+  opacity: 0.85;
+}
+
+.async-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
 .hero-actions {
   margin-top: 1.05rem;
   display: flex;
@@ -244,6 +277,49 @@ h3 {
 .panel-header p {
   margin-top: 0.25rem;
   color: var(--muted);
+}
+
+.panel-header-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1rem;
+}
+
+.mode-tabs,
+.prompt-grid,
+.handoff-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.prompt-grid {
+  margin-top: 1rem;
+}
+
+.prompt-grid button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-raised);
+  color: var(--ink);
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+  transition: 120ms ease;
+}
+
+.prompt-grid button:hover,
+.prompt-grid button:focus-visible {
+  border-color: var(--line-strong);
+  background: var(--accent-bg);
+  outline: none;
+}
+
+.async-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.34fr);
+  gap: 0.85rem;
+  align-items: stretch;
 }
 
 .native-chat {
@@ -340,6 +416,44 @@ h3 {
   color: var(--accent-2);
 }
 
+.sources-panel {
+  margin-top: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--surface-raised), var(--surface));
+  padding: 0.9rem;
+}
+
+.sources-panel h3 {
+  margin: 0 0 0.65rem;
+}
+
+.source-cards {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.source-card {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-muted);
+  padding: 0.72rem;
+  color: var(--ink);
+}
+
+.source-card:hover {
+  border-color: var(--line-strong);
+  text-decoration: none;
+}
+
+.source-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.84rem;
+  margin-top: 0.25rem;
+}
+
 .chat-error {
   color: var(--error);
   margin: 0;
@@ -377,6 +491,93 @@ h3 {
   margin-top: 0.7rem;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.handoff-panel {
+  margin-top: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(79, 143, 251, 0.08), transparent 34%),
+    var(--surface);
+  padding: 1rem;
+}
+
+.handoff-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.handoff-header h3 {
+  margin: 0.1rem 0 0;
+}
+
+.handoff-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.85rem;
+}
+
+.handoff-grid label,
+.consent-row {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.handoff-grid span,
+.consent-row {
+  color: var(--prose-ink);
+  font-weight: 600;
+}
+
+.handoff-grid small {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.handoff-grid input,
+.handoff-grid select,
+.handoff-grid textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-muted);
+  color: var(--ink);
+  padding: 0.62rem 0.72rem;
+}
+
+.handoff-grid textarea {
+  resize: vertical;
+}
+
+.handoff-grid input:focus,
+.handoff-grid select:focus,
+.handoff-grid textarea:focus {
+  outline: 2px solid var(--line-strong);
+  border-color: var(--line-strong);
+}
+
+.consent-row {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  margin-top: 0.85rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.consent-row input {
+  margin-top: 0.24rem;
+}
+
+.handoff-actions {
+  margin-top: 0.9rem;
+}
+
+.muted {
+  color: var(--muted);
 }
 
 .visually-hidden {
@@ -419,6 +620,18 @@ h3 {
 
 .card p {
   color: var(--muted);
+}
+
+.lane-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.lane-number {
+  color: var(--accent-2);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
 }
 
 .stack {
@@ -633,7 +846,10 @@ h3 {
 
 @media (max-width: 900px) {
   .three-col,
-  .two-col {
+  .two-col,
+  .async-workspace,
+  .panel-header-split,
+  .handoff-grid {
     grid-template-columns: 1fr;
   }
 

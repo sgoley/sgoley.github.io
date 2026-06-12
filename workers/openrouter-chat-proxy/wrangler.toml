@@ -5,5 +5,11 @@ compatibility_date = "2026-05-22"
 [vars]
 OPENROUTER_MODEL = "openai/gpt-oss-120b"
 OPENROUTER_SITE_TITLE = "Scott Goley Website Chat"
+PUBLIC_SITE_URL = "https://scottgoley.com"
 # Comma-separated list. Example: "https://scottgoley.com,https://sgoley.github.io"
 ALLOWED_ORIGINS = "https://scottgoley.com"
+# Optional hardening/intake bindings:
+# - TURNSTILE_SECRET_KEY secret: require Cloudflare Turnstile for chat/feedback.
+# - RATE_LIMIT_KV binding: per-IP hourly request caps.
+# - FEEDBACK_KV binding: store consented handoff packets.
+# - FEEDBACK_WEBHOOK_URL secret/var: forward consented packets to an automation endpoint.
