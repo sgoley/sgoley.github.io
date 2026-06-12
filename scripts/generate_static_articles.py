@@ -745,10 +745,14 @@ def _load_system_prompt_template(repo_root: Path) -> str:
 def _build_catalog_lines(docs: List[StaticDoc]) -> str:
     if not docs:
         return "- No markdown files are currently available."
-    return "\n".join(
-        f"- {doc.title} (slug: {doc.source_path.with_suffix('').as_posix()}, path: {doc.source_path.as_posix()})"
-        for doc in docs
-    )
+    lines = []
+    for doc in docs:
+        pub_date = doc.metadata.get("published", "")
+        date_str = f", date: {pub_date}" if pub_date else ""
+        lines.append(
+            f"- {doc.title} (slug: {doc.source_path.with_suffix('').as_posix()}, path: {doc.source_path.as_posix()}{date_str})"
+        )
+    return "\n".join(lines)
 
 
 def _write_chat_context_payload(repo_root: Path, docs: List[StaticDoc]) -> None:
@@ -772,6 +776,7 @@ def _write_chat_context_payload(repo_root: Path, docs: List[StaticDoc]) -> None:
                 "href": doc.href,
                 "excerpt": doc.excerpt,
                 "markdown": doc.body_markdown,
+                "published": str(doc.metadata.get("published", "")),
             }
             for doc in docs
         ],
