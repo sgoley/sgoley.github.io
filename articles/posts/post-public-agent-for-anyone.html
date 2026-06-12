@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Public agent for anyone - Scott Goley</title>
-  <meta name="description" content="This post explains how the website assistant works. The website chat interface is a **single-screen, native in-page chat panel** on the homepage. It uses a modern dark theme, re...">
+  <meta name="description" content="This post explains how the website assistant works. The website chat interface is a homepage async workbench. It combines a grounded chat panel, source cards, guided modes, and...">
   <link rel="stylesheet" href="../../assets/css/site.css">
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -60,39 +60,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <li><strong>Markdown files</strong> as the content source (scoped to <code>/content</code> only)</li>
 </ul>
 <h2>Overview</h2>
-<p>The website chat interface is a <strong>single-screen, native in-page chat panel</strong> on the homepage. It uses a modern dark theme, real-time streaming responses, and markdown-style rendering in assistant bubbles.</p>
+<p>The website chat interface is a <strong>homepage async workbench</strong>. It combines a grounded chat panel, source cards, guided modes, and a handoff packet builder for visitors who want to leave useful context rather than only ask résumé-style questions.</p>
 <h2>What It Does</h2>
 <p>This is a <strong>secure, content-aware assistant</strong> that:</p>
 <ol>
 <li><strong>Builds context from markdown files</strong> in the repository <code>content/</code> directory</li>
 <li><strong>Selects relevant documents</strong> for each user question using keyword matching</li>
-<li><strong>Sends grounded context + conversation history</strong> to the model through the Worker proxy</li>
+<li><strong>Sends conversation history and mode</strong> to the Worker, which owns prompt assembly and model selection</li>
 <li><strong>Maintains conversation history</strong> to enable follow-up questions within the same session</li>
 <li><strong>Never accesses</strong> source code, secrets, or files outside the <code>content/</code> boundary for chat grounding</li>
+<li><strong>Exports or submits handoff packets</strong> with explicit visitor consent</li>
 </ol>
 <h2>Security &amp; Scope</h2>
 <p>The chat interface enforces a <strong>strict content boundary</strong>:</p>
 <ul>
-<li>✅ <strong>Accessible</strong>: All files matching <code>content/*<em>/</em>.md</code></li>
+<li>✅ <strong>Accessible</strong>: All files matching <code>content/**/*.md</code></li>
 <li>❌ <strong>Not accessible for grounding</strong>: Source code, <code>.env</code> files, secrets, configuration files, or any path outside <code>content/</code></li>
 <li>✅ <strong>Proxy key isolation</strong>: OpenRouter API key lives in Cloudflare Worker secrets, never in browser JavaScript</li>
+<li>✅ <strong>Server-owned orchestration</strong>: The browser does not choose the model or send arbitrary system prompts</li>
 </ul>
 <p>This design ensures users can safely expose the chat widget publicly without revealing sensitive project information.</p>
 <h2>Interaction Model</h2>
 <p>The assistant can:</p>
 <ol>
 <li><strong>Search</strong> relevant articles by keyword from user queries</li>
-<li><strong>Attach</strong> selected markdown excerpts to the system context</li>
+<li><strong>Ask the Worker to attach</strong> selected markdown excerpts to the system context</li>
 <li><strong>Answer questions</strong> grounded in those markdown files</li>
 <li><strong>Remember context</strong> across multiple messages in a session</li>
+<li><strong>Help draft reusable async handoffs</strong> with goals, constraints, evidence, and open questions</li>
 </ol>
 <h2>Features &amp; Customization</h2>
 <ul>
 <li><strong>Native UI</strong>: no iframe required</li>
 <li><strong>Keyboard UX</strong>: Enter sends, Shift+Enter adds a newline</li>
-<li><strong>Configurable model</strong>: override model via page config or Worker defaults</li>
+<li><strong>Server-configured model</strong>: the Worker chooses the allowed OpenRouter model</li>
 <li><strong>Streaming replies</strong>: token streaming from OpenRouter through the Worker proxy</li>
 <li><strong>Grounded context file</strong>: generated from markdown + prompt template</li>
+<li><strong>Source cards</strong>: relevant article/project links are shown alongside answers</li>
+<li><strong>Feedback intake</strong>: consented handoff packets can be copied, downloaded, stored in KV, or forwarded by webhook</li>
 </ul>
 <h2>Learn More</h2>
 <p>For implementation details and deployment instructions, see this repository:</p>

@@ -20,7 +20,7 @@ const VIEWS = {
     title: "S&P 500 (real returns)",
     legendTitle: "Annualized real return",
     description1:
-      "A simple NYT-style recreation using annual S&P 500 total returns, inflation-adjusted to real returns, extended through 2025.",
+      "A simple recreation using annual S&P 500 total returns, inflation-adjusted to <strong>real returns</strong>, extended through <strong>2025</strong>.",
     description2:
       "Each square is one start-year / end-year combination. Colors encode annualized real return for that interval.",
     note: "Note: this version uses inflation adjustment, but does not include taxes/fees drag from the original graphic.",
@@ -28,12 +28,12 @@ const VIEWS = {
     growthLabel: "Real growth multiple",
     returnField: "sp500RealReturn",
     stops: [
-      { value: -0.04, color: "#8c3f3f" },
-      { value: 0.0, color: "#bc6a69" },
-      { value: 0.03, color: "#d7c8b2" },
-      { value: 0.07, color: "#8d9f63" },
-      { value: 0.1, color: "#5a7b40" },
-      { value: 0.14, color: "#315f32" },
+      { value: -0.04, color: "#8c3f3f" }, // Deep red
+      { value: 0.0, color: "#b85a5a" }, // Muted red
+      { value: 0.03, color: "#ebdcd0" }, // Cream/neutral
+      { value: 0.07, color: "#d5e2c1" }, // Soft light green
+      { value: 0.1, color: "#8d9f63" }, // Muted green
+      { value: 0.14, color: "#315f32" }, // Dark green
     ],
     tickValues: [0, 0.03, 0.07, 0.1],
   },
@@ -42,7 +42,7 @@ const VIEWS = {
     title: "Gold (nominal per-oz price return)",
     legendTitle: "Annualized nominal return",
     description1:
-      "This tab recreates the same start-year / end-year matrix for gold, using annual per-ounce price returns through 2025.",
+      "This tab recreates the same start-year / end-year matrix for gold, using annual per-ounce price returns through <strong>2025</strong>.",
     description2:
       "Each square shows what annualized nominal gold return you would have experienced for that holding interval.",
     note: "Note: this gold view reflects nominal per-ounce price return (not inflation-adjusted and not taxes/fees adjusted).",
@@ -51,10 +51,10 @@ const VIEWS = {
     returnField: "goldNominalReturn",
     stops: [
       { value: -0.08, color: "#8c3f3f" },
-      { value: 0.0, color: "#bc6a69" },
-      { value: 0.04, color: "#d7c8b2" },
-      { value: 0.08, color: "#8d9f63" },
-      { value: 0.15, color: "#5a7b40" },
+      { value: 0.0, color: "#b85a5a" },
+      { value: 0.04, color: "#ebdcd0" },
+      { value: 0.08, color: "#d5e2c1" },
+      { value: 0.15, color: "#8d9f63" },
       { value: 0.25, color: "#315f32" },
     ],
     tickValues: [0, 0.04, 0.08, 0.15],
@@ -109,7 +109,7 @@ function pct(v) {
 }
 
 function formatYears(start, end) {
-  return `${start}-${end}`;
+  return `${start}–${end}`;
 }
 
 function buildIntervalsFromField(series, returnField) {
@@ -200,13 +200,15 @@ function setupPointer(data, geometry, view) {
       return;
     }
 
+    const valClass = interval.cagr >= 0 ? "positive" : "negative";
+
     tooltip.hidden = false;
     tooltip.style.left = `${event.clientX - rect.left + 14}px`;
     tooltip.style.top = `${event.clientY - rect.top + 14}px`;
     tooltip.innerHTML = `
-      <strong>${interval.startYear} → ${interval.endYear}</strong><br />
+      <strong>${interval.startYear} → ${interval.endYear}</strong>
       Holding period: ${interval.yearsHeld} years<br />
-      ${view.rateLabel}: <strong>${pct(interval.cagr)}</strong><br />
+      ${view.rateLabel}: <span class="return-val ${valClass}"><strong>${pct(interval.cagr)}</strong></span><br />
       ${view.growthLabel}: <strong>${interval.growth.toFixed(2)}x</strong>
     `;
   };
@@ -222,8 +224,18 @@ function draw(view, data) {
   const drawW = canvas.width - margin.left - margin.right;
   const drawH = canvas.height - margin.top - margin.bottom;
   const cell = Math.floor(Math.min(drawW, drawH) / count);
+  const gridW = count * cell;
+  const gridH = count * cell;
 
-  ctx.fillStyle = "#efede6";
+  // Compute theme-aware colors from CSS
+  const isDark = document.documentElement.dataset.theme !== "light";
+  const clrBg        = isDark ? "#0f0f12" : "#f5f6fb";   // --surface
+  const clrGrid      = isDark ? "rgba(255,255,255,0.15)" : "rgba(23,25,35,0.08)";
+  const clrAxis      = isDark ? "rgba(255,255,255,0.30)" : "rgba(23,25,35,0.18)";
+  const clrLabel     = isDark ? "#a3a3ad" : "#4d566d";   // --muted
+  const clrHighlight = isDark ? "rgba(255,255,255,0.45)" : "rgba(23,25,35,0.35)";
+
+  ctx.fillStyle = clrBg;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const intervalsByCell = new Map();
@@ -235,7 +247,8 @@ function draw(view, data) {
     intervalsByCell.set(`${item.startIdx}:${item.endIdx}`, item);
   }
 
-  ctx.strokeStyle = "rgba(0,0,0,0.35)";
+  // Draw 20-year period highlight outlines
+  ctx.strokeStyle = clrHighlight;
   ctx.lineWidth = 1;
   for (let i = 0; i < count; i += 1) {
     const j = i + 19;
@@ -245,24 +258,28 @@ function draw(view, data) {
     ctx.strokeRect(x, y, cell - 1, cell - 1);
   }
 
-  ctx.strokeStyle = "#d5cec1";
+  // Grid lines
   ctx.lineWidth = 1;
   const tickStep = 10;
   for (let i = 0; i <= count; i += tickStep) {
     const x = margin.left + i * cell + 0.5;
     const y = margin.top + i * cell + 0.5;
+    const isBorder = (i === 0 || i === count);
+    
+    ctx.strokeStyle = isBorder ? clrAxis : clrGrid;
     ctx.beginPath();
     ctx.moveTo(x, margin.top);
-    ctx.lineTo(x, margin.top + count * cell);
+    ctx.lineTo(x, margin.top + gridH);
     ctx.stroke();
+    
     ctx.beginPath();
     ctx.moveTo(margin.left, y);
-    ctx.lineTo(margin.left + count * cell, y);
+    ctx.lineTo(margin.left + gridW, y);
     ctx.stroke();
   }
 
-  ctx.fillStyle = "#575757";
-  ctx.font = "12px Inter, sans-serif";
+  ctx.fillStyle = clrLabel;
+  ctx.font = "12px 'Avenir Next', Avenir, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "bottom";
   for (let i = 0; i < count; i += 10) {
@@ -307,7 +324,53 @@ function render(view) {
   draw(view, intervalData);
 }
 
+function initThemeToggle() {
+  const root = document.documentElement;
+  const themeKey = "investing-doodle-theme";
+  const toggleBtn = document.getElementById("theme-toggle");
+  if (!toggleBtn) return;
+
+  const readTheme = () => {
+    try { return localStorage.getItem(themeKey); } catch { return null; }
+  };
+  const writeTheme = (t) => {
+    try { localStorage.setItem(themeKey, t); } catch { /* noop */ }
+  };
+
+  const applyTheme = (theme) => {
+    const normalized = theme === "light" ? "light" : "dark";
+    root.dataset.theme = normalized;
+    const icon = toggleBtn.querySelector(".theme-toggle-icon");
+    const label = toggleBtn.querySelector(".theme-toggle-label");
+    const nextTheme = normalized === "dark" ? "light" : "dark";
+    if (icon) icon.textContent = normalized === "dark" ? "☾" : "☀";
+    if (label) label.textContent = `Switch to ${nextTheme} mode`;
+    toggleBtn.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+    toggleBtn.setAttribute("title", `Switch to ${nextTheme} mode`);
+  };
+
+  const saved = readTheme();
+  const hasSaved = saved === "dark" || saved === "light";
+  const prefersDark = typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const preferred = prefersDark ? "dark" : "light";
+  applyTheme(hasSaved ? saved : preferred);
+
+  toggleBtn.addEventListener("click", () => {
+    const current = root.dataset.theme === "light" ? "light" : "dark";
+    const next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    writeTheme(next);
+    // Re-draw chart so theme-aware colors update immediately
+    if (payload) {
+      const intervalData = buildIntervalsFromField(payload.series, activeView.returnField);
+      draw(activeView, intervalData);
+    }
+  });
+}
+
 async function main() {
+  initThemeToggle();
+
   const response = await fetch("./data/annual_returns.json");
   if (!response.ok) throw new Error("Failed to load data/annual_returns.json");
   payload = await response.json();

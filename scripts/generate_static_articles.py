@@ -114,6 +114,12 @@ def _clean_excerpt_line(line: str) -> str:
         return label
 
     stripped = re.sub(r"\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|([^\]]+))?\]\]", replace_wikilink, stripped)
+    stripped = re.sub(r"!\[([^\]]*)\]\([^)]+\)", r"\1", stripped)
+    stripped = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", stripped)
+    stripped = re.sub(r"`([^`]+)`", r"\1", stripped)
+    stripped = re.sub(r"\*\*([^*]+)\*\*", r"\1", stripped)
+    stripped = re.sub(r"\*([^*]+)\*", r"\1", stripped)
+    stripped = re.sub(r"\s+", " ", stripped).strip()
     return stripped
 
 
@@ -265,6 +271,11 @@ def _make_link_resolver(
 
 def _inline_html(raw_text: str, resolve_link: Callable[[str, str | None], str | None]) -> str:
     text = html.escape(raw_text)
+    code_spans: List[str] = []
+
+    def stash_code_span(match: re.Match[str]) -> str:
+        code_spans.append(f"<code>{match.group(1)}</code>")
+        return f"@@CODE_SPAN_{len(code_spans) - 1}@@"
 
     def replace_wikilink(match: re.Match[str]) -> str:
         target = html.unescape(match.group(1)).strip()
@@ -276,8 +287,8 @@ def _inline_html(raw_text: str, resolve_link: Callable[[str, str | None], str | 
             return html.escape(label)
         return f'<a href="{html.escape(href, quote=True)}">{html.escape(label)}</a>'
 
+    text = re.sub(r"`([^`]+)`", stash_code_span, text)
     text = re.sub(r"\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|([^\]]+))?\]\]", replace_wikilink, text)
-    text = re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
     text = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", text)
     text = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", text)
 
@@ -318,6 +329,8 @@ def _inline_html(raw_text: str, resolve_link: Callable[[str, str | None], str | 
         text,
     )
     text = _autolink_external_urls(text)
+    for idx, code_html in enumerate(code_spans):
+        text = text.replace(f"@@CODE_SPAN_{idx}@@", code_html)
     return text
 
 
@@ -799,6 +812,8 @@ def _collect_docs(
 
         markdown_text = markdown_file.read_text(encoding="utf-8")
         metadata, body_markdown = _parse_frontmatter(markdown_text)
+        if str(metadata.get("status", "")).lower() == "draft":
+            continue
 
         title = str(
             metadata.get("title")

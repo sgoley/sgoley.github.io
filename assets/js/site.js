@@ -86,13 +86,20 @@
     const params = new URLSearchParams(window.location.search);
     const endpointFromParam = (params.get("chat_api") || "").trim();
     const endpointFromData = (chatRoot.dataset.chatEndpoint || "").trim();
-    const model = (chatRoot.dataset.chatModel || "openai/gpt-oss-120b").trim();
+    const feedbackFromParam = (params.get("feedback_api") || "").trim();
+    const feedbackFromData = (chatRoot.dataset.feedbackEndpoint || "").trim();
     const note = document.getElementById("chat-note");
     const thread = document.getElementById("chat-thread");
     const form = document.getElementById("chat-form");
     const input = document.getElementById("chat-input");
+    const sourceCards = document.getElementById("source-cards");
+    const modeButtons = document.querySelectorAll("[data-chat-mode]");
+    const promptButtons = document.querySelectorAll("[data-prompt]");
+    const handoffForm = document.getElementById("handoff-form");
+    const handoffStatus = document.getElementById("handoff-status");
     const endpointPlaceholder = "YOUR-CLOUDFLARE-WORKER-URL";
     const configuredEndpoint = endpointFromParam || endpointFromData;
+    const configuredFeedbackEndpoint = feedbackFromParam || feedbackFromData;
     const looksLikeDomain = (value) =>
       /^[a-z0-9.-]+\.[a-z]{2,}(?:[/:?#]|$)/i.test(value);
     const normalizeEndpoint = (value) => {
@@ -121,8 +128,19 @@
       }
     };
     const endpoint = normalizeEndpoint(configuredEndpoint) || `${window.location.origin}/chat`;
+    const feedbackEndpoint =
+      normalizeEndpoint(configuredFeedbackEndpoint) ||
+      endpoint.replace(/\/chat\/?$/i, "/feedback");
     let chatContext = null;
     const history = [];
+    let currentMode = "discover";
+    let lastRelevantDocs = [];
+    const draftStorageKey = "sgoley-async-handoff-v1";
+    const draftTtlMs = 7 * 24 * 60 * 60 * 1000;
+    const sessionId =
+      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
     const escapeHtml = (value) =>
       String(value)
@@ -235,7 +253,7 @@
       }
       const empty = document.createElement("p");
       empty.className = "chat-empty";
-      empty.textContent = "Ask a question to start the conversation.";
+      empty.textContent = "Pick a starter or ask what context would be useful.";
       thread.appendChild(empty);
     };
 
@@ -260,6 +278,27 @@
       thread.appendChild(bubble);
       thread.scrollTop = thread.scrollHeight;
       return bubble;
+    };
+
+    const renderSourceCards = (docs) => {
+      if (!sourceCards) {
+        return;
+      }
+      sourceCards.innerHTML = "";
+      if (!docs.length) {
+        const empty = document.createElement("p");
+        empty.className = "muted";
+        empty.textContent = "No close source matches yet.";
+        sourceCards.appendChild(empty);
+        return;
+      }
+      docs.forEach((doc) => {
+        const link = document.createElement("a");
+        link.className = "source-card";
+        link.href = doc.href || "#";
+        link.innerHTML = `${escapeHtml(doc.title || "Untitled")}<span>${escapeHtml(doc.kind || "source")} · ${escapeHtml(doc.source_path || "")}</span>`;
+        sourceCards.appendChild(link);
+      });
     };
 
     const renderAssistantBubble = (bubble, text, finalize = false) => {
@@ -317,36 +356,6 @@
         .sort((a, b) => b.score - a.score)
         .slice(0, maxDocs)
         .map((item) => item.doc);
-    };
-
-    const buildSystemPrompt = (query) => {
-      const docs = selectRelevantDocs(query, chatContext?.documents || []);
-      const basePrompt =
-        chatContext?.system_prompt ||
-        "You are the personal website assistant. Ground answers in provided markdown excerpts.";
-      const groundingGuardrails = [
-        "Grounding requirements:",
-        "1) Use only facts present in the provided markdown context and catalog.",
-        "2) If a requested fact is missing, say that it is not available in site content.",
-        "3) Do not infer or invent implementation details (framework, backend, environment variables, or source code behavior).",
-        "4) Do not claim access to code/config/secrets outside content.",
-      ].join("\n");
-      if (docs.length === 0) {
-        return `${basePrompt}\n\n${groundingGuardrails}`;
-      }
-      const excerptBlock = docs
-        .map((doc) => {
-          const body = String(doc.markdown || "").slice(0, 5000);
-          return [
-            `Title: ${doc.title || "Untitled"}`,
-            `Path: ${doc.source_path || "unknown"}`,
-            `Public Link: https://scottgoley.com/${doc.href || ""}`,
-            "Markdown:",
-            body,
-          ].join("\n");
-        })
-        .join("\n\n---\n\n");
-      return `${basePrompt}\n\n${groundingGuardrails}\n\nContext excerpts:\n${excerptBlock}`;
     };
 
     const streamAssistantReply = async (response, onChunk) => {
@@ -443,6 +452,146 @@
       chatContext = await response.json();
     };
 
+    const formToFields = () => {
+      if (!(handoffForm instanceof HTMLFormElement)) {
+        return {};
+      }
+      const data = new FormData(handoffForm);
+      return {
+        name: String(data.get("name") || "").trim(),
+        contact: String(data.get("contact") || "").trim(),
+        stage: String(data.get("stage") || "exploring").trim(),
+        goal: String(data.get("goal") || "").trim(),
+        context: String(data.get("context") || "").trim(),
+        evidence: String(data.get("evidence") || "").trim(),
+        consent: data.get("consent") === "yes",
+      };
+    };
+
+    const buildPacket = () => {
+      const fields = formToFields();
+      return {
+        schema: "sgoley.async-handoff.v1",
+        session_id: sessionId,
+        created_at: new Date().toISOString(),
+        source_url: window.location.href,
+        mode: currentMode,
+        fields,
+        sources: lastRelevantDocs.map((doc) => ({
+          title: doc.title || "",
+          href: doc.href || "",
+          kind: doc.kind || "",
+          source_path: doc.source_path || "",
+        })),
+        transcript: history.slice(-20),
+      };
+    };
+
+    const setHandoffStatus = (message, isError = false) => {
+      if (!handoffStatus) {
+        return;
+      }
+      handoffStatus.textContent = message;
+      handoffStatus.classList.toggle("chat-error", isError);
+    };
+
+    const saveDraft = () => {
+      if (!handoffForm) {
+        return;
+      }
+      try {
+        localStorage.setItem(
+          draftStorageKey,
+          JSON.stringify({
+            expires_at: Date.now() + draftTtlMs,
+            fields: formToFields(),
+          }),
+        );
+      } catch (error) {
+        console.warn("Unable to save handoff draft.", error);
+      }
+    };
+
+    const restoreDraft = () => {
+      if (!(handoffForm instanceof HTMLFormElement)) {
+        return;
+      }
+      try {
+        const raw = localStorage.getItem(draftStorageKey);
+        if (!raw) {
+          return;
+        }
+        const draft = JSON.parse(raw);
+        if (!draft?.expires_at || draft.expires_at < Date.now()) {
+          localStorage.removeItem(draftStorageKey);
+          return;
+        }
+        const fields = draft.fields || {};
+        Object.entries(fields).forEach(([key, value]) => {
+          const field = handoffForm.elements.namedItem(key);
+          if (field instanceof HTMLInputElement && field.type === "checkbox") {
+            field.checked = Boolean(value);
+          } else if (
+            field instanceof HTMLInputElement ||
+            field instanceof HTMLTextAreaElement ||
+            field instanceof HTMLSelectElement
+          ) {
+            field.value = String(value || "");
+          }
+        });
+      } catch (error) {
+        console.warn("Unable to restore handoff draft.", error);
+      }
+    };
+
+    const copyPacket = async () => {
+      const packet = buildPacket();
+      const serialized = JSON.stringify(packet, null, 2);
+      await navigator.clipboard.writeText(serialized);
+      setHandoffStatus("Copied handoff packet to clipboard.");
+    };
+
+    const downloadPacket = () => {
+      const packet = buildPacket();
+      const blob = new Blob([JSON.stringify(packet, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `async-handoff-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      setHandoffStatus("Downloaded handoff packet JSON.");
+    };
+
+    const sendPacket = async () => {
+      const packet = buildPacket();
+      if (!packet.fields.consent) {
+        setHandoffStatus("Check the consent box before sending context to Scott.", true);
+        return;
+      }
+      const response = await fetch(feedbackEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ packet }),
+      });
+      if (!response.ok) {
+        throw new Error(await parseHttpError(response));
+      }
+      const result = await response.json();
+      if (!result.stored && !result.forwarded) {
+        setHandoffStatus(
+          `Packet accepted by the endpoint, but storage/forwarding is not configured. Copy or download it as a fallback. Reference: ${result.id || "not available"}.`,
+          true,
+        );
+        return;
+      }
+      const stored = result.stored ? "stored" : "accepted";
+      const forwarded = result.forwarded ? " and forwarded" : "";
+      setHandoffStatus(`Packet ${stored}${forwarded}. Reference: ${result.id || "not available"}.`);
+    };
+
     if (note) {
       if (!configuredEndpoint || configuredEndpoint.includes(endpointPlaceholder)) {
         note.hidden = false;
@@ -461,6 +610,55 @@
     loadContext().catch((error) => {
       const message = error instanceof Error ? error.message : "Unable to load chat context.";
       appendMessage("assistant", `Context load warning: ${message}`);
+    });
+
+    restoreDraft();
+    if (handoffForm) {
+      handoffForm.addEventListener("input", saveDraft);
+      handoffForm.addEventListener("change", saveDraft);
+      handoffForm.querySelector("[data-copy-packet]")?.addEventListener("click", () => {
+        copyPacket().catch((error) => {
+          setHandoffStatus(error instanceof Error ? error.message : "Unable to copy packet.", true);
+        });
+      });
+      handoffForm.querySelector("[data-download-packet]")?.addEventListener("click", downloadPacket);
+      handoffForm.querySelector("[data-send-packet]")?.addEventListener("click", () => {
+        setHandoffStatus("Sending packet...");
+        sendPacket().catch((error) => {
+          setHandoffStatus(error instanceof Error ? error.message : "Unable to send packet.", true);
+        });
+      });
+      handoffForm.querySelector("[data-clear-packet]")?.addEventListener("click", () => {
+        handoffForm.reset();
+        localStorage.removeItem(draftStorageKey);
+        setHandoffStatus("Draft cleared from this browser.");
+      });
+    }
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentMode = button.getAttribute("data-chat-mode") || "discover";
+        modeButtons.forEach((candidate) => candidate.classList.remove("active"));
+        button.classList.add("active");
+        if (input) {
+          input.placeholder =
+            currentMode === "brief"
+              ? "Describe the handoff you want drafted..."
+              : currentMode === "feedback"
+                ? "Leave feedback or suggest future content..."
+                : "Ask about fit, projects, or what context to leave...";
+        }
+      });
+    });
+
+    promptButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (!input) {
+          return;
+        }
+        input.value = button.getAttribute("data-prompt") || "";
+        input.focus();
+      });
     });
 
     if (form && input) {
@@ -504,12 +702,13 @@
         let assistantText = "";
 
         try {
-          const systemPrompt = buildSystemPrompt(userText);
+          lastRelevantDocs = selectRelevantDocs(userText, chatContext?.documents || []);
+          renderSourceCards(lastRelevantDocs);
           const messageWindow = history.slice(-10);
           const payload = {
-            model,
             stream: true,
-            messages: [{ role: "system", content: systemPrompt }, ...messageWindow],
+            mode: currentMode,
+            messages: messageWindow,
           };
 
           const response = await fetch(endpoint, {

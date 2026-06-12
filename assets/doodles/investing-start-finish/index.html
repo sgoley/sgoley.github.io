@@ -7,21 +7,39 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <!-- Top Navigation Bar -->
+    <header class="app-navbar">
+      <div class="nav-wrap">
+        <div class="navbar-brand">
+          <span class="logo-icon">📈</span>
+          <span class="logo-text">Investing Start-Finish (1928–2025)</span>
+        </div>
+        <nav class="nav-tabs" role="tablist" aria-label="Asset view">
+          <button id="tab-sp500" class="nav-tab active" role="tab" aria-selected="true">S&amp;P 500</button>
+          <button id="tab-gold" class="nav-tab" role="tab" aria-selected="false">Gold (per oz)</button>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
+          <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+          <span class="theme-toggle-label visually-hidden">Switch to light mode</span>
+        </button>
+      </div>
+    </header>
+
     <main class="layout">
       <section class="copy">
-        <h1>In Investing: When You Start and When You Finish</h1>
-        <div class="tabs" role="tablist" aria-label="Asset view">
-          <button id="tab-sp500" class="tab-btn active" role="tab" aria-selected="true">S&amp;P 500</button>
-          <button id="tab-gold" class="tab-btn" role="tab" aria-selected="false">Gold (per oz)</button>
-        </div>
-        <p>
+        <header class="header-group">
+          <span class="eyebrow">Interactive Data Doodle</span>
+          <h1>In Investing: When You Start and When You Finish</h1>
+        </header>
+
+        <p class="intro">
           <span id="descriptionLine1"
             >A simple NYT-style recreation using annual S&amp;P 500 total
             returns, inflation-adjusted to <strong>real returns</strong>,
             extended through <strong>2025</strong>.</span
           >
         </p>
-        <p>
+        <p class="body-text">
           <span id="descriptionLine2"
             >Each square is one start-year / end-year combination. Colors
             encode annualized real return for that interval.</span
@@ -40,6 +58,7 @@
         </div>
 
         <div class="stats">
+          <h2>Asset profiles &amp; cycles</h2>
           <div class="card">
             <h3>Best 20-year period</h3>
             <p id="best20">Loading…</p>
