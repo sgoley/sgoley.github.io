@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regional Housing Crisis Doodle - Scott Goley</title>
+  <meta name="description" content="An interactive data visualization exploring regional U.S. housing returns from 1975 through 2026 — comparing the Great Financial Crisis crash against today's elevated, supply-constrained market.">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK7DSRV');</script>
+<!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BFSYS2PX3G');
+</script>
+  <style>
+    /* Launch bar that sits above the iframe */
+    .embed-launch-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.62rem 1rem;
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-bottom: none;
+      border-radius: 16px 16px 0 0;
+      margin-top: 1rem;
+    }
+
+    .embed-launch-bar span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .embed-launch-bar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid var(--line-strong);
+      background: var(--accent-bg);
+      color: var(--accent-2);
+      border-radius: 999px;
+      padding: 0.35rem 0.82rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: 120ms ease;
+      text-decoration: none;
+    }
+
+    .embed-launch-bar a:hover {
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .embed-frame-wrap-housing {
+      margin: 0;
+    }
+
+    .embed-frame-housing {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 0 0 16px 16px;
+      background: var(--surface);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../index.html">Scott Goley</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../articles.html">Articles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container stack">
+    <section class="panel article-header">
+      <p class="eyebrow">Project · Data Doodle</p>
+      <h1>Regional Housing Crisis (1975–2026)</h1>
+      <div class="article-metadata">
+        By Scott Goley · Published 2026-06-12
+        <div class="tags">
+          <span class="tag">doodle</span>
+          <span class="tag">housing</span>
+          <span class="tag">economics</span>
+          <span class="tag">javascript</span>
+          <span class="tag">visualization</span>
+          <span class="tag">data</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="panel article-prose">
+      <p>
+        A follow-up to the <a href="proj-investing-start-finish.html">Investing Start/Finish</a> heatmap doodle — this one zooms in on the
+        U.S. housing market specifically, letting you compare purchase-year vs. sale-year annualized returns from
+        <strong>1975 through 2026</strong> for every U.S. state and 500+ metro areas.
+      </p>
+
+      <h2>Demo</h2>
+
+      <div class="embed-launch-bar">
+        <span>Interactive demo — best experienced at full width</span>
+        <a href="/assets/doodles/the-regional-housing-crisis/" target="_blank" rel="noopener">
+          ↗ Open full page
+        </a>
+      </div>
+      <div class="embed-frame-wrap-housing">
+        <iframe
+          class="embed-frame-housing"
+          src="/assets/doodles/the-regional-housing-crisis/"
+          title="Regional Housing Crisis 1975–2026 live demo"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          style="height: 1100px;"
+        ></iframe>
+      </div>
+      <p>If your browser blocks embeds, open it directly: <a href="/assets/doodles/the-regional-housing-crisis/">Open live demo</a></p>
+
+      <h2>What it shows</h2>
+      <p>
+        The primary view is a <strong>holding-period heatmap</strong>: each cell represents the annualized (CAGR) return for
+        a home purchased in the row-year and sold in the column-year. Deep red signals losses, cream is flat,
+        greens are gains. You can immediately spot the GFC crater (2006–2012), the COVID rocket (2019–2022),
+        and the post-pandemic plateau we're navigating now.
+      </p>
+      <p>
+        Below the heatmap is a paired sub-graph of the <strong>30-year fixed mortgage rate</strong> (red) and
+        <strong>10-year Treasury yield</strong> (blue) since 1975 — the secular decline in both rates was a major
+        structural tailwind for home prices over five decades, and its reversal since 2022 explains much of
+        the "frozen" market we're in today.
+      </p>
+
+      <h2>Why 2026 is not 2008</h2>
+      <p>
+        Many observers look at elevated 2026 prices and worry about a repeat of the subprime meltdown. The
+        <strong>Economics &amp; Credit</strong> tab makes the structural counter-argument:
+      </p>
+      <ul>
+        <li><strong>Supply is genuinely constrained.</strong> Post-2008 construction never recovered to meet demographic demand. The U.S. is millions of units short — a structural floor that didn't exist pre-GFC.</li>
+        <li><strong>Mortgage quality is radically different.</strong> Post-Dodd-Frank underwriting eliminated most exotic products. Today's homeowners skew high-credit-score, fixed-rate, and locked into sub-4% mortgages they have no incentive to walk away from.</li>
+        <li><strong>The "lock-in effect" suppresses supply.</strong> Rather than a wave of distressed selling, restricted inventory keeps prices elevated even as affordability deteriorates.</li>
+      </ul>
+      <p>
+        The risk today isn't a 2008-style systemic default cascade — it's a prolonged, grinding affordability crisis
+        for non-homeowners, with prices high and sticky rather than collapsing.
+      </p>
+
+      <h2>Data sources</h2>
+      <ul>
+        <li><strong>Zillow Home Value Index (ZHVI)</strong> — smoothed, seasonally adjusted mid-tier values, 2000–2026</li>
+        <li><strong>FHFA HPI all-transactions index</strong> — quarterly Q4 values spliced back to 1975 for states &amp; national</li>
+        <li><strong>BLS CPI-U</strong> — for real (inflation-adjusted) return toggle</li>
+        <li><strong>FRED DGS10 / MORTGAGE30US</strong> — 10-year Treasury yield and 30-year fixed mortgage rate</li>
+      </ul>
+      <p>
+        The FHFA and Zillow series are spliced at year-2000 using a scale factor so national and state series
+        extend continuously from 1975; metro areas begin in 2000 where Zillow data starts.
+      </p>
+
+      <h2>Commentary</h2>
+      <p>
+        This started as a curiosity: the original <a href="proj-investing-start-finish.html">Start/Finish doodle</a> covered equity indices.
+        I wanted the same matrix view for housing, but with regional granularity — because housing crises are deeply geographic.
+        Nevada and Florida cratered 50%+ during the GFC while Texas barely dipped. Today's hot markets (Austin, Tampa, Phoenix)
+        look very different from coastal supply-constrained cores (NYC, Boston, SF).
+      </p>
+      <p>
+        The most interesting visual is the "twin peaks" tab — some cities show a classic GFC double-peak shape
+        (Las Vegas, Miami) while others (San Francisco, Seattle) were resilient in 2008 but experienced an
+        even steeper post-pandemic surge. Both patterns converge on the same 2026 plateau, but from very
+        different trajectories.
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>
