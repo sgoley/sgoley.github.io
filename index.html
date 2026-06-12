@@ -3,51 +3,14 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Scott Goley - Async Collaboration</title>
+        <title>Scott Goley - Home</title>
         <meta
             name="description"
-            content="An async collaboration interface for exploring Scott Goley's work, sharing context, and leaving useful handoff packets."
+            content="Personal site with native embedded chat, projects, and writing."
         />
         <link rel="stylesheet" href="assets/css/site.css" />
-        <!-- Google Tag Manager -->
-        <script>
-            (function (w, d, s, l, i) {
-                w[l] = w[l] || [];
-                w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-                var f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s),
-                    dl = l != "dataLayer" ? "&l=" + l : "";
-                j.async = true;
-                j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-                f.parentNode.insertBefore(j, f);
-            })(window, document, "script", "dataLayer", "GTM-TK7DSRV");
-        </script>
-        <!-- End Google Tag Manager -->
-        <!-- Google tag (gtag.js) -->
-        <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"
-        ></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag("js", new Date());
-            gtag("config", "G-BFSYS2PX3G");
-        </script>
     </head>
     <body>
-        <!-- Google Tag Manager (noscript) -->
-        <noscript
-            ><iframe
-                src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
-                height="0"
-                width="0"
-                style="display: none; visibility: hidden"
-            ></iframe
-        ></noscript>
-        <!-- End Google Tag Manager (noscript) -->
         <header class="site-header">
             <div class="container nav-wrap">
                 <a class="brand" href="index.html">Scott Goley</a>
@@ -61,204 +24,52 @@
         </header>
 
         <main>
-            <section class="hero async-hero container">
-                <p class="eyebrow">Async Collaboration Desk</p>
-                <h1>Leave better context than a calendar invite.</h1>
+            <section class="hero container">
+                <p class="eyebrow">Personal Website</p>
+                <h1>Data, analytics, and AI systems</h1>
                 <p>
-                    Explore my work, pressure-test fit, and package the useful
-                    parts of the conversation into a handoff I can actually use
-                    later.
+                    Writing, projects, and an interactive assistant grounded in
+                    my published notes.
                 </p>
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="#chat">Start a handoff</a>
+                    <a class="btn btn-primary" href="#chat">Open Chat</a>
                     <a class="btn btn-ghost" href="projects.html"
-                        >Browse evidence</a
+                        >View Projects</a
                     >
                 </div>
-            </section>
-
-            <section class="container grid three-col async-lanes">
-                <article class="card lane-card">
-                    <span class="lane-number">01</span>
-                    <h3>Discover</h3>
-                    <p>
-                        Ask grounded questions across public projects, writing,
-                        and work notes.
-                    </p>
-                </article>
-                <article class="card lane-card">
-                    <span class="lane-number">02</span>
-                    <h3>Discuss</h3>
-                    <p>
-                        Compare your problem against examples of my actual work
-                        instead of guessing from a résumé.
-                    </p>
-                </article>
-                <article class="card lane-card">
-                    <span class="lane-number">03</span>
-                    <h3>Hand off</h3>
-                    <p>
-                        Capture goals, constraints, links, and transcript
-                        evidence as a reusable packet.
-                    </p>
-                </article>
             </section>
 
             <section class="container panel" id="chat">
-                <div class="panel-header panel-header-split">
-                    <div>
-                        <p class="eyebrow">Discover -> Discuss -> Hand off</p>
-                        <h2>Async workbench</h2>
-                        <p>
-                            The assistant answers from published site context.
-                            The packet builder helps you leave context, feedback,
-                            and evidence I can reuse.
-                        </p>
-                    </div>
-                    <div class="mode-tabs" aria-label="Conversation mode">
-                        <button type="button" class="tag active" data-chat-mode="discover">
-                            Discover
-                        </button>
-                        <button type="button" class="tag" data-chat-mode="fit">
-                            Fit check
-                        </button>
-                        <button type="button" class="tag" data-chat-mode="brief">
-                            Brief builder
-                        </button>
-                        <button type="button" class="tag" data-chat-mode="feedback">
-                            Feedback
-                        </button>
-                    </div>
+                <div class="panel-header">
+                    <h2>Chat Assistant</h2>
+                    <p>Ask questions about my markdown posts, projects, and notes.</p>
                 </div>
 
-                <div class="prompt-grid" aria-label="Prompt starters">
-                    <button type="button" data-prompt="Help me evaluate whether Scott is a fit for a data platform or analytics engineering project.">
-                        Evaluate project fit
-                    </button>
-                    <button type="button" data-prompt="Find projects or work examples that are most relevant to building reliable data pipelines and developer tooling.">
-                        Find relevant examples
-                    </button>
-                    <button type="button" data-prompt="Interview me for the context Scott would need before taking on an async project.">
-                        Interview me for context
-                    </button>
-                    <button type="button" data-prompt="Turn this conversation into a concise async handoff packet with goals, constraints, evidence, and open questions.">
-                        Draft the handoff
-                    </button>
-                </div>
+                <div
+                    id="native-chat"
+                    class="native-chat"
+                    data-chat-endpoint="YOUR-CLOUDFLARE-WORKER-URL/chat"
+                    data-chat-model="openai/gpt-oss-120b"
+                >
+                    <div id="chat-thread" class="chat-thread" aria-live="polite"></div>
 
-                <div class="async-workspace">
-                    <div
-                        id="native-chat"
-                        class="native-chat"
-                        data-chat-endpoint="https://sgoley-github-io.scottmgoley.workers.dev/chat"
-                        data-feedback-endpoint="https://sgoley-github-io.scottmgoley.workers.dev/feedback"
-                    >
-                        <div
-                            id="chat-thread"
-                            class="chat-thread"
-                            aria-live="polite"
-                        ></div>
-
-                        <form
-                            id="chat-form"
-                            class="chat-compose"
-                            autocomplete="off"
+                    <form id="chat-form" class="chat-compose" autocomplete="off">
+                        <label class="visually-hidden" for="chat-input"
+                            >Message</label
                         >
-                            <label class="visually-hidden" for="chat-input"
-                                >Message</label
-                            >
-                            <textarea
-                                id="chat-input"
-                                name="message"
-                                rows="2"
-                                maxlength="2400"
-                                placeholder="Ask about fit, projects, or what context to leave..."
-                                required
-                            ></textarea>
-                            <button type="submit" class="btn btn-primary">
-                                Send
-                            </button>
-                        </form>
-                    </div>
-
-                    <aside class="sources-panel" aria-label="Sources used">
-                        <h3>Sources used</h3>
-                        <div id="source-cards" class="source-cards">
-                            <p class="muted">
-                                Relevant project and article links will appear
-                                after you ask a question.
-                            </p>
-                        </div>
-                    </aside>
+                        <textarea
+                            id="chat-input"
+                            name="message"
+                            rows="2"
+                            maxlength="2400"
+                            placeholder="Ask about projects, posts, and notes..."
+                            required
+                        ></textarea>
+                        <button type="submit" class="btn btn-primary">
+                            Send
+                        </button>
+                    </form>
                 </div>
-
-                <form id="handoff-form" class="handoff-panel">
-                    <div class="handoff-header">
-                        <div>
-                            <p class="eyebrow">Leave context</p>
-                            <h3>Async handoff packet</h3>
-                        </div>
-                        <button type="button" class="btn btn-ghost" data-clear-packet>
-                            Clear draft
-                        </button>
-                    </div>
-
-                    <div class="handoff-grid">
-                        <label>
-                            <span>Name or org <small>(optional)</small></span>
-                            <input name="name" autocomplete="name" />
-                        </label>
-                        <label>
-                            <span>Contact or preferred next step <small>(optional)</small></span>
-                            <input name="contact" autocomplete="email" />
-                        </label>
-                        <label>
-                            <span>Stage</span>
-                            <select name="stage">
-                                <option value="exploring">Exploring fit</option>
-                                <option value="scoping">Scoping a project</option>
-                                <option value="debugging">Debugging a problem</option>
-                                <option value="feedback">Leaving feedback</option>
-                                <option value="other">Something else</option>
-                            </select>
-                        </label>
-                        <label>
-                            <span>Goal or question</span>
-                            <textarea name="goal" rows="3" maxlength="1600"></textarea>
-                        </label>
-                        <label>
-                            <span>Context and constraints</span>
-                            <textarea name="context" rows="4" maxlength="2600"></textarea>
-                        </label>
-                        <label>
-                            <span>Evidence links, artifacts, or examples</span>
-                            <textarea name="evidence" rows="4" maxlength="2600" placeholder="URLs, repo names, docs, screenshots, prior attempts, or notes."></textarea>
-                        </label>
-                    </div>
-
-                    <label class="consent-row">
-                        <input type="checkbox" name="consent" value="yes" />
-                        <span>
-                            Scott may store this packet and reuse the submitted
-                            context or feedback to improve future content,
-                            projects, or async workflows. Do not include secrets
-                            or confidential material.
-                        </span>
-                    </label>
-
-                    <div class="handoff-actions">
-                        <button type="button" class="btn btn-ghost" data-copy-packet>
-                            Copy packet
-                        </button>
-                        <button type="button" class="btn btn-ghost" data-download-packet>
-                            Download JSON
-                        </button>
-                        <button type="button" class="btn btn-primary" data-send-packet>
-                            Send to Scott
-                        </button>
-                    </div>
-                    <p id="handoff-status" class="embed-note" role="status"></p>
-                </form>
 
                 <p id="chat-note" class="embed-note">
                     Chat endpoint not configured. Set
@@ -270,12 +81,12 @@
 
             <section class="container grid three-col">
                 <article class="card">
-                    <h3>Work with me async</h3>
+                    <h3>Articles</h3>
                     <p>
-                        How to leave useful context, what artifacts help, and
-                        what async collaboration can look like.
+                        Writing on data engineering, AI tooling, and career
+                        development.
                     </p>
-                    <a href="articles/posts/post-work-with-me-async.html">Read the guide -></a>
+                    <a href="articles.html">Browse articles -></a>
                 </article>
                 <article class="card">
                     <h3>Portfolio</h3>
@@ -286,24 +97,10 @@
                     <a href="projects.html">Open projects -></a>
                 </article>
                 <article class="card">
-                    <h3>Articles</h3>
-                    <p>
-                        Writing on data engineering, AI tooling, and career
-                        development.
-                    </p>
-                    <a href="articles.html">Browse articles -></a>
+                    <h3>About</h3>
+                    <p>Background, work experience, and links.</p>
+                    <a href="about.html">Read bio -></a>
                 </article>
-            </section>
-
-            <section class="container panel">
-                <p class="eyebrow">Why this exists</p>
-                <h2>A better async interface should create residue.</h2>
-                <p>
-                    A normal chatbot answers and forgets. This page is designed
-                    to leave behind a reusable artifact: the question, the
-                    supporting evidence, the constraints, the transcript, and
-                    the permission boundary for future use.
-                </p>
             </section>
         </main>
 
