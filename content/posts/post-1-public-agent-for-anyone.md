@@ -67,4 +67,4 @@ The assistant can:
 
 For implementation details and deployment instructions, see this repository:
 
-**→ [sgoley.github.io](https://github.com/sgoley/sgoley.github.io)**
+**→ <!---->**[**sgoley.github.io**](https://github.com/sgoley/sgoley.github.io)

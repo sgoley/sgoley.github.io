@@ -5,22 +5,23 @@ status: published
 published: 2026-05-09
 tags: [education, certifications]
 ---
+
 ## Formal
 
-* Florida State University
-* Aug 2011 - May 2015
-* B.A. in Psychology / Statistics Minor
-* Activities and societies: Economics Club, TEDxFSU, Ultimate Frisbee mens collegiate team
+- Florida State University
+- Aug 2011 - May 2015
+- B.A. in Psychology / Statistics Minor
+- Activities and societies: Economics Club, TEDxFSU, Ultimate Frisbee mens collegiate team
 
-## Certifications 
+## Certifications
 
-* May 2015: Certificate in SAS Programming and Data Analysis 
-* Jul 2018: Datacamp Quantitative Analyst with R
-* Jul 2018: Datacamp Data Scientist with Python 
-* Jul 2019: Microsoft Certified: Data Analyst Associate
-* Jun 2023: SnowPro Core Certification
-* Jan 2024: Astronomer Certification for Apache Airflow Fundamentals
-* Dec 2024: Astronomer Certification DAG Authoring for Apache Airflow
+- May 2015: Certificate in SAS Programming and Data Analysis
+- Jul 2018: Datacamp Quantitative Analyst with R
+- Jul 2018: Datacamp Data Scientist with Python
+- Jul 2019: Microsoft Certified: Data Analyst Associate
+- Jun 2023: SnowPro Core Certification
+- Jan 2024: Astronomer Certification for Apache Airflow Fundamentals
+- Dec 2024: Astronomer Certification DAG Authoring for Apache Airflow
 
 ## Commentary
 
