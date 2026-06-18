@@ -84,7 +84,7 @@ Through Real-Time Bidding (RTB) and programmatic platforms, tech corporations be
 
 We have now transitioned from the Attention Economy to what is detailed in _From the Attention Economy to the Intention Economy_ [11](#user-content-fn-8). Instead of merely bidding on where a user looks, corporations are building a dragnet to harvest human **intention**.
 
-Through large language models (LLMs), custom GPTs, and conversational AI interfaces (like those developed by OpenAI and Microsoft), hyper-capitalism is shifting the human-computer interface into a continuous dialogue. Conversational interfaces serve as direct transducers of human thought. By interacting with these systems, users explicitly reveal their immediate intentions, emotional states, and somatic needs [12](#user-content-fn-10). This conversational data provides the ultimate predictive modeling material [13](#user-content-fn-9). The goal is no longer just to capture attention, but to move along a continuum: $\text{Understand Intent} \longrightarrow \text{Predict Intent} \longrightarrow \text{Predict Action} \longrightarrow \text{Intervene and Shape Action [^11]}$ By understanding and predicting the user's somatic intentions, the market can proactively inject commercial solutions before the user even experiences the physical somatic symptom.
+Through large language models (LLMs), custom GPTs, and conversational AI interfaces (like those developed by OpenAI and Microsoft), hyper-capitalism is shifting the human-computer interface into a continuous dialogue. Conversational interfaces serve as direct transducers of human thought. By interacting with these systems, users explicitly reveal their immediate intentions, emotional states, and somatic needs [12](#user-content-fn-10). This conversational data provides the ultimate predictive modeling material [13](#user-content-fn-9). The goal is no longer just to capture attention, but to move along a continuum: **Understand Intent** → **Predict Intent** → **Predict Action** → **Intervene and Shape Action** [18](#user-content-fn-11) By understanding and predicting the user's somatic intentions, the market can proactively inject commercial solutions before the user even experiences the physical somatic symptom.
 
 ---
 
@@ -124,15 +124,15 @@ The autonomic nervous system is divided into two primary branches that operate a
 
 Autonomic health is characterized by **high vagal tone** and **heart rate variability (HRV)**—the ability to rapidly upregulate for action and immediately down-regulate for recovery once a stressor has passed [15](#user-content-fn-13). Dysregulation occurs when the system becomes "stuck" in a state of chronic sympathetic dominance or collapses into a state of dissociative hypo-arousal (dorsal vagal shutdown) due to chronic, unresolved stress.
 
-### The Carbon Dioxide ($CO_2$) Trap and "Soft" Anxiety
+### The Carbon Dioxide (CO₂) Trap and "Soft" Anxiety
 
 One of the most immediate biophysical drivers of daily anxiety is the alteration of blood chemistry through dysfunctional breathing. Under chronic stress or narrow cognitive focus (often referred to as "screen apnea"), individuals unconsciously adopt a pattern of shallow, rapid chest breathing, punctuated by periodic breath-holding.
 
-This breathing pattern alters the balance of oxygen ($O_2$) and carbon dioxide ($CO_2$) in the blood:
+This breathing pattern alters the balance of oxygen (O₂) and carbon dioxide (CO₂) in the blood:
 
-- **The Chemical Loop:** Shallow breathing prevents the fully efficient offloading of $CO_2$ from the lungs' alveoli. This causes carbon dioxide to accumulate in the blood, leading to a state of systemic acidosis.
-- **The Suffocation Alarm:** The brainstem does not monitor oxygen levels to trigger the breathing reflex; it monitors $CO_2$ levels and blood pH. When $CO_2$ rises, chemoreceptors in the carotid bodies and medulla send immediate alarm signals to the amygdala and other threat-detection structures [16](#user-content-fn-14).
-- **Soft Anxiety:** The brain interprets this elevated $CO_2$ level as suffocation or confinement, generating a visceral sensation of threat. This is "soft anxiety"—a chemical state of low-grade panic that has no cognitive cause, but forces the individual to seek immediate external relief.
+- **The Chemical Loop:** Shallow breathing prevents the fully efficient offloading of CO₂ from the lungs' alveoli. This causes carbon dioxide to accumulate in the blood, leading to a state of systemic acidosis.
+- **The Suffocation Alarm:** The brainstem does not monitor oxygen levels to trigger the breathing reflex; it monitors CO₂ levels and blood pH. When CO₂ rises, chemoreceptors in the carotid bodies and medulla send immediate alarm signals to the amygdala and other threat-detection structures [16](#user-content-fn-14).
+- **Soft Anxiety:** The brain interprets this elevated CO₂ level as suffocation or confinement, generating a visceral sensation of threat. This is "soft anxiety"—a chemical state of low-grade panic that has no cognitive cause, but forces the individual to seek immediate external relief.
 
 ### The Cortisol-Melatonin Circadian Axis
 
@@ -294,8 +294,8 @@ The industry markets the aesthetic benefits (skin clarity, youthfulness), but th
 
 ### Case Study 10: The Airport and Air Travel Friction Economy
 
-- **The Biophysical Setup:** Air travel is a concentrated environment of sympathetic triggers. The traveller is subjected to high ambient noise (cabin roar at ~80–85 dB, which activates a low-grade threat response), recirculated air with high $CO_2$ levels (often between 1,500 and 2,500 ppm, inducing chemoreceptor panic), and mild cabin altitude hypoxia [20](#user-content-fn-16).
-- **The Mechanical Deficit:** The traveller does not know how to manage $CO_2$ tolerance, protect their ears, or drop their autonomic arousal in a high-friction, crowded transit zone.
+- **The Biophysical Setup:** Air travel is a concentrated environment of sympathetic triggers. The traveller is subjected to high ambient noise (cabin roar at ~80–85 dB, which activates a low-grade threat response), recirculated air with high CO₂ levels (often between 1,500 and 2,500 ppm, inducing chemoreceptor panic), and mild cabin altitude hypoxia [20](#user-content-fn-16).
+- **The Mechanical Deficit:** The traveller does not know how to manage CO₂ tolerance, protect their ears, or drop their autonomic arousal in a high-friction, crowded transit zone.
 - **The Extraction Loop:** The aviation industry monetizes this transit-induced dysregulation. Airlines and airports structure their terminals as high-friction spaces, then sell escape options. They sell "Fast Track" security passes to bypass stress, premium Lounge memberships to escape sensory chaos, and alcohol at airport bars to blunt the nervous system before boarding. The entire transit economy is built to extract revenue from travelers seeking temporary comfort from the autonomic toll of travel.
 
 ---
@@ -342,7 +342,7 @@ As hyper-capitalism has optimized for somatic extraction, it has generated a dee
 
 The working and lower-middle classes exist in a state of **somatic poverty**. Their daily lives are spent in environments designed to maximize sympathetic load while offering no structural avenues for downregulation:
 
-- **Spatial Confinement:** Working in spaces with poor air filtration and elevated $CO_2$ levels (which keeps the brainstem in a constant suffocation-alarm scan) [20](#user-content-fn-16).
+- **Spatial Confinement:** Working in spaces with poor air filtration and elevated CO₂ levels (which keeps the brainstem in a constant suffocation-alarm scan) [20](#user-content-fn-16).
 - **Sensory Exploitation:** Exposure to constant ambient noise, artificial lighting, and demanding production quotas.
 - **Nutritional Extraction:** Forced reliance on cheap, highly processed, high-GI foods that trigger blood sugar volatility and metabolic stress.
 - **Temporal Dispossession:** Shift work, rigid hours, and multiple jobs eliminate the time needed for circadian alignment and restful sleep.
@@ -352,7 +352,7 @@ The working and lower-middle classes exist in a state of **somatic poverty**. Th
 
 Conversely, the wealthy can afford to buy their way out of the autonomic extraction loop, securing a state of **somatic wealth**:
 
-- **Environmental Control:** Living and working in spaces with advanced HEPA and carbon air filtration (keeping indoor $CO_2$ levels below 800 ppm), acoustic insulation, and natural light optimization.
+- **Environmental Control:** Living and working in spaces with advanced HEPA and carbon air filtration (keeping indoor CO₂ levels below 800 ppm), acoustic insulation, and natural light optimization.
 - **Spatial Sanctuary:** Access to private green spaces, quiet environments, and low-density transit options.
 - **Temporal Autonomy:** The ability to control their daily schedule, avoid alarm-clock-driven cortisol spikes, and integrate movement and rest intervals into the day.
 - **Somatic Education:** Access to specialized somatic coaches, breathwork facilitators, clean whole-food nutrition, and premium, non-commodified recovery modalities [19](#user-content-fn-18).
@@ -417,7 +417,7 @@ By reclaiming the basic, biological tools of self-regulation, we withdraw our bo
 
 The breath is the only autonomic function that is both completely automatic and subject to direct voluntary control. It is the biological control panel for the nervous system:
 
-- **The Physiological Sigh (Immediate Down-Regulation):** When hit with a sudden wave of work-induced stress or parenting overwhelm, perform a double inhale through the nose (one full breath, followed by a quick, sharp sniff to inflate collapsed lung sacs), then a long, slow exhale through the mouth. Repeating this 3 times offloads the $CO_2$ buildup that triggers the brain's panic response, immediately lowering heart rate via the vagal brake [21](#user-content-fn-15).
+- **The Physiological Sigh (Immediate Down-Regulation):** When hit with a sudden wave of work-induced stress or parenting overwhelm, perform a double inhale through the nose (one full breath, followed by a quick, sharp sniff to inflate collapsed lung sacs), then a long, slow exhale through the mouth. Repeating this 3 times offloads the CO₂ buildup that triggers the brain's panic response, immediately lowering heart rate via the vagal brake [21](#user-content-fn-15).
 - **Coherence Breathing (Baseline Building):** Practice breathing at a rate of 5 to 6 breaths per minute (typically a 5-second inhale and a 5-second exhale). This rhythm synchronizes the heart rate, respiration, and blood pressure, maximizing heart rate variability (HRV) and building long-term vagal tone [15](#user-content-fn-13).
 - **Nasal Breathing:** Restrict breathing exclusively to the nose during daily activity and sleep. Nasal breathing increases nitric oxide production, filters air, and naturally slows the respiratory rate, preventing the hyperventilation loops that drive soft anxiety [20](#user-content-fn-16).
 
@@ -447,7 +447,7 @@ Nervous system regulation was never meant to be a solitary project. We are socia
 
 Audit your daily physical spaces to reduce passive sympathetic load:
 
-- **Air Quality Management:** Monitor and manage the $CO_2$ levels in your home and workspace. Ensure regular ventilation by opening windows or using air filtration systems to keep $CO_2$ levels below 1,000 ppm, preventing the chemoreceptor-driven suffocation alarm [20](#user-content-fn-16).
+- **Air Quality Management:** Monitor and manage the CO₂ levels in your home and workspace. Ensure regular ventilation by opening windows or using air filtration systems to keep CO₂ levels below 1,000 ppm, preventing the chemoreceptor-driven suffocation alarm [20](#user-content-fn-16).
 - **Sensory Deprivation Intervals:** Intentionally design periods of silence and low light into your day. Give your nervous system a rest from notifications, ambient noise, and visual clutter, allowing the parasympathetic system to engage without the aid of purchased commodities.
 
 ---

@@ -271,12 +271,18 @@ def _make_link_resolver(
 
 def _inline_html(raw_text: str, resolve_link: Callable[[str, str | None], str | None]) -> str:
     text = html.escape(raw_text)
-    code_spans: List[str] = []
+    stashed: List[str] = []
 
-    def stash_code_span(match: re.Match[str]) -> str:
-        code_spans.append(f"<code>{match.group(1)}</code>")
-        return f"@@CODE_SPAN_{len(code_spans) - 1}@@"
+    def stash(html_content: str) -> str:
+        stashed.append(html_content)
+        return f"@@STASHEDHTML{len(stashed) - 1}@@"
 
+    # 1. Stash and compile code spans
+    def replace_code_span(match: re.Match[str]) -> str:
+        return stash(f"<code>{match.group(1)}</code>")
+    text = re.sub(r"`([^`]+)`", replace_code_span, text)
+
+    # 2. Stash and compile wikilinks
     def replace_wikilink(match: re.Match[str]) -> str:
         target = html.unescape(match.group(1)).strip()
         fragment = html.unescape(match.group(2)).strip() if match.group(2) else None
@@ -285,23 +291,27 @@ def _inline_html(raw_text: str, resolve_link: Callable[[str, str | None], str | 
         href = resolve_link(target, fragment)
         if not href:
             return html.escape(label)
-        return f'<a href="{html.escape(href, quote=True)}">{html.escape(label)}</a>'
-
-    text = re.sub(r"`([^`]+)`", stash_code_span, text)
+        return stash(f'<a href="{html.escape(href, quote=True)}">{html.escape(label)}</a>')
     text = re.sub(r"\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|([^\]]+))?\]\]", replace_wikilink, text)
-    text = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", text)
-    text = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", text)
 
+    # 3. Stash and compile markdown images
     def replace_markdown_image(match: re.Match[str]) -> str:
         alt_text = html.unescape(match.group(1))
         src = html.unescape(match.group(2)).strip()
         title = html.unescape(match.group(3)).strip() if match.group(3) else ""
         title_attr = f' title="{html.escape(title, quote=True)}"' if title else ""
-        return (
+        img_html = (
             f'<img src="{html.escape(src, quote=True)}" '
             f'alt="{html.escape(alt_text, quote=True)}"{title_attr}>'
         )
+        return stash(img_html)
+    text = re.sub(
+        r"!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;(.*?)&quot;)?\)",
+        replace_markdown_image,
+        text,
+    )
 
+    # 4. Stash and compile markdown links
     def replace_markdown_link(match: re.Match[str]) -> str:
         label = match.group(1)
         href = html.unescape(match.group(2)).strip()
@@ -316,21 +326,35 @@ def _inline_html(raw_text: str, resolve_link: Callable[[str, str | None], str | 
             else:
                 extra_attrs = f' title="{html.escape(title, quote=True)}"'
 
-        return f'<a href="{html.escape(href, quote=True)}"{extra_attrs}>{label}</a>'
+        # Check if it is a footnote link (e.g. starts with #user-content-fn- or matches [number](#...))
+        is_footnote = href.startswith("#user-content-fn-") or (
+            label.isdigit() and href.startswith("#") and "fn" in href
+        )
 
-    text = re.sub(
-        r"!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;(.*?)&quot;)?\)",
-        replace_markdown_image,
-        text,
-    )
+        link_html = f'<a href="{html.escape(href, quote=True)}"{extra_attrs}>{label}</a>'
+        if is_footnote:
+            link_html = f"<sup>{link_html}</sup>"
+        return stash(link_html)
     text = re.sub(
         r"\[([^\]]+)\]\(([^)\s]+)(?:\s+&quot;(.*?)&quot;)?\)",
         replace_markdown_link,
         text,
     )
+
+    # 5. Parse bold & italics using * and _
+    # Note: Because links, images, and code spans are stashed, they are protected.
+    text = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", text)
+    text = re.sub(r"__([^_]+)__", r"<strong>\1</strong>", text)
+    text = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", text)
+    text = re.sub(r"_([^_]+)_", r"<em>\1</em>", text)
+
+    # 6. Autolink external URLs
     text = _autolink_external_urls(text)
-    for idx, code_html in enumerate(code_spans):
-        text = text.replace(f"@@CODE_SPAN_{idx}@@", code_html)
+
+    # 7. Restore stashed elements in reverse order to handle nesting
+    for idx in reversed(range(len(stashed))):
+        text = text.replace(f"@@STASHEDHTML{idx}@@", stashed[idx])
+
     return text
 
 
