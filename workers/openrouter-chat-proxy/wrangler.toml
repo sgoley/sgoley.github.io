@@ -7,7 +7,7 @@ OPENROUTER_MODEL = "openai/gpt-oss-120b"
 OPENROUTER_SITE_TITLE = "Scott Goley Website Chat"
 PUBLIC_SITE_URL = "https://scottgoley.com"
 # Comma-separated list. Example: "https://scottgoley.com,https://sgoley.github.io"
-ALLOWED_ORIGINS = "https://scottgoley.com"
+ALLOWED_ORIGINS = "https://scottgoley.com,https://sgoley.github.io,http://localhost:8000,http://127.0.0.1:8000"
 # Optional hardening/intake bindings:
 # - TURNSTILE_SECRET_KEY secret: require Cloudflare Turnstile for chat/feedback.
 # - RATE_LIMIT_KV binding: per-IP hourly request caps.
