@@ -43,6 +43,213 @@
       thread.querySelectorAll(".chat-empty").forEach((node) => node.remove());
     };
 
+    const renderMarkdown = (rawMarkdown) => {
+      if (!rawMarkdown) return "";
+
+      const codeBlocks = [];
+      let text = String(rawMarkdown).replace(/```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g, (_, lang, code) => {
+        const idx = codeBlocks.length;
+        const escapedCode = code
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        codeBlocks.push(`<pre><code class="${lang ? `language-${lang}` : ""}">${escapedCode}</code></pre>`);
+        return `\n\n@@CODE_BLOCK_${idx}@@\n\n`;
+      });
+
+      text = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      const inlineFormat = (str) => {
+        const inlineCode = [];
+        let s = str.replace(/`([^`]+)`/g, (_, code) => {
+          const idx = inlineCode.length;
+          inlineCode.push(`<code>${code}</code>`);
+          return `@@INLINE_CODE_${idx}@@`;
+        });
+
+        const links = [];
+        s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]+|#[^\s)]+)\)/g, (_, label, url) => {
+          const idx = links.length;
+          links.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+          return `@@LINK_${idx}@@`;
+        });
+
+        s = s.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+          let trailing = "";
+          while (url && ".,:;!?".includes(url.slice(-1))) {
+            trailing = url.slice(-1) + trailing;
+            url = url.slice(0, -1);
+          }
+          const idx = links.length;
+          links.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+          return `@@LINK_${idx}@@${trailing}`;
+        });
+
+        s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        s = s.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+        s = s.replace(/(^|[^\*])\*([^*]+)\*([^\*]|$)/g, "$1<em>$2</em>$3");
+        s = s.replace(/(^|[^_])_([^_]+)_([^_]|$)/g, "$1<em>$2</em>$3");
+        s = s.replace(/~~([^~]+)~~/g, "<del>$1</del>");
+
+        s = s.replace(/@@LINK_(\d+)@@/g, (_, idx) => links[Number(idx)] || "");
+        s = s.replace(/@@INLINE_CODE_(\d+)@@/g, (_, idx) => inlineCode[Number(idx)] || "");
+        return s;
+      };
+
+      const lines = text.split("\n");
+      const outputBlocks = [];
+      let currentList = null;
+      let currentQuote = null;
+      let inTable = false;
+      let tableLines = [];
+
+      const flushList = () => {
+        if (!currentList) return;
+        const tag = currentList.type;
+        const itemsHtml = currentList.items.map((it) => `<li>${inlineFormat(it)}</li>`).join("");
+        outputBlocks.push(`<${tag}>${itemsHtml}</${tag}>`);
+        currentList = null;
+      };
+
+      const flushQuote = () => {
+        if (!currentQuote) return;
+        outputBlocks.push(`<blockquote>${inlineFormat(currentQuote.join(" "))}</blockquote>`);
+        currentQuote = null;
+      };
+
+      const flushTable = () => {
+        if (!inTable || tableLines.length === 0) {
+          inTable = false;
+          tableLines = [];
+          return;
+        }
+        if (tableLines.length >= 2) {
+          const splitRow = (row) => {
+            let clean = row.trim();
+            if (clean.startsWith("|")) clean = clean.slice(1);
+            if (clean.endsWith("|")) clean = clean.slice(0, -1);
+            return clean.split("|").map((cell) => cell.trim());
+          };
+          const headerRow = splitRow(tableLines[0]);
+          const isSep = /^\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?$/.test(tableLines[1].trim());
+          if (isSep) {
+            let tableHtml = '<div class="chat-table-wrap"><table><thead><tr>';
+            headerRow.forEach((h) => {
+              tableHtml += `<th>${inlineFormat(h)}</th>`;
+            });
+            tableHtml += '</tr></thead><tbody>';
+            const dataRows = tableLines.slice(2).map(splitRow);
+            dataRows.forEach((row) => {
+              if (row.length === 1 && row[0] === "") return;
+              tableHtml += '<tr>';
+              for (let i = 0; i < headerRow.length; i++) {
+                tableHtml += `<td>${inlineFormat(row[i] || "")}</td>`;
+              }
+              tableHtml += '</tr>';
+            });
+            tableHtml += '</tbody></table></div>';
+            outputBlocks.push(tableHtml);
+            inTable = false;
+            tableLines = [];
+            return;
+          }
+        }
+        tableLines.forEach((l) => outputBlocks.push(`<p>${inlineFormat(l)}</p>`));
+        inTable = false;
+        tableLines = [];
+      };
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        if (trimmed.startsWith("@@CODE_BLOCK_") && trimmed.endsWith("@@")) {
+          flushList();
+          flushQuote();
+          flushTable();
+          const match = trimmed.match(/@@CODE_BLOCK_(\d+)@@/);
+          if (match) {
+            outputBlocks.push(codeBlocks[Number(match[1])] || "");
+          }
+          continue;
+        }
+
+        if (trimmed.startsWith("|") && (trimmed.endsWith("|") || trimmed.includes("|"))) {
+          flushList();
+          flushQuote();
+          inTable = true;
+          tableLines.push(trimmed);
+          continue;
+        } else if (inTable) {
+          flushTable();
+        }
+
+        if (!trimmed) {
+          flushList();
+          flushQuote();
+          continue;
+        }
+
+        const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
+        if (headingMatch) {
+          flushList();
+          flushQuote();
+          const level = Math.min(6, headingMatch[1].length + 2);
+          outputBlocks.push(`<h${level}>${inlineFormat(headingMatch[2])}</h${level}>`);
+          continue;
+        }
+
+        if (/^(-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
+          flushList();
+          flushQuote();
+          outputBlocks.push("<hr>");
+          continue;
+        }
+
+        if (trimmed.startsWith("&gt;") || trimmed.startsWith(">")) {
+          flushList();
+          const quoteText = trimmed.replace(/^(&gt;|>)\s?/, "");
+          if (!currentQuote) currentQuote = [];
+          currentQuote.push(quoteText);
+          continue;
+        } else if (currentQuote) {
+          flushQuote();
+        }
+
+        const ulMatch = trimmed.match(/^[-*+]\s+(.*)$/);
+        if (ulMatch) {
+          if (!currentList || currentList.type !== "ul") {
+            flushList();
+            currentList = { type: "ul", items: [] };
+          }
+          currentList.items.push(ulMatch[1]);
+          continue;
+        }
+
+        const olMatch = trimmed.match(/^\d+\.\s+(.*)$/);
+        if (olMatch) {
+          if (!currentList || currentList.type !== "ol") {
+            flushList();
+            currentList = { type: "ol", items: [] };
+          }
+          currentList.items.push(olMatch[1]);
+          continue;
+        }
+
+        flushList();
+        outputBlocks.push(`<p>${inlineFormat(trimmed)}</p>`);
+      }
+
+      flushList();
+      flushQuote();
+      flushTable();
+
+      return outputBlocks.join("");
+    };
+
     const appendMessage = (role, text) => {
       if (!thread) {
         return null;
@@ -53,7 +260,11 @@
         role === "user"
           ? "chat-message chat-message-user"
           : "chat-message chat-message-assistant";
-      bubble.textContent = text;
+      if (role === "user") {
+        bubble.textContent = text;
+      } else {
+        bubble.innerHTML = renderMarkdown(text);
+      }
       thread.appendChild(bubble);
       thread.scrollTop = thread.scrollHeight;
       return bubble;
@@ -248,7 +459,8 @@
           await streamAssistantReply(response, (chunk) => {
             assistantText += chunk;
             if (assistantBubble) {
-              assistantBubble.textContent = assistantText || "...";
+              assistantBubble.innerHTML = renderMarkdown(assistantText || "...");
+              thread.scrollTop = thread.scrollHeight;
             }
           });
 
@@ -260,7 +472,8 @@
               : "Request error: unknown failure.";
         } finally {
           if (assistantBubble) {
-            assistantBubble.textContent = assistantText;
+            assistantBubble.innerHTML = renderMarkdown(assistantText);
+            thread.scrollTop = thread.scrollHeight;
           }
           history.push({ role: "assistant", content: assistantText });
           setFormBusy(false);
