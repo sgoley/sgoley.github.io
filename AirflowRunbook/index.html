@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runbook for Airflow — iPhone & iPad Companion</title>
+  <meta name="description" content="Runbook is a native, direct-to-instance iOS companion for Apache Airflow. Monitor health, review DAG runs, and trigger new runs from iPhone and iPad.">
+  <meta property="og:title" content="Runbook for Airflow — iPhone & iPad Companion">
+  <meta property="og:description" content="A native, direct-to-instance iOS companion for Apache Airflow. Monitor health, review DAG runs, and trigger new runs.">
+  <meta property="og:image" content="assets/app-icon.png">
+  <meta property="og:url" content="https://scottgoley.com/AirflowRunbook/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #050d18;
+      --bg-navy: #08142a;
+      --bg-surface: #0d1f3d;
+      --card-bg: rgba(13, 31, 61, 0.78);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-border-hover: rgba(23, 105, 210, 0.45);
+      --primary: #1769d2;
+      --primary-glow: rgba(23, 105, 210, 0.25);
+      --accent: #ff8c42;
+      --text-main: #f3f7fd;
+      --text-muted: #8ba3c7;
+      --text-dim: #5c7298;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background-color: var(--bg-deep); color: var(--text-main); line-height: 1.6; }
+    body { overflow-x: hidden; background: radial-gradient(circle at 50% 0%, rgba(23, 105, 210, 0.08), transparent 50%), radial-gradient(circle at 100% 20%, rgba(255, 140, 66, 0.04), transparent 40%), var(--bg-deep); min-height: 100vh; }
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; font-weight: 700; }
+    a { color: #4fa3ff; text-decoration: none; transition: var(--transition); }
+    a:hover { color: #8fc8ff; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .site-header { position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); background: rgba(5, 13, 24, 0.82); border-bottom: 1px solid var(--card-border); }
+    .nav-wrapper { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.25rem; color: #fff; }
+    .brand-icon { width: 38px; height: 38px; border-radius: 10px; }
+    .brand-badge { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: rgba(23, 105, 210, 0.2); color: #4fa3ff; border: 1px solid rgba(23, 105, 210, 0.35); }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; }
+    .bar { display: block; width: 24px; height: 2px; margin: 6px 0; background: var(--text-main); border-radius: 2px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); }
+    .nav-links a:hover { color: #fff; }
+    .github-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--card-border); color: #fff; font-size: 0.9rem; font-weight: 600; }
+    .github-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .hero { padding: 96px 0 80px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(23, 105, 210, 0.12); border: 1px solid rgba(23, 105, 210, 0.25); color: #4fa3ff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 24px; }
+    .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: #4fa3ff; box-shadow: 0 0 0 0 rgba(79, 163, 255, 0.7); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(79, 163, 255, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(79, 163, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(79, 163, 255, 0); } }
+    .hero h1 { font-size: 3.4rem; line-height: 1.05; margin-bottom: 22px; }
+    .hero h1 span { background: linear-gradient(135deg, #4fa3ff 0%, #ff8c42 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-desc { font-size: 1.2rem; color: var(--text-muted); max-width: 540px; margin-bottom: 32px; }
+    .hero-cta-group { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 12px; background: linear-gradient(135deg, #1769d2, #2a86f7); color: #fff; font-weight: 600; box-shadow: 0 4px 20px rgba(23, 105, 210, 0.25); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(23, 105, 210, 0.35); color: #fff; }
+    .btn-secondary { display: inline-flex; align-items: center; padding: 14px 24px; border-radius: 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border); color: #fff; font-weight: 600; }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .hero-badges { display: flex; gap: 20px; flex-wrap: wrap; }
+    .hero-badge-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.92rem; }
+    .hero-visual { position: relative; }
+    .hero-visual img { width: 100%; max-width: 360px; display: block; margin: 0 auto; border-radius: 32px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06); }
+    .section { padding: 90px 0; }
+    .section-header { text-align: center; max-width: 680px; margin: 0 auto 60px; }
+    .section-tag { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(23, 105, 210, 0.12); border: 1px solid rgba(23, 105, 210, 0.25); color: #4fa3ff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; }
+    .section-title { font-size: 2.4rem; margin-bottom: 14px; }
+    .section-subtitle { font-size: 1.1rem; color: var(--text-muted); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .feature-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 28px; transition: var(--transition); }
+    .feature-card:hover { transform: translateY(-4px); border-color: var(--card-border-hover); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25); }
+    .feature-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(23, 105, 210, 0.14); display: flex; align-items: center; justify-content: center; color: #4fa3ff; margin-bottom: 18px; }
+    .feature-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.95rem; }
+    .showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+    .showcase-item { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); overflow: hidden; transition: var(--transition); }
+    .showcase-item:hover { transform: translateY(-4px); border-color: var(--card-border-hover); }
+    .showcase-item img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--card-border); }
+    .showcase-caption { padding: 20px; }
+    .showcase-caption h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .showcase-caption p { color: var(--text-muted); font-size: 0.92rem; }
+    .security-section { background: linear-gradient(180deg, transparent, rgba(23, 105, 210, 0.06), transparent); }
+    .security-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .security-list { list-style: none; }
+    .security-list li { display: flex; gap: 14px; margin-bottom: 24px; }
+    .security-list .icon { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: rgba(23, 105, 210, 0.15); color: #4fa3ff; display: flex; align-items: center; justify-content: center; }
+    .security-list h4 { margin-bottom: 6px; }
+    .security-list p { color: var(--text-muted); font-size: 0.95rem; }
+    .security-visual img { width: 100%; border-radius: var(--radius-lg); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); border: 1px solid var(--card-border); }
+    .site-footer { padding: 48px 0; border-top: 1px solid var(--card-border); }
+    .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { color: var(--text-muted); font-size: 0.92rem; }
+    .footer-links a:hover { color: #fff; }
+    @media (max-width: 900px) {
+      .hero-grid, .security-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.6rem; }
+      .hero { padding: 72px 0 60px; }
+      .nav-toggle { display: block; }
+      .nav-menu { position: absolute; top: 72px; left: 0; right: 0; background: rgba(5, 13, 24, 0.95); border-bottom: 1px solid var(--card-border); padding: 20px 24px; display: none; }
+      .nav-menu.open { display: block; }
+      .nav-links { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="#" class="nav-brand">
+        <img src="assets/app-icon.png" alt="Runbook Icon" class="brand-icon">
+        <span>Runbook for Airflow</span>
+        <span class="brand-badge">iOS 17+</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <nav class="nav-menu" id="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#showcase">Interface</a></li>
+          <li><a href="#security">Security</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="https://github.com/sgoley/AirflowRunbook/issues">Support</a></li>
+          <li class="nav-action">
+            <a href="https://github.com/sgoley/AirflowRunbook" target="_blank" rel="noopener" class="github-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015-2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>GitHub</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-pill"><span class="pulse-dot"></span><span>Direct-to-Instance • iOS Widgets</span></div>
+        <h1>Apache Airflow <span>in your pocket</span>.</h1>
+        <p class="hero-desc">Runbook is a native iPhone and iPad companion for monitoring Airflow health, reviewing DAG runs, and explicitly triggering new runs. Your device talks directly to your Airflow instance over HTTPS.</p>
+        <div class="hero-cta-group">
+          <a href="#features" class="btn-primary"><span>Explore Features</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="https://github.com/sgoley/AirflowRunbook/issues" class="btn-secondary"><span>Get Support</span></a>
+        </div>
+        <div class="hero-badges">
+          <div class="hero-badge-item"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Direct HTTPS connection</span></div>
+          <div class="hero-badge-item"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Keychain credentials</span></div>
+          <div class="hero-badge-item"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Synthetic demo mode</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/screenshots/iphone/dashboard_6.9inch.png" alt="Runbook dashboard on iPhone">
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Operations at a glance</span>
+        <h2 class="section-title">Monitor, inspect, trigger.</h2>
+        <p class="section-subtitle">Runbook deliberately starts with an operationally safe slice: failed and active run monitoring, run details, refresh, and explicit new-run triggering.</p>
+      </div>
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <h3>Health Dashboard</h3>
+          <p>See the status of your Airflow instance at a glance with summary counts for failed, running, queued, and successful DAG runs.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+          <h3>DAG Run Detail</h3>
+          <p>Drill into individual runs, review task states, start times, durations, and failure details from anywhere.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h3>Explicit Triggers</h3>
+          <p>Trigger new DAG runs with a clear confirmation step. No background scheduling on your behalf — just explicit, intentional actions.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <h3>Keychain Auth</h3>
+          <p>Airflow usernames and passwords live in the iOS Secure Keychain. Short-lived API tokens remain in memory only.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+          <h3>Direct-to-Instance</h3>
+          <p>No relay service or intermediary. HTTPS requests originate on your device and terminate directly at your Airflow URL.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M8 12h8M12 8v8" stroke-linecap="round"/></svg></div>
+          <h3>Demo Workspace</h3>
+          <p>On a clean install, Runbook opens a synthetic demo workspace so the full interface can be evaluated without an Airflow account.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="showcase" style="background: rgba(0,0,0,0.15);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interface</span>
+        <h2 class="section-title">Built for operators.</h2>
+        <p class="section-subtitle">Real iPhone and iPad captures of the monitoring interface, connection setup, and run inspection screens.</p>
+      </div>
+      <div class="showcase-grid">
+        <div class="showcase-item">
+          <img src="assets/screenshots/iphone/dashboard_6.9inch.png" alt="Dashboard">
+          <div class="showcase-caption"><h3>Dashboard</h3><p>Instance health and recent run summary.</p></div>
+        </div>
+        <div class="showcase-item">
+          <img src="assets/screenshots/iphone/instances_6.9inch.png" alt="Instances">
+          <div class="showcase-caption"><h3>Instances</h3><p>Manage and switch between Airflow connections.</p></div>
+        </div>
+        <div class="showcase-item">
+          <img src="assets/screenshots/iphone/run-detail_6.9inch.png" alt="Run Detail">
+          <div class="showcase-caption"><h3>Run Detail</h3><p>Detailed task grid for a specific DAG run.</p></div>
+        </div>
+        <div class="showcase-item">
+          <img src="assets/screenshots/iphone/dag-grid_6.9inch.png" alt="DAG Grid">
+          <div class="showcase-caption"><h3>DAG Grid</h3><p>Browse runs across a DAG and trigger new ones.</p></div>
+        </div>
+        <div class="showcase-item">
+          <img src="assets/screenshots/iphone/connection_6.9inch.png" alt="Connection">
+          <div class="showcase-caption"><h3>Connection</h3><p>Configure instance URL and credentials.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section security-section" id="security">
+    <div class="container security-grid">
+      <div>
+        <span class="section-tag">Privacy & Trust</span>
+        <h2 class="section-title" style="margin-bottom: 14px;">Zero-knowledge operations.</h2>
+        <p class="section-subtitle" style="text-align: left; margin-bottom: 32px;">Runbook is designed to connect directly to Apache Airflow installations controlled by its users. The developer does not operate a relay service and does not collect, track, or monetize personal information or Airflow instance data.</p>
+        <ul class="security-list">
+          <li>
+            <span class="icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div><h4>Keychain Storage</h4><p>Credentials are stored using the iOS Secure Keychain and never written to app group containers.</p></div>
+          </li>
+          <li>
+            <span class="icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div><h4>Direct HTTPS</h4><p>All network traffic goes directly from your device to your Airflow URL over TLS. No proxy or logging intermediary.</p></div>
+          </li>
+          <li>
+            <span class="icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div><h4>No Telemetry</h4><p>No analytics, advertising, or third-party tracking SDKs. The demo workspace is fully synthetic and makes no network requests.</p></div>
+          </li>
+        </ul>
+      </div>
+      <div class="security-visual">
+        <img src="assets/screenshots/ipad/dashboard_13inch.png" alt="Runbook dashboard on iPad">
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p style="color: var(--text-dim); font-size: 0.92rem;">Runbook for Airflow</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="https://github.com/sgoley/AirflowRunbook">GitHub</a>
+        <a href="https://github.com/sgoley/AirflowRunbook/issues">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('nav-toggle');
+    const menu = document.getElementById('nav-menu');
+    toggle.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('#nav-menu a').forEach(link => {
+      link.addEventListener('click', () => { menu.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); });
+    });
+  </script>
+
+</body>
+</html>
