@@ -1,4 +1,18 @@
 (() => {
+  const applyTheme = () => {
+    const saved = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = saved ? saved === "dark" : prefersDark;
+    document.documentElement.classList.toggle("light", !isDark);
+  };
+
+  const setTheme = (dark) => {
+    document.documentElement.classList.toggle("light", !dark);
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  };
+
+  applyTheme();
+
   const current = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".site-nav a").forEach((link) => {
     const href = link.getAttribute("href");
@@ -562,5 +576,19 @@
       link.addEventListener("mouseleave", hideOverlay);
       link.addEventListener("blur", hideOverlay);
     });
+  }
+
+  const nav = document.querySelector(".site-nav");
+  if (nav) {
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "theme-toggle";
+    toggle.setAttribute("aria-label", "Toggle theme");
+    toggle.textContent = "◐";
+    toggle.addEventListener("click", () => {
+      const isDark = !document.documentElement.classList.contains("light");
+      setTheme(isDark);
+    });
+    nav.appendChild(toggle);
   }
 })();
