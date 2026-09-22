@@ -587,7 +587,7 @@
     toggle.textContent = "◐";
     toggle.addEventListener("click", () => {
       const isDark = !document.documentElement.classList.contains("light");
-      setTheme(isDark);
+      setTheme(!isDark);
     });
     nav.appendChild(toggle);
   }
