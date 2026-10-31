@@ -69,3 +69,7 @@ tmp/
 # Docs to exclude
 /PLANNING.md
 /TASK.md
+
+# Employer stack diagrams. Local reference only.
+# This repo is the public site: Pages serves tracked files, and content/** feeds the public assistant.
+/reference/stacks/
