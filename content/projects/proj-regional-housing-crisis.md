@@ -4,6 +4,11 @@ author: Scott Goley
 status: published
 published: 2026-06-12
 tags: [doodle, housing, economics, javascript, visualization, data]
+shelf: open
+part: Built
+outcome: Purchase-year versus sale-year annualized returns for U.S. housing, by state and metro.
+proof_label: Live
+proof_url: /assets/doodles/the-regional-housing-crisis/
 ---
 
 # Regional Housing Crisis (1975–2026)

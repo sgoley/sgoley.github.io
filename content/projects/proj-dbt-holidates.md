@@ -4,6 +4,11 @@ author: Scott Goley
 status: published
 published: 2026-05-11
 tags: [dbt, dbt-core, holidays, calendar, analytics-engineering, date-dimension]
+shelf: install
+part: Built
+outcome: Holiday calendar models and a macro for business-day logic across several countries.
+proof_label: Source
+proof_url: https://github.com/sgoley/dbt-holidates
 ---
 
 # dbt Holidates

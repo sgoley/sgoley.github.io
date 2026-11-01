@@ -13,10 +13,24 @@
 
   applyTheme();
 
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll(".site-nav a").forEach((link) => {
-    const href = link.getAttribute("href");
-    if (href === current || (current === "" && href === "index.html")) {
+  const path = window.location.pathname;
+  const pageSection = (() => {
+    if (/\/articles\/posts\/(exp-|edu\.html)/.test(path)) return "experience";
+    if (path.endsWith("/experience.html") || path.endsWith("/about.html")) return "experience";
+    if (path.endsWith("/articles.html") || path.includes("/articles/posts/")) return "writing";
+    if (path.endsWith("/ask.html")) return "ask";
+    if (
+      path.endsWith("/index.html") ||
+      path.endsWith("/") ||
+      path.endsWith("/projects.html") ||
+      path.includes("/projects/")
+    ) {
+      return "work";
+    }
+    return "";
+  })();
+  document.querySelectorAll(".site-nav a[data-nav]").forEach((link) => {
+    if (pageSection && link.getAttribute("data-nav") === pageSection) {
       link.classList.add("active");
     }
   });
@@ -416,6 +430,16 @@
       chatContext = await response.json();
     };
 
+    document.querySelectorAll("[data-ask-prompt]").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (!input) {
+          return;
+        }
+        input.value = button.getAttribute("data-ask-prompt") || "";
+        input.focus();
+      });
+    });
+
     const endpointMissing = !endpoint || endpoint.includes(endpointPlaceholder);
     if (endpointMissing) {
       if (note) {
@@ -578,7 +602,7 @@
     });
   }
 
-  const nav = document.querySelector(".site-nav");
+  const nav = document.querySelector(".nav-cluster") || document.querySelector(".site-nav");
   if (nav) {
     const toggle = document.createElement("button");
     toggle.type = "button";

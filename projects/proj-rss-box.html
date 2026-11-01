@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RSS Box - Scott Goley</title>
-  <meta name="description" content="Repository: /Users/admin/Storage/Git/homelab/rss-box RSS Box is a private monorepo for an inbox-style RSS and content processing app. It combines a Fastify API, a React/Vite web...">
+  <meta name="description" content="Private repository. Not published. RSS Box is a private monorepo for an inbox-style RSS and content processing app. It combines a Fastify API, a React/Vite web app, Postgres, Re...">
   <link rel="stylesheet" href="../assets/css/site.css">
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -31,12 +31,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="brand" href="../index.html">Scott Goley</a>
-      <nav class="site-nav" aria-label="Main navigation">
-        <a href="../index.html">Home</a>
-        <a href="../about.html">About</a>
-        <a href="../projects.html">Projects</a>
-        <a href="../articles.html">Articles</a>
-      </nav>
+      <div class="nav-cluster">
+        <nav class="site-nav" aria-label="Main navigation">
+          <a data-nav="work" href="../index.html">Work</a>
+          <a data-nav="experience" href="../experience.html">Experience</a>
+          <a data-nav="writing" href="../articles.html">Writing</a>
+          <a data-nav="ask" href="../ask.html">Ask</a>
+        </nav>
+        <nav class="site-links" aria-label="Profiles">
+          <a href="https://github.com/sgoley">GitHub</a>
+          <a href="https://www.linkedin.com/in/sgoley/">LinkedIn</a>
+        </nav>
+      </div>
     </div>
   </header>
 
@@ -51,7 +57,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
 
     <article class="panel article-prose">
-<p>Repository: <code>/Users/admin/Storage/Git/homelab/rss-box</code></p>
+<p>Private repository. Not published.</p>
 <p>RSS Box is a private monorepo for an inbox-style RSS and content processing app. It combines a Fastify API, a React/Vite web app, Postgres, Redis, and background jobs so feeds and other inbound sources can be collected, processed, and surfaced in one place.</p>
 <h2>What it includes</h2>
 <ul>
@@ -72,7 +78,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </article>
   </main>
 
-  <footer class="site-footer">
+    <footer class="site-footer">
     <div class="container">
       <p>(c) <span data-year></span> Scott Goley</p>
     </div>

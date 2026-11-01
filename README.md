@@ -8,15 +8,16 @@ Static personal website (HTML/CSS/JS) with:
 
 ## Architecture
 
-- **Static site**: root pages (`index.html`, `about.html`, `projects.html`, `articles.html`)
+- **Static site**: `index.html` (Work), `experience.html`, `articles.html` (Writing), `ask.html`. `about.html` and `projects.html` redirect.
 - **Markdown source of truth**:
   - `content/posts/*.md`
   - `content/projects/*.md`
 - **Prompt template**: `prompts/default_system.txt`
 - **Generator**: `scripts/generate_static_articles.py`
   - builds `articles/**` and `projects/**`
-  - updates `articles.html` and `projects.html`
+  - updates `index.html`, `experience.html`, `articles.html`, and the `about.html` / `projects.html` redirects
   - builds chat context file: `assets/data/chat-context.json`
+- **Project cards**: set `outcome`, `shelf` (`open`, `install`, or `read`), and optional `featured` (1–4), `proof_label`, and `proof_url` in project frontmatter
 - **Frontend chat client**: `assets/js/site.js` (guided chat, source cards, packet builder)
 - **OpenRouter proxy**: `workers/openrouter-chat-proxy/` (Cloudflare Worker)
 

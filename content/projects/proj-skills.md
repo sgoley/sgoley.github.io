@@ -4,6 +4,11 @@ author: Scott Goley
 status: published
 published: 2026-06-01
 tags: [ai, llm, agent-skills, scenario-planning, game-theory, tailscale, devops]
+shelf: install
+part: Built
+outcome: Skill specs for decision simulations and Tailscale operations, installed as one package.
+proof_label: Source
+proof_url: https://github.com/sgoley/skills
 ---
 
 # Skills (Agentic Simulation + Tailscale Utilities)

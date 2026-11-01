@@ -12,14 +12,14 @@ This post explains how the website assistant works.
 
 ## Stack
 
-- **Native JavaScript chat UI** embedded directly in the homepage
+- **Native JavaScript chat UI** on the Ask page
 - **Cloudflare Worker** as the OpenRouter proxy backend
 - **OpenRouter** as the LLM backend (supporting 200+ models)
 - **Markdown files** as the content source (scoped to `/content` only)
 
 ## Overview
 
-The website chat interface is a **homepage async workbench**. It combines a grounded chat panel, source cards, guided modes, and a handoff packet builder for visitors who want to leave useful context rather than only ask résumé-style questions.
+The website chat lives on the Ask page. It combines a grounded chat panel, source cards, guided modes, and a handoff packet builder for visitors who want to leave useful context rather than only ask résumé-style questions.
 
 ## What It Does
 

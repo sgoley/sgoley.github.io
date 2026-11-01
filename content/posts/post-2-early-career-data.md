@@ -3,6 +3,7 @@ title: Early Data & Analytics Career Playbook
 status: published
 published: 2026-05-01
 tags: [mentorship, data-analytics, early-career]
+outcome: What to optimize for early in a data career: proof of work, judgment, and constraints.
 ---
 
 # Data & Analytics Mentorship Playbook

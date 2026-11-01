@@ -3,6 +3,11 @@ title: Investing Start/Finish Doodle
 author: Scott Goley
 status: published
 published: 2026-05-11
+shelf: open
+part: Built
+outcome: A heatmap of annualized stock returns by the year you buy and the year you sell.
+proof_label: Live
+proof_url: /assets/doodles/investing-start-finish/
 tags: [doodle, investing, javascript, visualization]
 ---
 

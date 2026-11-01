@@ -36,7 +36,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add content prompts articles projects articles.html projects.html assets/data
+          git add content prompts articles projects index.html experience.html about.html articles.html projects.html assets/data
 
           if git diff --cached --quiet; then
             echo "No changes to commit."

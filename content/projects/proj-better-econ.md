@@ -4,6 +4,11 @@ author: Scott Goley
 status: published
 published: 2026-09-22
 tags: [ios, swift, swiftui, fred, economics, widgets]
+shelf: open
+part: Built
+outcome: Home Screen widgets for any saved FRED series, fetched on the device, with the API key kept in the Keychain.
+proof_label: Live
+proof_url: /BetterEcon/
 ---
 
 BetterEcon puts configurable FRED® economic data widgets, values, and autoscaled sparklines on your iPhone and iPad Home Screen. Track unemployment, inflation, Treasury yields, mortgage rates, and any saved FRED® series without opening the app.

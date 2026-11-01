@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Ask - Scott Goley</title>
+        <meta
+            name="description"
+            content="Ask questions about Scott Goley's published notes, projects, and writing."
+        />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <!-- Google Tag Manager -->
+        <script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s),
+                    dl = l != "dataLayer" ? "&l=" + l : "";
+                j.async = true;
+                j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, "script", "dataLayer", "GTM-TK7DSRV");
+        </script>
+        <!-- End Google Tag Manager -->
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-BFSYS2PX3G"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-BFSYS2PX3G");
+        </script>
+    </head>
+    <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript
+            ><iframe
+                src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DSRV"
+                height="0"
+                width="0"
+                style="display: none; visibility: hidden"
+            ></iframe
+        ></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        <header class="site-header">
+            <div class="container nav-wrap">
+                <a class="brand" href="index.html">Scott Goley</a>
+                <div class="nav-cluster">
+                    <nav class="site-nav" aria-label="Main navigation">
+                        <a data-nav="work" href="index.html">Work</a>
+                        <a data-nav="experience" href="experience.html">Experience</a>
+                        <a data-nav="writing" href="articles.html">Writing</a>
+                        <a data-nav="ask" href="ask.html">Ask</a>
+                    </nav>
+                    <nav class="site-links" aria-label="Profiles">
+                        <a href="https://github.com/sgoley">GitHub</a>
+                        <a href="https://www.linkedin.com/in/sgoley/">LinkedIn</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="container stack">
+            <section class="panel" id="chat">
+                <div class="panel-header">
+                    <p class="eyebrow">Ask</p>
+                    <h1>Ask about the work</h1>
+                    <p>
+                        Questions are answered from the published notes. Pick a
+                        starting point, or write your own.
+                    </p>
+                </div>
+
+                <div class="ask-prompts">
+                    <button
+                        type="button"
+                        class="btn btn-ghost"
+                        data-ask-prompt="What does dbt Postgres Utils cover, and where is it published?"
+                    >
+                        Postgres utils
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-ghost"
+                        data-ask-prompt="What does lake-sort do with a dropzone file?"
+                    >
+                        lake-sort
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-ghost"
+                        data-ask-prompt="How does the Quicken MCP server limit what SQL an assistant can run?"
+                    >
+                        Quicken SQL
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-ghost"
+                        data-ask-prompt="How does the homelab expose services on the LAN and over Tailscale?"
+                    >
+                        Homelab access
+                    </button>
+                </div>
+
+                <div
+                    id="native-chat"
+                    class="native-chat"
+                    data-chat-endpoint="https://sgoley-openrouter-chat-proxy.scottmgoley.workers.dev/chat"
+                    data-chat-model="openai/gpt-oss-120b"
+                >
+                    <div id="chat-thread" class="chat-thread" aria-live="polite"></div>
+
+                    <form id="chat-form" class="chat-compose" autocomplete="off">
+                        <label class="visually-hidden" for="chat-input">Message</label>
+                        <textarea
+                            id="chat-input"
+                            name="message"
+                            rows="2"
+                            maxlength="2400"
+                            placeholder="Ask about a project, a role, or an essay..."
+                            required
+                        ></textarea>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+
+                <p id="chat-note" class="embed-note">
+                    Chat endpoint not configured. Set
+                    <code>data-chat-endpoint</code> in <code>ask.html</code> or
+                    pass
+                    <code>?chat_api=https://your-worker.workers.dev/chat</code>.
+                </p>
+                <p class="lede">
+                    <a href="articles/posts/post-1-public-agent-for-anyone.html"
+                        >How this assistant uses the notes -&gt;</a
+                    >
+                </p>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <p>(c) <span data-year></span> Scott Goley</p>
+            </div>
+        </footer>
+
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

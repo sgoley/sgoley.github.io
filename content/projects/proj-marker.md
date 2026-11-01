@@ -4,11 +4,15 @@ author: Scott Goley
 status: published
 published: 2026-06-02
 tags: [homelab, ebooks, markdown, fastapi, python, automation]
+shelf: read
+part: Built
+outcome: A local app that converts a private ebook library into Markdown and keeps the folder structure.
+proof_label: Read
 ---
 
 # Marker
 
-Repository: `/Users/admin/Storage/Git/homelab/marker`
+Private repository. Not published.
 
 Marker is a small FastAPI app for turning local ebook/library files into Markdown. It scans a configured library, lets you browse and filter files in the browser, queues conversion jobs, and writes Markdown into a matching output tree while keeping the source folder structure intact.
 

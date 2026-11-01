@@ -4,6 +4,11 @@ author: Scott Goley
 status: published
 published: 2026-05-27
 tags: [go, tailscale, langfuse, aperture, ai, observability, docker, homelab]
+shelf: install
+part: Built
+outcome: A Go relay that turns Tailscale Aperture webhooks into Langfuse traces inside a tailnet.
+proof_label: Source
+proof_url: https://github.com/sgoley/unofficial-ts-aperture-langfuse-relay
 ---
 
 # Aperture → Langfuse Relay

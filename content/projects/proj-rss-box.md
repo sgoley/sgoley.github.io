@@ -4,11 +4,15 @@ author: Scott Goley
 status: published
 published: 2026-06-02
 tags: [rss, inbox, react, fastify, postgres, redis, ai]
+shelf: read
+part: Built
+outcome: A private inbox for RSS and other inbound sources, with an API, a web app, and background jobs.
+proof_label: Read
 ---
 
 # RSS Box
 
-Repository: `/Users/admin/Storage/Git/homelab/rss-box`
+Private repository. Not published.
 
 RSS Box is a private monorepo for an inbox-style RSS and content processing app. It combines a Fastify API, a React/Vite web app, Postgres, Redis, and background jobs so feeds and other inbound sources can be collected, processed, and surfaced in one place.
 

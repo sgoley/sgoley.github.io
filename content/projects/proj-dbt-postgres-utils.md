@@ -4,6 +4,12 @@ author: Scott Goley
 status: published
 published: 2026-05-11
 tags: [dbt, dbt-core, postgres, analytics-engineering, data-platform]
+featured: 1
+shelf: install
+part: Built
+outcome: PostgreSQL macros for indexes, privileges, foreign data, and materialized views, published on dbt Hub.
+proof_label: Source
+proof_url: https://github.com/sgoley/dbt-postgres-utils
 ---
 
 # dbt Postgres Utils

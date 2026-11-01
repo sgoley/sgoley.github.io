@@ -4,6 +4,11 @@ author: Scott Goley
 status: published
 published: 2026-05-11
 tags: [ai, notes, youtube, substack, obsidian, docker, react, bun]
+shelf: read
+part: Built
+outcome: A self-hosted app that turns YouTube transcripts into summaries in an Obsidian vault.
+proof_label: Source
+proof_url: https://github.com/sgoley/sub-notes-public
 ---
 
 # Sub Notes (Public)

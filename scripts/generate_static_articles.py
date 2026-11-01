@@ -127,9 +127,7 @@ def _excerpt(markdown_text: str, max_chars: int = 180) -> str:
     cleaned: List[str] = []
     for line in markdown_text.splitlines():
         stripped = _clean_excerpt_line(line)
-        if not stripped or stripped.startswith("#") or stripped.startswith("- ") or re.match(
-            r"^\d+\.\s+", stripped
-        ):
+        if not stripped or stripped.startswith("#") or re.match(r"^([-*+]|\d+\.)\s+", stripped):
             continue
         cleaned.append(stripped)
 
@@ -634,8 +632,162 @@ def _render_metadata(metadata: Dict[str, Any]) -> str:
     return "\n".join(out)
 
 
+GITHUB_URL = "https://github.com/sgoley"
+LINKEDIN_URL = "https://www.linkedin.com/in/sgoley/"
+
+
+def _content_group(doc: StaticDoc) -> str:
+    explicit = str(doc.metadata.get("group", "")).strip().lower()
+    if explicit in {"experience", "writing"}:
+        return explicit
+    stem = doc.source_path.stem.lower()
+    if stem == "edu" or stem.startswith("exp-"):
+        return "experience"
+    return "writing"
+
+
+def _featured_rank(doc: StaticDoc) -> int:
+    raw = str(doc.metadata.get("featured", "")).strip()
+    if not raw or raw.lower() in {"false", "0", "no"}:
+        return 0
+    try:
+        return int(raw)
+    except ValueError:
+        return 0
+
+
+def _shelf(doc: StaticDoc) -> str:
+    shelf = str(doc.metadata.get("shelf", "")).strip().lower()
+    if shelf in {"open", "install", "read"}:
+        return shelf
+    return "read"
+
+
+def _doc_eyebrow(doc: StaticDoc) -> str:
+    if doc.kind == "project":
+        return "Project"
+    if _content_group(doc) == "experience":
+        return "Experience"
+    return "Writing"
+
+
+def render_site_header(prefix: str = "") -> str:
+    return f"""<header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="{prefix}index.html">Scott Goley</a>
+      <div class="nav-cluster">
+        <nav class="site-nav" aria-label="Main navigation">
+          <a data-nav="work" href="{prefix}index.html">Work</a>
+          <a data-nav="experience" href="{prefix}experience.html">Experience</a>
+          <a data-nav="writing" href="{prefix}articles.html">Writing</a>
+          <a data-nav="ask" href="{prefix}ask.html">Ask</a>
+        </nav>
+        <nav class="site-links" aria-label="Profiles">
+          <a href="{GITHUB_URL}">GitHub</a>
+          <a href="{LINKEDIN_URL}">LinkedIn</a>
+        </nav>
+      </div>
+    </div>
+  </header>"""
+
+
+def render_site_footer(prefix: str = "") -> str:
+    return f"""  <footer class="site-footer">
+    <div class="container">
+      <p>(c) <span data-year></span> Scott Goley</p>
+    </div>
+  </footer>
+
+  <script src="{prefix}assets/js/site.js"></script>"""
+
+
+def _page_shell(
+    *,
+    title: str,
+    description: str,
+    body: str,
+    prefix: str = "",
+) -> str:
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(title)}</title>
+  <meta name="description" content="{html.escape(description, quote=True)}">
+  <link rel="stylesheet" href="{prefix}assets/css/site.css">
+  {GTM_HEAD_SNIPPET}
+  {GA_HEAD_SNIPPET}
+</head>
+<body>
+  {GTM_BODY_SNIPPET}
+  {render_site_header(prefix)}
+
+{body}
+
+  {render_site_footer(prefix)}
+</body>
+</html>
+"""
+
+
+def _is_external(url: str) -> bool:
+    return url.startswith("http://") or url.startswith("https://")
+
+
+def _anchor(href: str, label: str) -> str:
+    extra = ' target="_blank" rel="noopener noreferrer"' if _is_external(href) else ""
+    return (
+        f'<a href="{html.escape(href, quote=True)}"{extra}>'
+        f"{html.escape(label)} -&gt;</a>"
+    )
+
+
+def render_project_card(doc: StaticDoc) -> str:
+    label = str(doc.metadata.get("proof_label") or "Read").strip() or "Read"
+    proof = str(doc.metadata.get("proof_url") or doc.href).strip() or doc.href
+    part = str(doc.metadata.get("part") or "Built").strip() or "Built"
+    outcome = str(doc.metadata.get("outcome") or doc.excerpt or "No summary available yet.")
+    links = [_anchor(proof, label)]
+    if proof.rstrip("/") != doc.href.rstrip("/"):
+        links.append(_anchor(doc.href, "Note"))
+    return f"""      <article class="card">
+        <p class="card-kicker">{html.escape(part)} · {html.escape(label)}</p>
+        <h2>{html.escape(doc.title)}</h2>
+        <p>{html.escape(outcome)}</p>
+        <p class="card-links">{"".join(links)}</p>
+      </article>"""
+
+
+def render_summary_card(doc: StaticDoc, cta: str) -> str:
+    summary = str(doc.metadata.get("outcome") or doc.excerpt or "No summary available yet.")
+    return f"""      <article class="card">
+        <h2>{html.escape(doc.title)}</h2>
+        <p>{html.escape(summary)}</p>
+        <a href="{html.escape(doc.href, quote=True)}">{html.escape(cta)} -&gt;</a>
+      </article>"""
+
+
+def render_redirect(target: str, title: str) -> str:
+    safe_target = html.escape(target, quote=True)
+    safe_title = html.escape(title)
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url={safe_target}">
+  <link rel="canonical" href="{safe_target}">
+  <title>{safe_title}</title>
+</head>
+<body>
+  <p><a href="{safe_target}">{safe_title}</a></p>
+</body>
+</html>
+"""
+
+
 def render_doc_page(doc: StaticDoc, body_html: str) -> str:
-    eyebrow = "Article" if doc.kind == "article" else "Project"
+    eyebrow = _doc_eyebrow(doc)
     metadata_html = _render_metadata(doc.metadata)
     return f"""<!doctype html>
 <html lang="en">
@@ -650,17 +802,7 @@ def render_doc_page(doc: StaticDoc, body_html: str) -> str:
 </head>
 <body>
   {GTM_BODY_SNIPPET}
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="{doc.path_prefix}index.html">Scott Goley</a>
-      <nav class="site-nav" aria-label="Main navigation">
-        <a href="{doc.path_prefix}index.html">Home</a>
-        <a href="{doc.path_prefix}about.html">About</a>
-        <a href="{doc.path_prefix}projects.html">Projects</a>
-        <a href="{doc.path_prefix}articles.html">Articles</a>
-      </nav>
-    </div>
-  </header>
+  {render_site_header(doc.path_prefix)}
 
   <main class="container stack">
     <section class="panel article-header">
@@ -674,86 +816,113 @@ def render_doc_page(doc: StaticDoc, body_html: str) -> str:
     </article>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>(c) <span data-year></span> Scott Goley</p>
-    </div>
-  </footer>
-
-  <script src="{doc.path_prefix}assets/js/site.js"></script>
+  {render_site_footer(doc.path_prefix)}
 </body>
 </html>
 """
 
 
-def render_collection_index(
-    docs: List[StaticDoc],
-    *,
-    page_title: str,
-    meta_description: str,
-    eyebrow: str,
-    heading: str,
-    intro: str,
-    cta_text: str,
-) -> str:
-    cards: List[str] = []
-    for doc in docs:
-        summary = doc.excerpt or "No summary available yet."
-        cards.append(
-            f"""      <article class="card">
-        <h2>{html.escape(doc.title)}</h2>
-        <p>{html.escape(summary)}</p>
-        <a href="{html.escape(doc.href, quote=True)}">{html.escape(cta_text)} -&gt;</a>
-      </article>"""
+def _cards_grid(cards: List[str]) -> str:
+    if not cards:
+        return ""
+    return f"""    <section class="grid two-col">
+{chr(10).join(cards)}
+    </section>"""
+
+
+def render_work_page(projects: List[StaticDoc]) -> str:
+    featured = sorted(
+        (doc for doc in projects if _featured_rank(doc) > 0),
+        key=_featured_rank,
+    )
+    featured_ids = {doc.href for doc in featured}
+    shelves = [
+        ("open", "Open it", "Product sites and live analyses."),
+        ("install", "Install it", "Packages and small services."),
+        ("read", "Read it", "How a system is built. Some of these repositories stay private."),
+    ]
+    shelf_html: List[str] = []
+    for key, heading, lede in shelves:
+        cards = [
+            render_project_card(doc)
+            for doc in projects
+            if doc.href not in featured_ids and _shelf(doc) == key
+        ]
+        if not cards:
+            continue
+        shelf_html.append(
+            f"""    <section class="shelf">
+      <h2>{html.escape(heading)}</h2>
+      <p class="lede">{html.escape(lede)}</p>
+{_cards_grid(cards)}
+    </section>"""
         )
-    cards_html = "\n".join(cards)
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{html.escape(page_title)} - Scott Goley</title>
-  <meta name="description" content="{html.escape(meta_description, quote=True)}">
-  <link rel="stylesheet" href="assets/css/site.css">
-  {GTM_HEAD_SNIPPET}
-  {GA_HEAD_SNIPPET}
-</head>
-<body>
-  {GTM_BODY_SNIPPET}
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="index.html">Scott Goley</a>
-      <nav class="site-nav" aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="projects.html">Projects</a>
-        <a href="articles.html">Articles</a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="container stack">
+    featured_html = _cards_grid([render_project_card(doc) for doc in featured])
+    body = f"""  <main>
+    <section class="hero container">
+      <p class="eyebrow">Work</p>
+      <h1>Data, analytics, and AI systems</h1>
+      <p>Four public projects to open first. The rest are grouped by what you can do with them.</p>
+    </section>
+
+    <div class="container stack">
+      <section class="shelf">
+        <h2>Start here</h2>
+{featured_html}
+      </section>
+{chr(10).join(shelf_html)}
+    </div>
+  </main>"""
+    return _page_shell(
+        title="Scott Goley",
+        description="Public work by Scott Goley: data packages, tools, and a homelab.",
+        body=body,
+    )
+
+
+def render_experience_page(docs: List[StaticDoc], intro_html: str) -> str:
+    cards = _cards_grid([render_summary_card(doc, "Read") for doc in docs])
+    body = f"""  <main class="container stack">
     <section class="panel">
-      <p class="eyebrow">{html.escape(eyebrow)}</p>
-      <h1>{html.escape(heading)}</h1>
-      <p>{intro}</p>
+      <p class="eyebrow">Experience</p>
+      <h1>Experience</h1>
+      <div class="article-prose">
+{intro_html}
+      </div>
     </section>
+{cards}
+  </main>"""
+    return _page_shell(
+        title="Experience - Scott Goley",
+        description="Education and work experience.",
+        body=body,
+    )
 
-    <section class="grid two-col">
-{cards_html}
+
+def render_writing_page(docs: List[StaticDoc]) -> str:
+    cards = _cards_grid([render_summary_card(doc, "Read") for doc in docs])
+    body = f"""  <main class="container stack">
+    <section class="panel">
+      <p class="eyebrow">Writing</p>
+      <h1>Writing</h1>
+      <p class="lede">Essays. The job timeline is on Experience.</p>
     </section>
-  </main>
+{cards}
+  </main>"""
+    return _page_shell(
+        title="Writing - Scott Goley",
+        description="Essays by Scott Goley.",
+        body=body,
+    )
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>(c) <span data-year></span> Scott Goley</p>
-    </div>
-  </footer>
 
-  <script src="assets/js/site.js"></script>
-</body>
-</html>
-"""
+def _experience_intro_html(repo_root: Path) -> str:
+    path = repo_root / "content" / "experience.md"
+    if not path.exists():
+        return "<p>Education and roles.</p>"
+    _metadata, body = _parse_frontmatter(path.read_text(encoding="utf-8"))
+    return markdown_to_html(body, lambda _target, label: label)
 
 
 def _load_system_prompt_template(repo_root: Path) -> str:
@@ -926,40 +1095,33 @@ def main() -> None:
         doc.output_path.parent.mkdir(parents=True, exist_ok=True)
         doc.output_path.write_text(render_doc_page(doc, body_html), encoding="utf-8")
 
-    (repo_root / "articles.html").write_text(
-        render_collection_index(
-            articles,
-            page_title="Articles",
-            meta_description="Generated article index from content/posts markdown files.",
-            eyebrow="Writing",
-            heading="Articles and notes",
-            intro="These pages are generated from markdown files in <code>content/posts</code>.",
-            cta_text="Read article",
-        ),
+    experience_docs = [doc for doc in articles if _content_group(doc) == "experience"]
+    writing_docs = [doc for doc in articles if _content_group(doc) == "writing"]
+
+    (repo_root / "index.html").write_text(render_work_page(projects), encoding="utf-8")
+    (repo_root / "experience.html").write_text(
+        render_experience_page(experience_docs, _experience_intro_html(repo_root)),
         encoding="utf-8",
     )
-
+    (repo_root / "articles.html").write_text(render_writing_page(writing_docs), encoding="utf-8")
     (repo_root / "projects.html").write_text(
-        render_collection_index(
-            projects,
-            page_title="Projects",
-            meta_description="Generated project index from content/projects markdown files.",
-            eyebrow="Projects",
-            heading="Project walkthroughs and builds",
-            intro="These pages are generated from markdown files in <code>content/projects</code>.",
-            cta_text="Open project",
-        ),
+        render_redirect("index.html", "Work"),
+        encoding="utf-8",
+    )
+    (repo_root / "about.html").write_text(
+        render_redirect("experience.html", "Experience"),
         encoding="utf-8",
     )
     _write_chat_context_payload(repo_root, all_docs)
 
     print(f"Generated {len(articles)} article pages into articles/")
     print(f"Generated {len(projects)} project pages into projects/")
+    print(f"Experience entries: {len(experience_docs)}; writing entries: {len(writing_docs)}")
     if removed_articles or removed_projects:
         print(
             f"Removed stale pages: articles={removed_articles}, projects={removed_projects}"
         )
-    print("Updated articles.html, projects.html, and assets/data/chat-context.json")
+    print("Updated index.html, experience.html, articles.html, projects.html, about.html, and chat context")
 
 
 if __name__ == "__main__":
