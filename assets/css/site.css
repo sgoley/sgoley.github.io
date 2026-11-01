@@ -35,6 +35,9 @@
   --callout-important: #a78bfa;
   --callout-danger: #f87171;
   --shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.32);
+  --btn-primary-bg: #3b74e2;
+  --btn-primary-hover: #2f63c9;
 }
 
 .light {
@@ -74,6 +77,9 @@
   --callout-important: #6b4fbf;
   --callout-danger: #9c2525;
   --shadow: 0 16px 36px rgba(17, 26, 46, 0.13);
+  --shadow-sm: 0 4px 14px rgba(17, 26, 46, 0.09);
+  --btn-primary-bg: #2f6fdf;
+  --btn-primary-hover: #265cc0;
 }
 
 * {
@@ -91,6 +97,12 @@ body {
   background: radial-gradient(circle at 0% 0%, var(--bg-glow), transparent 32%), var(--bg);
   color: var(--ink);
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent-soft-3);
 }
 
 a {
@@ -228,6 +240,7 @@ h1,
 h2,
 h3 {
   line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .hero h1 {
@@ -528,10 +541,18 @@ h3 {
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 14px;
   background: var(--card-bg-2);
-  padding: 1rem;
+  padding: 1.1rem 1.2rem;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.card:hover {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .card h2,
@@ -555,8 +576,64 @@ h3 {
 .card-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1rem;
-  margin: 0.2rem 0 0;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
+}
+
+.card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.3rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 0.6rem;
+  border: 1px solid transparent;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.card-btn svg {
+  width: 0.95em;
+  height: 0.95em;
+  flex: none;
+}
+
+.card-btn:hover {
+  text-decoration: none;
+}
+
+.card-btn-primary {
+  background: var(--btn-primary-bg);
+  color: #fff;
+}
+
+.card-btn-primary:hover {
+  background: var(--btn-primary-hover);
+  color: #fff;
+}
+
+.card-btn-outline {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.card-btn-outline:hover {
+  background: var(--surface);
+  border-color: var(--accent-border);
+}
+
+.card-btn:focus-visible,
+.btn:focus-visible,
+.site-nav a:focus-visible,
+.site-links a:focus-visible,
+.tag:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
 }
 
 .shelf h2 {

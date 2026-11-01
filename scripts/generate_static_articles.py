@@ -735,11 +735,28 @@ def _is_external(url: str) -> bool:
     return url.startswith("http://") or url.startswith("https://")
 
 
-def _anchor(href: str, label: str) -> str:
-    extra = ' target="_blank" rel="noopener noreferrer"' if _is_external(href) else ""
+_ICON_ARROW_RIGHT = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" '
+    'stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+    'stroke-linejoin="round" aria-hidden="true" focusable="false">'
+    '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>'
+)
+_ICON_ARROW_UP_RIGHT = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" '
+    'stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+    'stroke-linejoin="round" aria-hidden="true" focusable="false">'
+    '<path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>'
+)
+
+
+def _anchor(href: str, label: str, primary: bool = False) -> str:
+    external = _is_external(href)
+    extra = ' target="_blank" rel="noopener noreferrer"' if external else ""
+    icon = _ICON_ARROW_UP_RIGHT if external else _ICON_ARROW_RIGHT
+    variant = "card-btn-primary" if primary else "card-btn-outline"
     return (
-        f'<a href="{html.escape(href, quote=True)}"{extra}>'
-        f"{html.escape(label)} -&gt;</a>"
+        f'<a class="card-btn {variant}" href="{html.escape(href, quote=True)}"{extra}>'
+        f"{html.escape(label)}{icon}</a>"
     )
 
 
@@ -748,14 +765,14 @@ def render_project_card(doc: StaticDoc) -> str:
     proof = str(doc.metadata.get("proof_url") or doc.href).strip() or doc.href
     part = str(doc.metadata.get("part") or "Built").strip() or "Built"
     outcome = str(doc.metadata.get("outcome") or doc.excerpt or "No summary available yet.")
-    links = [_anchor(proof, label)]
+    links = [_anchor(proof, label, primary=True)]
     if proof.rstrip("/") != doc.href.rstrip("/"):
         links.append(_anchor(doc.href, "Note"))
     return f"""      <article class="card">
         <p class="card-kicker">{html.escape(part)} · {html.escape(label)}</p>
         <h2>{html.escape(doc.title)}</h2>
         <p>{html.escape(outcome)}</p>
-        <p class="card-links">{"".join(links)}</p>
+        <div class="card-links">{"".join(links)}</div>
       </article>"""
 
 
@@ -764,7 +781,7 @@ def render_summary_card(doc: StaticDoc, cta: str) -> str:
     return f"""      <article class="card">
         <h2>{html.escape(doc.title)}</h2>
         <p>{html.escape(summary)}</p>
-        <a href="{html.escape(doc.href, quote=True)}">{html.escape(cta)} -&gt;</a>
+        <div class="card-links"><a class="card-btn card-btn-outline" href="{html.escape(doc.href, quote=True)}">{html.escape(cta)}{_ICON_ARROW_RIGHT}</a></div>
       </article>"""
 
 
