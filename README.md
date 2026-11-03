@@ -17,7 +17,8 @@ Static personal website (HTML/CSS/JS) with:
   - builds `articles/**` and `projects/**`
   - updates `index.html`, `experience.html`, `articles.html`, and the `about.html` / `projects.html` redirects
   - builds chat context file: `assets/data/chat-context.json`
-- **Project cards**: set `outcome`, `shelf` (`open`, `install`, or `read`), and optional `featured` (1–4), `proof_label`, and `proof_url` in project frontmatter
+- **Project cards**: set `outcome`, `shelf` (`open`, `install`, or `read`), and optional `featured` (1–4), `proof_label`, `proof_url`, and `repo` (GitHub repo name when `proof_url` doesn't point at it) in project frontmatter
+- **GitHub profile data**: the generator fetches `api.github.com` (user, repos, latest Actions run for linked repos) and scrapes the public contributions calendar, then writes `assets/data/github-profile.json` and bakes the data into `index.html`. Set `GITHUB_TOKEN` to avoid rate limits; on failure the previous JSON is reused
 - **Frontend chat client**: `assets/js/site.js` (guided chat, source cards, packet builder)
 - **OpenRouter proxy**: `workers/openrouter-chat-proxy/` (Cloudflare Worker)
 

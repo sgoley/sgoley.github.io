@@ -6,6 +6,7 @@ published: 2026-05-11
 tags: [homelab, docker, caddy, tailscale, infrastructure, devops]
 featured: 4
 shelf: read
+repo: homelab-stacks-public
 part: Built
 outcome: How one Docker host serves the same names on the LAN and over Tailscale, without publishing secrets.
 proof_label: Diagram

@@ -3,9 +3,13 @@ from __future__ import annotations
 
 import html
 import json
+import os
 import posixpath
 import re
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Dict, List
 
@@ -633,7 +637,220 @@ def _render_metadata(metadata: Dict[str, Any]) -> str:
 
 
 GITHUB_URL = "https://github.com/sgoley"
+GITHUB_USERNAME = "sgoley"
 LINKEDIN_URL = "https://www.linkedin.com/in/sgoley/"
+
+_LANGUAGE_COLORS = {
+    "python": "#3572A5",
+    "typescript": "#3178c6",
+    "javascript": "#f1e05a",
+    "go": "#00ADD8",
+    "swift": "#F05138",
+    "html": "#e34c26",
+    "css": "#563d7c",
+    "shell": "#89e051",
+    "jupyter notebook": "#DA5B0B",
+    "dockerfile": "#384d54",
+    "ruby": "#701516",
+    "rust": "#dea584",
+    "lua": "#000080",
+    "sql": "#e38c00",
+    "plpgsql": "#336790",
+}
+
+
+def _gh_request(url: str, *, api: bool = True) -> Any:
+    headers = {
+        "User-Agent": "sgoley-github-io-generator",
+        "Accept": "application/vnd.github+json" if api else "text/html",
+    }
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    if token and api:
+        headers["Authorization"] = f"Bearer {token}"
+    if not api:
+        headers["User-Agent"] = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+        )
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        raw = resp.read().decode("utf-8")
+    return json.loads(raw) if api else raw
+
+
+def _fetch_contributions(username: str) -> Dict[str, Any]:
+    page = _gh_request(
+        f"https://github.com/users/{username}/contributions", api=False
+    )
+    counts: Dict[str, int] = {}
+    for tip_for, tip_text in re.findall(
+        r'<tool-tip[^>]*for="([^"]+)"[^>]*>([^<]*)</tool-tip>', page
+    ):
+        count_match = re.search(r"([\d,]+)\s+contributions?", tip_text)
+        counts[tip_for] = int(count_match.group(1).replace(",", "")) if count_match else 0
+
+    cells: Dict[tuple[int, int], Dict[str, Any]] = {}
+    for tag in re.findall(r"<td\b[^>]*ContributionCalendar-day[^>]*>", page):
+        cell_id = re.search(r'id="contribution-day-component-(\d+)-(\d+)"', tag)
+        date_match = re.search(r'data-date="([\d-]+)"', tag)
+        level_match = re.search(r'data-level="(\d)"', tag)
+        if not (cell_id and date_match and level_match):
+            continue
+        day, week = int(cell_id.group(1)), int(cell_id.group(2))
+        cells[(week, day)] = {
+            "date": date_match.group(1),
+            "level": int(level_match.group(1)),
+            "count": counts.get(f"contribution-day-component-{day}-{week}", 0),
+        }
+
+    if not cells:
+        return {"total": 0, "weeks": []}
+
+    max_week = max(w for w, _ in cells)
+    weeks: List[List[Dict[str, Any]]] = []
+    total = 0
+    for week in range(max_week + 1):
+        column = []
+        for day in range(7):
+            cell = cells.get((week, day))
+            column.append(cell)
+            if cell:
+                total += cell["count"]
+        weeks.append(column)
+    return {"total": total, "weeks": weeks}
+
+
+def _fetch_latest_run(owner: str, repo: str, default_branch: str) -> Dict[str, Any] | None:
+    try:
+        data = _gh_request(
+            f"https://api.github.com/repos/{owner}/{repo}/actions/runs"
+            f"?per_page=1&branch={default_branch}"
+        )
+    except (OSError, urllib.error.URLError, json.JSONDecodeError):
+        return None
+    runs = data.get("workflow_runs") or []
+    if not runs:
+        return None
+    run = runs[0]
+    return {
+        "name": run.get("name") or "CI",
+        "status": run.get("status") or "",
+        "conclusion": run.get("conclusion") or "",
+        "url": run.get("html_url") or "",
+    }
+
+
+def _fetch_github_profile(
+    username: str, ci_repo_names: set[str] | None = None
+) -> Dict[str, Any]:
+    user = _gh_request(f"https://api.github.com/users/{username}")
+
+    repos: List[Dict[str, Any]] = []
+    for page in range(1, 4):
+        batch = _gh_request(
+            f"https://api.github.com/users/{username}/repos"
+            f"?per_page=100&type=owner&sort=pushed&page={page}"
+        )
+        if not batch:
+            break
+        repos.extend(batch)
+        if len(batch) < 100:
+            break
+
+    slim_repos = []
+    for repo in repos:
+        if repo.get("fork"):
+            continue
+        slim_repos.append(
+            {
+                "name": repo.get("name") or "",
+                "description": repo.get("description") or "",
+                "url": repo.get("html_url") or "",
+                "stars": repo.get("stargazers_count") or 0,
+                "forks": repo.get("forks_count") or 0,
+                "language": repo.get("language") or "",
+                "updated_at": repo.get("pushed_at") or repo.get("updated_at") or "",
+                "default_branch": repo.get("default_branch") or "main",
+            }
+        )
+
+    wanted = ci_repo_names or set()
+    for repo in slim_repos:
+        if repo["name"].lower() in wanted:
+            repo["latest_run"] = _fetch_latest_run(
+                username, repo["name"], repo["default_branch"]
+            )
+
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "user": {
+            "login": user.get("login") or username,
+            "name": user.get("name") or "",
+            "bio": user.get("bio") or "",
+            "avatar_url": user.get("avatar_url") or "",
+            "followers": user.get("followers") or 0,
+            "following": user.get("following") or 0,
+            "public_repos": user.get("public_repos") or 0,
+            "location": user.get("location") or "",
+            "company": user.get("company") or "",
+            "blog": user.get("blog") or "",
+            "created_at": user.get("created_at") or "",
+            "html_url": user.get("html_url") or GITHUB_URL,
+        },
+        "repos": slim_repos,
+        "total_stars": sum(r["stars"] for r in slim_repos),
+        "contributions": _fetch_contributions(username),
+    }
+
+
+def _load_or_fetch_github_profile(
+    repo_root: Path, ci_repo_names: set[str] | None = None
+) -> Dict[str, Any]:
+    cache_path = repo_root / "assets" / "data" / "github-profile.json"
+    try:
+        profile = _fetch_github_profile(GITHUB_USERNAME, ci_repo_names)
+    except Exception as exc:  # network down, rate-limited, markup changed
+        print(f"GitHub fetch failed ({exc}); using cached profile if present.")
+        if cache_path.exists():
+            return json.loads(cache_path.read_text(encoding="utf-8"))
+        return {"generated_at": "", "user": {}, "repos": [], "total_stars": 0,
+                "contributions": {"total": 0, "weeks": []}}
+
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps(profile, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    return profile
+
+
+def _repo_lookup(profile: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    return {
+        str(repo.get("name", "")).lower(): repo
+        for repo in profile.get("repos") or []
+        if repo.get("name")
+    }
+
+
+def _repo_name_from_url(url: str) -> str:
+    match = re.search(r"github\.com/[\w.-]+/([\w.-]+)", url)
+    return match.group(1).lower() if match else ""
+
+
+def _relative_updated(iso_date: str) -> str:
+    if not iso_date:
+        return ""
+    try:
+        when = datetime.fromisoformat(iso_date.replace("Z", "+00:00"))
+    except ValueError:
+        return ""
+    days = (datetime.now(timezone.utc) - when).days
+    if days < 1:
+        return "Updated today"
+    if days == 1:
+        return "Updated yesterday"
+    if days < 30:
+        return f"Updated {days} days ago"
+    return f"Updated {when.strftime('%b %-d')}"
 
 
 def _content_group(doc: StaticDoc) -> str:
@@ -760,22 +977,6 @@ def _anchor(href: str, label: str, primary: bool = False) -> str:
     )
 
 
-def render_project_card(doc: StaticDoc) -> str:
-    label = str(doc.metadata.get("proof_label") or "Read").strip() or "Read"
-    proof = str(doc.metadata.get("proof_url") or doc.href).strip() or doc.href
-    part = str(doc.metadata.get("part") or "Built").strip() or "Built"
-    outcome = str(doc.metadata.get("outcome") or doc.excerpt or "No summary available yet.")
-    links = [_anchor(proof, label, primary=True)]
-    if proof.rstrip("/") != doc.href.rstrip("/"):
-        links.append(_anchor(doc.href, "Note"))
-    return f"""      <article class="card">
-        <p class="card-kicker">{html.escape(part)} · {html.escape(label)}</p>
-        <h2>{html.escape(doc.title)}</h2>
-        <p>{html.escape(outcome)}</p>
-        <div class="card-links">{"".join(links)}</div>
-      </article>"""
-
-
 def render_summary_card(doc: StaticDoc, cta: str) -> str:
     summary = str(doc.metadata.get("outcome") or doc.excerpt or "No summary available yet.")
     return f"""      <article class="card">
@@ -847,7 +1048,282 @@ def _cards_grid(cards: List[str]) -> str:
     </section>"""
 
 
-def render_work_page(projects: List[StaticDoc]) -> str:
+_ICON_REPO = (
+    '<svg class="gh-ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">'
+    '<path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 '
+    "0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 "
+    "0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5v-9Zm10.5-1V9h-8c-.356 0-.694.074-1 "
+    ".208V2.5a1 1 0 0 1 1-1h8ZM5 12.25v3.25a.25.25 0 0 0 .4.2l1.45-1.087a.25.25 "
+    '0 0 1 .3 0L8.6 15.7a.25.25 0 0 0 .4-.2v-3.25a.25.25 0 0 0-.25-.25h-3.5a.25.25 0 0 0-.25.25Z"/></svg>'
+)
+_ICON_STAR = (
+    '<svg class="gh-ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">'
+    '<path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 '
+    "1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 "
+    '0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>'
+)
+_ICON_FORK = (
+    '<svg class="gh-ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">'
+    '<path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 '
+    "2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 "
+    "0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 "
+    '0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 '
+    '8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>'
+)
+_ICON_PEOPLE = (
+    '<svg class="gh-ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">'
+    '<path d="M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 '
+    "0 1 1-1.482.235 4.001 4.001 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 "
+    "0 0 1 3.102 8.05 3.493 3.493 0 0 1 2 5.5ZM11 4a3.001 3.001 0 0 1 2.93 2.372 "
+    "5.512 5.512 0 0 1 2.166 2.508.75.75 0 0 1-.31 1.005l-.19.098a.75.75 0 0 1-.832-.154 "
+    'A4.01 4.01 0 0 0 11 8.5c-.35 0-.68.045-1 .13V4Z"/></svg>'
+)
+_ICON_CHECK = (
+    '<svg class="gh-ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">'
+    '<path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 '
+    "9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 "
+    '0 0 1 1.06 0Z"/></svg>'
+)
+_ICON_X = (
+    '<svg class="gh-ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">'
+    '<path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 '
+    "1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 "
+    '1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"/></svg>'
+)
+_ICON_DOT = (
+    '<svg class="gh-ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">'
+    '<circle cx="8" cy="8" r="5"/></svg>'
+)
+
+
+def _doc_repo(doc: StaticDoc, repos: Dict[str, Dict[str, Any]]) -> Dict[str, Any] | None:
+    explicit = str(doc.metadata.get("repo") or "").strip().lower()
+    if explicit:
+        return repos.get(explicit)
+    proof = str(doc.metadata.get("proof_url") or "")
+    return repos.get(_repo_name_from_url(proof))
+
+
+def _doc_badge(doc: StaticDoc, repo: Dict[str, Any] | None) -> str:
+    if repo is not None:
+        return "Public"
+    label = str(doc.metadata.get("proof_label") or "").lower()
+    if label in {"live", "diagram"}:
+        return "Site"
+    return "Private"
+
+
+def _ci_chip(repo: Dict[str, Any] | None) -> str:
+    run = (repo or {}).get("latest_run")
+    if not run:
+        return ""
+    status = str(run.get("status") or "")
+    conclusion = str(run.get("conclusion") or "")
+    name = html.escape(str(run.get("name") or "CI"))
+    if status != "completed":
+        icon, cls, text = _ICON_DOT, "gh-ci-pending", "running"
+    elif conclusion == "success":
+        icon, cls, text = _ICON_CHECK, "gh-ci-pass", "passing"
+    elif conclusion in {"failure", "timed_out", "startup_failure"}:
+        icon, cls, text = _ICON_X, "gh-ci-fail", "failing"
+    else:
+        icon, cls, text = _ICON_DOT, "gh-ci-neutral", html.escape(conclusion or "—")
+    url = html.escape(str(run.get("url") or ""), quote=True)
+    title = html.escape(f"{run.get('name')}: {status}/{conclusion}", quote=True)
+    return f'<a class="gh-ci {cls}" href="{url}" title="{title}" target="_blank" rel="noopener noreferrer">{icon}{name} {text}</a>'
+
+
+def _repo_meta(repo: Dict[str, Any] | None) -> str:
+    if not repo:
+        return ""
+    parts: List[str] = []
+    lang = str(repo.get("language") or "")
+    if lang:
+        color = _LANGUAGE_COLORS.get(lang.lower(), "var(--muted)")
+        parts.append(
+            f'<span class="gh-lang"><span class="gh-dot" style="background:{color}"></span>'
+            f"{html.escape(lang)}</span>"
+        )
+    stars = int(repo.get("stars") or 0)
+    if stars:
+        parts.append(f"{_ICON_STAR}{stars}")
+    forks = int(repo.get("forks") or 0)
+    if forks:
+        parts.append(f"{_ICON_FORK}{forks}")
+    updated = _relative_updated(str(repo.get("updated_at") or ""))
+    if updated:
+        parts.append(html.escape(updated))
+    return "".join(f'<span class="gh-meta-item">{p}</span>' for p in parts)
+
+
+def _display_name(doc: StaticDoc, repo: Dict[str, Any] | None) -> str:
+    if repo:
+        return f"sgoley/{repo['name']}"
+    return doc.title
+
+
+def render_pinned_card(doc: StaticDoc, repos: Dict[str, Dict[str, Any]]) -> str:
+    repo = _doc_repo(doc, repos)
+    label = str(doc.metadata.get("proof_label") or "Read").strip() or "Read"
+    proof = str(doc.metadata.get("proof_url") or doc.href).strip() or doc.href
+    outcome = str(doc.metadata.get("outcome") or doc.excerpt or "No summary available yet.")
+    links = [_anchor(proof, label, primary=True)]
+    if proof.rstrip("/") != doc.href.rstrip("/"):
+        links.append(_anchor(doc.href, "Note"))
+    meta = _repo_meta(repo) + _ci_chip(repo)
+    meta_html = f'<div class="gh-card-meta">{meta}</div>' if meta else ""
+    return f"""      <article class="gh-card">
+        <div class="gh-card-head">
+          {_ICON_REPO}<a class="gh-card-title" href="{html.escape(proof, quote=True)}">{html.escape(_display_name(doc, repo))}</a>
+          <span class="gh-badge">{_doc_badge(doc, repo)}</span>
+        </div>
+        <p class="gh-card-desc">{html.escape(outcome)}</p>
+        {meta_html}
+        <div class="card-links">{"".join(links)}</div>
+      </article>"""
+
+
+def render_repo_row(doc: StaticDoc, repos: Dict[str, Dict[str, Any]]) -> str:
+    repo = _doc_repo(doc, repos)
+    label = str(doc.metadata.get("proof_label") or "Read").strip() or "Read"
+    proof = str(doc.metadata.get("proof_url") or doc.href).strip() or doc.href
+    outcome = str(doc.metadata.get("outcome") or doc.excerpt or "No summary available yet.")
+    links = [_anchor(proof, label, primary=True)]
+    if proof.rstrip("/") != doc.href.rstrip("/"):
+        links.append(_anchor(doc.href, "Note"))
+    meta = _repo_meta(repo) + _ci_chip(repo)
+    meta_html = f'<div class="gh-card-meta">{meta}</div>' if meta else ""
+    return f"""      <div class="gh-repo">
+        <div class="gh-repo-head">
+          {_ICON_REPO}<a class="gh-repo-name" href="{html.escape(proof, quote=True)}">{html.escape(_display_name(doc, repo))}</a>
+          <span class="gh-badge">{_doc_badge(doc, repo)}</span>
+          <span class="gh-repo-actions">{"".join(links)}</span>
+        </div>
+        <p class="gh-repo-desc">{html.escape(outcome)}</p>
+        {meta_html}
+      </div>"""
+
+
+def render_contrib_graph(profile: Dict[str, Any]) -> str:
+    contrib = profile.get("contributions") or {}
+    weeks = contrib.get("weeks") or []
+    if not weeks:
+        return ""
+
+    month_labels: List[str] = []
+    prev_label_col = -3
+    prev_month = -1
+    for col, week in enumerate(weeks):
+        first = next((c for c in week if c), None)
+        if not first:
+            month_labels.append("<span></span>")
+            continue
+        month = int(first["date"][5:7])
+        if month != prev_month and col - prev_label_col >= 3:
+            month_labels.append(
+                f"<span>{html.escape(datetime.strptime(first['date'], '%Y-%m-%d').strftime('%b'))}</span>"
+            )
+            prev_label_col = col
+            prev_month = month
+        else:
+            month_labels.append("<span></span>")
+            if month != prev_month:
+                prev_month = month
+
+    week_html: List[str] = []
+    for week in weeks:
+        cells = "".join(
+            f'<span class="gh-day" data-level="{cell["level"]}" '
+            f'title="{cell["count"]} contribution{"s" if cell["count"] != 1 else ""} '
+            f'on {cell["date"]}"></span>'
+            if cell
+            else '<span class="gh-day gh-day-empty"></span>'
+            for cell in week
+        )
+        week_html.append(f'<div class="gh-week">{cells}</div>')
+
+    total = contrib.get("total") or 0
+    total_html = f"{total:,} contributions in the last year" if total else "Contributions in the last year"
+    return f"""      <section class="gh-contribs">
+        <div class="gh-contribs-head">
+          <h2>{html.escape(total_html)}</h2>
+          <a href="{GITHUB_URL}" target="_blank" rel="noopener noreferrer">@{GITHUB_USERNAME}</a>
+        </div>
+        <div class="gh-graph-scroll">
+          <div class="gh-months">{"".join(month_labels)}</div>
+          <div class="gh-graph">{"".join(week_html)}</div>
+        </div>
+        <div class="gh-legend">
+          <span>Less</span>
+          <span class="gh-day" data-level="0"></span><span class="gh-day" data-level="1"></span><span class="gh-day" data-level="2"></span><span class="gh-day" data-level="3"></span><span class="gh-day" data-level="4"></span>
+          <span>More</span>
+        </div>
+      </section>"""
+
+
+def render_profile_sidebar(profile: Dict[str, Any]) -> str:
+    user = profile.get("user") or {}
+    avatar = str(user.get("avatar_url") or "")
+    login = str(user.get("login") or GITHUB_USERNAME)
+    name = str(user.get("name") or "").strip()
+    if not name or name.lower() == login.lower():
+        name = "Scott Goley"
+    bio = str(user.get("bio") or "Data, analytics, and AI systems.")
+    profile_url = str(user.get("html_url") or GITHUB_URL)
+    generated = str(profile.get("generated_at") or "")
+    generated_note = ""
+    if generated:
+        try:
+            generated_note = datetime.fromisoformat(generated).strftime("%b %-d, %Y")
+        except ValueError:
+            generated_note = ""
+
+    facts: List[str] = []
+    if user.get("company"):
+        facts.append(f"<li>{html.escape(str(user['company']))}</li>")
+    if user.get("location"):
+        facts.append(f"<li>{html.escape(str(user['location']))}</li>")
+    if user.get("blog"):
+        blog = str(user["blog"])
+        facts.append(
+            f'<li><a href="{html.escape(blog, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(blog.replace("https://", "").replace("http://", ""))}</a></li>'
+        )
+    if user.get("created_at"):
+        try:
+            joined = datetime.fromisoformat(
+                str(user["created_at"]).replace("Z", "+00:00")
+            ).strftime("%b %Y")
+            facts.append(f"<li>Joined {html.escape(joined)}</li>")
+        except ValueError:
+            pass
+    if user.get("public_repos"):
+        facts.append(f"<li>{int(user['public_repos'])} public repos</li>")
+
+    stats_html = ""
+    if user:
+        stats_html = f"""        <div class="gh-stats">
+          {_ICON_PEOPLE}<strong>{int(user.get('followers') or 0)}</strong> followers
+          · <strong>{int(user.get('following') or 0)}</strong> following
+          · {_ICON_STAR}<strong>{int(profile.get('total_stars') or 0)}</strong>
+        </div>"""
+
+    return f"""    <aside class="gh-sidebar">
+      <img class="gh-avatar" src="{html.escape(avatar, quote=True)}" alt="{html.escape(name, quote=True)}" width="296" height="296">
+      <h1 class="gh-name">{html.escape(name)}</h1>
+      <p class="gh-handle">{html.escape(login)}</p>
+      <p class="gh-bio">{html.escape(bio)}</p>
+      <a class="btn btn-ghost gh-follow" href="{html.escape(profile_url, quote=True)}" target="_blank" rel="noopener noreferrer">Follow on GitHub</a>
+{stats_html}
+      <ul class="gh-facts">{"".join(facts)}</ul>
+      <p class="gh-note">
+        This site <em>is</em> a repo — <a href="https://github.com/sgoley/sgoley.github.io" target="_blank" rel="noopener noreferrer">sgoley/sgoley.github.io</a>.
+        Everything above the fold is rendered from the GitHub API{f' as of {generated_note}' if generated_note else ''}.
+      </p>
+    </aside>"""
+
+
+def render_work_page(projects: List[StaticDoc], profile: Dict[str, Any]) -> str:
+    repos = _repo_lookup(profile)
     featured = sorted(
         (doc for doc in projects if _featured_rank(doc) > 0),
         key=_featured_rank,
@@ -860,35 +1336,48 @@ def render_work_page(projects: List[StaticDoc]) -> str:
     ]
     shelf_html: List[str] = []
     for key, heading, lede in shelves:
-        cards = [
-            render_project_card(doc)
+        rows = [
+            render_repo_row(doc, repos)
             for doc in projects
             if doc.href not in featured_ids and _shelf(doc) == key
         ]
-        if not cards:
+        if not rows:
             continue
         shelf_html.append(
-            f"""    <section class="shelf">
-      <h2>{html.escape(heading)}</h2>
-      <p class="lede">{html.escape(lede)}</p>
-{_cards_grid(cards)}
-    </section>"""
+            f"""      <section class="shelf">
+        <h2>{html.escape(heading)}</h2>
+        <p class="lede">{html.escape(lede)}</p>
+        <div class="gh-repo-list">
+{chr(10).join(rows)}
+        </div>
+      </section>"""
         )
 
-    featured_html = _cards_grid([render_project_card(doc) for doc in featured])
-    body = f"""  <main>
-    <section class="hero container">
-      <p class="eyebrow">Work</p>
-      <h1>Data, analytics, and AI systems</h1>
-      <p>Four public projects to open first. The rest are grouped by what you can do with them.</p>
-    </section>
-
-    <div class="container stack">
-      <section class="shelf">
-        <h2>Start here</h2>
-{featured_html}
+    pinned = "\n".join(render_pinned_card(doc, repos) for doc in featured)
+    contrib = render_contrib_graph(profile)
+    body = f"""  <main class="container">
+    <div class="gh-layout">
+{render_profile_sidebar(profile)}
+      <div class="gh-main">
+      <section class="gh-readme">
+        <div class="gh-readme-head">{_ICON_REPO}<span>sgoley</span><span class="gh-sep">/</span><strong>README.md</strong></div>
+        <div class="gh-readme-body">
+          <h2>Data, analytics, and AI systems</h2>
+          <p>Four public projects to open first. The rest are grouped by what you can do with them —
+          live apps, installable packages, and write-ups. Stars, languages, CI status, and the
+          contribution graph on this page are real data pulled from github.com/sgoley at build time.</p>
+        </div>
       </section>
+
+      <section class="shelf">
+        <h2>Pinned</h2>
+        <section class="grid two-col">
+{pinned}
+        </section>
+      </section>
+{contrib}
 {chr(10).join(shelf_html)}
+      </div>
     </div>
   </main>"""
     return _page_shell(
@@ -1115,7 +1604,20 @@ def main() -> None:
     experience_docs = [doc for doc in articles if _content_group(doc) == "experience"]
     writing_docs = [doc for doc in articles if _content_group(doc) == "writing"]
 
-    (repo_root / "index.html").write_text(render_work_page(projects), encoding="utf-8")
+    ci_repo_names = {
+        name
+        for doc in projects
+        for name in (
+            str(doc.metadata.get("repo") or "").strip().lower()
+            or _repo_name_from_url(str(doc.metadata.get("proof_url") or "")),
+        )
+        if name
+    }
+    github_profile = _load_or_fetch_github_profile(repo_root, ci_repo_names)
+
+    (repo_root / "index.html").write_text(
+        render_work_page(projects, github_profile), encoding="utf-8"
+    )
     (repo_root / "experience.html").write_text(
         render_experience_page(experience_docs, _experience_intro_html(repo_root)),
         encoding="utf-8",
