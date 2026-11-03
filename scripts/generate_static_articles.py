@@ -759,8 +759,6 @@ def _fetch_github_profile(
 
     slim_repos = []
     for repo in repos:
-        if repo.get("fork"):
-            continue
         slim_repos.append(
             {
                 "name": repo.get("name") or "",
@@ -771,6 +769,8 @@ def _fetch_github_profile(
                 "language": repo.get("language") or "",
                 "updated_at": repo.get("pushed_at") or repo.get("updated_at") or "",
                 "default_branch": repo.get("default_branch") or "main",
+                "fork": bool(repo.get("fork")),
+                "archived": bool(repo.get("archived")),
             }
         )
 
@@ -798,7 +798,7 @@ def _fetch_github_profile(
             "html_url": user.get("html_url") or GITHUB_URL,
         },
         "repos": slim_repos,
-        "total_stars": sum(r["stars"] for r in slim_repos),
+        "total_stars": sum(r["stars"] for r in slim_repos if not r["fork"]),
         "contributions": _fetch_contributions(username),
     }
 
@@ -895,6 +895,7 @@ def render_site_header(prefix: str = "") -> str:
       <div class="nav-cluster">
         <nav class="site-nav" aria-label="Main navigation">
           <a data-nav="work" href="{prefix}index.html">Work</a>
+          <a data-nav="repos" href="{prefix}repositories.html">Repositories</a>
           <a data-nav="experience" href="{prefix}experience.html">Experience</a>
           <a data-nav="writing" href="{prefix}articles.html">Writing</a>
           <a data-nav="ask" href="{prefix}ask.html">Ask</a>
@@ -1387,6 +1388,99 @@ def render_work_page(projects: List[StaticDoc], profile: Dict[str, Any]) -> str:
     )
 
 
+def _repo_doc_map(
+    projects: List[StaticDoc], repos: Dict[str, Dict[str, Any]]
+) -> Dict[str, StaticDoc]:
+    mapping: Dict[str, StaticDoc] = {}
+    for doc in projects:
+        repo = _doc_repo(doc, repos)
+        if repo and repo["name"].lower() not in mapping:
+            mapping[repo["name"].lower()] = doc
+    return mapping
+
+
+def _repo_explainer(repo: Dict[str, Any], doc: StaticDoc | None) -> str:
+    if doc is not None:
+        return str(doc.metadata.get("outcome") or doc.excerpt or "")
+    desc = str(repo.get("description") or "").strip()
+    if desc:
+        return desc
+    if repo.get("fork"):
+        return "Forked repository."
+    return "No description on GitHub yet."
+
+
+def render_repo_card(repo: Dict[str, Any], doc: StaticDoc | None) -> str:
+    name = str(repo.get("name") or "")
+    url = str(repo.get("url") or GITHUB_URL)
+    badge = "Fork" if repo.get("fork") else ("Archive" if repo.get("archived") else "Public")
+    explainer = _repo_explainer(repo, doc)
+    links = [_anchor(url, "Source", primary=True)]
+    if doc is not None:
+        links.append(_anchor(doc.href, "Note"))
+    meta = _repo_meta(repo) + _ci_chip(repo)
+    meta_html = f'<div class="gh-card-meta">{meta}</div>' if meta else ""
+    lang_tag = (str(repo.get("language") or "other")).lower().replace(" ", "-") or "other"
+    search_text = html.escape(
+        f"{name} {repo.get('description') or ''} {explainer}".lower(), quote=True
+    )
+    return f"""      <article class="gh-card article-card" data-tags="{html.escape(lang_tag, quote=True)}" data-search="{search_text}">
+        <div class="gh-card-head">
+          {_ICON_REPO}<a class="gh-card-title" href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">sgoley/{html.escape(name)}</a>
+          <span class="gh-badge">{badge}</span>
+        </div>
+        <p class="gh-card-desc">{html.escape(explainer)}</p>
+        {meta_html}
+        <div class="card-links">{"".join(links)}</div>
+      </article>"""
+
+
+def render_repositories_page(projects: List[StaticDoc], profile: Dict[str, Any]) -> str:
+    repos = _repo_lookup(profile)
+    doc_by_repo = _repo_doc_map(projects, repos)
+    all_repos = sorted(
+        profile.get("repos") or [],
+        key=lambda r: str(r.get("updated_at") or ""),
+        reverse=True,
+    )
+
+    lang_counts: Dict[str, int] = {}
+    for repo in all_repos:
+        lang = str(repo.get("language") or "other")
+        lang_counts[lang] = lang_counts.get(lang, 0) + 1
+    top_langs = [
+        lang for lang, _ in sorted(lang_counts.items(), key=lambda kv: -kv[1]) if lang != "other"
+    ][:7]
+    chips = ['<button class="tag active" data-filter="all">All</button>']
+    chips += [
+        f'<button class="tag" data-filter="{html.escape(lang.lower().replace(" ", "-"), quote=True)}">{html.escape(lang)}</button>'
+        for lang in top_langs
+    ]
+
+    cards = "\n".join(
+        render_repo_card(repo, doc_by_repo.get(str(repo.get("name") or "").lower()))
+        for repo in all_repos
+    )
+    body = f"""  <main class="container stack">
+    <section class="panel">
+      <p class="eyebrow">Repositories</p>
+      <h1>Repositories <span class="gh-count">{len(all_repos)}</span></h1>
+      <p class="lede">Every public repository on github.com/sgoley, newest pushes first.
+      Repositories with a Note link have a project write-up on this site.</p>
+      <input class="gh-search" type="search" placeholder="Find a repository..." aria-label="Find a repository" data-repo-search>
+      <div class="tag-row">{"".join(chips)}</div>
+    </section>
+    <section class="grid two-col" data-repo-list>
+{cards}
+    </section>
+  </main>"""
+    return _page_shell(
+        title="Repositories - Scott Goley",
+        description="Every public repository by Scott Goley on GitHub.",
+        body=body,
+    )
+
+
 def render_experience_page(docs: List[StaticDoc], intro_html: str) -> str:
     cards = _cards_grid([render_summary_card(doc, "Read") for doc in docs])
     body = f"""  <main class="container stack">
@@ -1617,6 +1711,9 @@ def main() -> None:
 
     (repo_root / "index.html").write_text(
         render_work_page(projects, github_profile), encoding="utf-8"
+    )
+    (repo_root / "repositories.html").write_text(
+        render_repositories_page(projects, github_profile), encoding="utf-8"
     )
     (repo_root / "experience.html").write_text(
         render_experience_page(experience_docs, _experience_intro_html(repo_root)),

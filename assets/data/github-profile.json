@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T13:45:01.049840+00:00",
+  "generated_at": "2026-11-03T15:32:14.791736+00:00",
   "user": {
     "login": "sgoley",
     "name": "sgoley",
@@ -22,8 +22,10 @@
       "stars": 0,
       "forks": 0,
       "language": "HTML",
-      "updated_at": "2026-11-03T13:44:47Z",
-      "default_branch": "main"
+      "updated_at": "2026-11-03T13:45:03Z",
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "sub-notes-public",
@@ -34,6 +36,8 @@
       "language": "TypeScript",
       "updated_at": "2026-10-31T16:05:47Z",
       "default_branch": "main",
+      "fork": false,
+      "archived": false,
       "latest_run": {
         "name": "CI",
         "status": "completed",
@@ -49,7 +53,9 @@
       "forks": 0,
       "language": "TypeScript",
       "updated_at": "2026-10-26T23:14:53Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "paseo-exporter",
@@ -59,7 +65,9 @@
       "forks": 0,
       "language": "TypeScript",
       "updated_at": "2026-10-23T10:17:56Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "homelab-stacks-public",
@@ -70,6 +78,8 @@
       "language": "",
       "updated_at": "2026-10-21T22:34:55Z",
       "default_branch": "main",
+      "fork": false,
+      "archived": false,
       "latest_run": null
     },
     {
@@ -81,6 +91,8 @@
       "language": "Go",
       "updated_at": "2026-10-21T22:30:06Z",
       "default_branch": "main",
+      "fork": false,
+      "archived": false,
       "latest_run": null
     },
     {
@@ -91,7 +103,21 @@
       "forks": 0,
       "language": "Go",
       "updated_at": "2026-10-16T14:58:09Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "paseo-continuity",
+      "description": "Automatic provider failover for Paseo agents",
+      "url": "https://github.com/sgoley/paseo-continuity",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2026-10-07T15:17:27Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "BetterEcon-support",
@@ -101,7 +127,9 @@
       "forks": 0,
       "language": "",
       "updated_at": "2026-09-25T17:14:08Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "AirflowRunbook-support",
@@ -111,7 +139,9 @@
       "forks": 0,
       "language": "",
       "updated_at": "2026-09-25T17:14:05Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "sgoley",
@@ -121,7 +151,9 @@
       "forks": 0,
       "language": "",
       "updated_at": "2026-09-23T21:12:53Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "quicken-mcp-server",
@@ -132,6 +164,8 @@
       "language": "Python",
       "updated_at": "2026-09-14T15:03:53Z",
       "default_branch": "master",
+      "fork": false,
+      "archived": false,
       "latest_run": null
     },
     {
@@ -143,6 +177,8 @@
       "language": "Python",
       "updated_at": "2026-09-14T12:27:57Z",
       "default_branch": "main",
+      "fork": false,
+      "archived": false,
       "latest_run": {
         "name": "CI",
         "status": "completed",
@@ -159,7 +195,21 @@
       "language": "",
       "updated_at": "2026-09-13T13:04:50Z",
       "default_branch": "main",
+      "fork": false,
+      "archived": false,
       "latest_run": null
+    },
+    {
+      "name": "muxi",
+      "description": "Deploy intelligence. Open-source infrastructure for AI agents in production.",
+      "url": "https://github.com/sgoley/muxi",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2026-07-14T15:00:49Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "accountable",
@@ -169,7 +219,9 @@
       "forks": 0,
       "language": "TypeScript",
       "updated_at": "2026-06-24T17:11:03Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "skills",
@@ -180,6 +232,8 @@
       "language": "JavaScript",
       "updated_at": "2026-06-10T17:50:45Z",
       "default_branch": "main",
+      "fork": false,
+      "archived": false,
       "latest_run": null
     },
     {
@@ -191,6 +245,8 @@
       "language": "Python",
       "updated_at": "2026-06-05T15:30:47Z",
       "default_branch": "main",
+      "fork": false,
+      "archived": false,
       "latest_run": null
     },
     {
@@ -201,7 +257,9 @@
       "forks": 0,
       "language": "JavaScript",
       "updated_at": "2026-06-02T01:02:46Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "streamlit-openrouter-chat-embed",
@@ -211,7 +269,33 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2026-05-21T19:29:56Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "thetagang",
+      "description": "ThetaGang is an IBKR bot for collecting money",
+      "url": "https://github.com/sgoley/thetagang",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2026-05-16T13:46:57Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "TradingAgents",
+      "description": "TradingAgents: Multi-Agents LLM Financial Trading Framework",
+      "url": "https://github.com/sgoley/TradingAgents",
+      "stars": 1,
+      "forks": 0,
+      "language": "Python",
+      "updated_at": "2026-05-14T11:19:22Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "Simple-Contact",
@@ -221,7 +305,9 @@
       "forks": 0,
       "language": "HTML",
       "updated_at": "2026-05-11T14:55:40Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "Personal-Contact",
@@ -231,7 +317,9 @@
       "forks": 0,
       "language": "HTML",
       "updated_at": "2026-05-11T14:55:31Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "maitredb",
@@ -241,7 +329,9 @@
       "forks": 0,
       "language": "TypeScript",
       "updated_at": "2026-04-30T13:32:25Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "dbt-postgres-utils",
@@ -252,7 +342,33 @@
       "language": "",
       "updated_at": "2026-04-29T22:19:20Z",
       "default_branch": "master",
+      "fork": false,
+      "archived": false,
       "latest_run": null
+    },
+    {
+      "name": "hubcap",
+      "description": "This app adds modules to the hubsite at hub.getdbt.com",
+      "url": "https://github.com/sgoley/hubcap",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2026-04-29T22:16:13Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "hub.getdbt.com",
+      "description": "Package hub for dbt.",
+      "url": "https://github.com/sgoley/hub.getdbt.com",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2026-04-28T22:35:22Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "obsidian-txt-editor",
@@ -262,7 +378,93 @@
       "forks": 0,
       "language": "TypeScript",
       "updated_at": "2026-04-18T04:12:41Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "kanban-markdown-vscode-extension",
+      "description": "A kanban board for your codebase. Features stored as markdown.",
+      "url": "https://github.com/sgoley/kanban-markdown-vscode-extension",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2026-03-22T09:37:11Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "symphony",
+      "description": "Symphony turns project work into isolated, autonomous implementation runs, allowing teams to manage work instead of supervising coding agents.",
+      "url": "https://github.com/sgoley/symphony",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2026-03-19T19:34:30Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "obsidian-linear-plugin",
+      "description": "",
+      "url": "https://github.com/sgoley/obsidian-linear-plugin",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-11-01T15:09:02Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "sqlmesh",
+      "description": "Scalable and efficient data transformation framework - backwards compatible with dbt.",
+      "url": "https://github.com/sgoley/sqlmesh",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-10-13T16:34:26Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "dbt-utils",
+      "description": "Utility functions for dbt projects.",
+      "url": "https://github.com/sgoley/dbt-utils",
+      "stars": 0,
+      "forks": 0,
+      "language": "Makefile",
+      "updated_at": "2025-10-13T14:42:20Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "dbt-core",
+      "description": "dbt enables data analysts and engineers to transform their data using the same practices that software engineers use to build applications.",
+      "url": "https://github.com/sgoley/dbt-core",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-10-13T09:12:07Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "dbt-adapters",
+      "description": "",
+      "url": "https://github.com/sgoley/dbt-adapters",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-10-13T01:13:02Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "home-slice-mcp",
@@ -272,7 +474,9 @@
       "forks": 0,
       "language": "JavaScript",
       "updated_at": "2025-10-05T16:02:49Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "llm-exports-mcp",
@@ -282,7 +486,33 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2025-09-07T12:34:29Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "fred-mcp-server",
+      "description": "Open-source FRED MCP Server (Federal Reserve Economic Data)",
+      "url": "https://github.com/sgoley/fred-mcp-server",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-09-04T11:43:19Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "sec-edgar-mcp",
+      "description": "A SEC EDGAR MCP (Model Context Protocol) Server",
+      "url": "https://github.com/sgoley/sec-edgar-mcp",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-09-04T11:43:13Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "stlt-lottery-heatmap",
@@ -292,7 +522,9 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2025-09-02T13:13:35Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "ccdb-sdk",
@@ -302,7 +534,57 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2025-08-27T18:26:01Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "claude-historian",
+      "description": "🤖 An MCP server for Claude Code conversation history",
+      "url": "https://github.com/sgoley/claude-historian",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-08-26T18:06:00Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "quantconnect-mcp",
+      "description": "QuantConnect Algorithmic Trading Platform Orchestration MCP - Agentic LLM Driven Trading Strategy Design, Research & Implementation",
+      "url": "https://github.com/sgoley/quantconnect-mcp",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-08-05T22:09:24Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "kdbai-samples",
+      "description": "Developer samples for the KDB.AI vector database",
+      "url": "https://github.com/sgoley/kdbai-samples",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-07-01T17:22:47Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "st_login_form",
+      "description": "Create secure authentication forms for your Streamlit apps - in one-line of code!",
+      "url": "https://github.com/sgoley/st_login_form",
+      "stars": 0,
+      "forks": 0,
+      "language": "Python",
+      "updated_at": "2025-06-01T16:01:05Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "stlt-baby-kcal",
@@ -312,7 +594,57 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2025-05-27T06:26:22Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "vscode-dbt-casual-user",
+      "description": "This extension makes vscode seamlessly work with dbt™: Auto-complete, preview, column lineage, AI docs generation, health checks, cost estimation etc",
+      "url": "https://github.com/sgoley/vscode-dbt-casual-user",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2025-04-14T16:16:28Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "librechat",
+      "description": "Enhanced ChatGPT Clone: Features Agents, Anthropic, AWS, OpenAI, Assistants API, Azure, Groq, o1, GPT-4o, Mistral, OpenRouter, Vertex AI, Gemini, Artifacts, AI model switching, message search, Code Interpreter, langchain, DALL-E-3, OpenAPI Actions, Functions, Secure Multi-User Auth, Presets, open-source for self-hosting. Active project.",
+      "url": "https://github.com/sgoley/librechat",
+      "stars": 0,
+      "forks": 0,
+      "language": "TypeScript",
+      "updated_at": "2025-03-24T00:08:31Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "devdocs",
+      "description": "API Documentation Browser",
+      "url": "https://github.com/sgoley/devdocs",
+      "stars": 0,
+      "forks": 0,
+      "language": "Ruby",
+      "updated_at": "2025-03-17T20:45:39Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "Algo.Py",
+      "description": "The Next-Gen Algorithmic Trading Framework 🚀 (Early Beta)",
+      "url": "https://github.com/sgoley/Algo.Py",
+      "stars": 0,
+      "forks": 0,
+      "language": "Jupyter Notebook",
+      "updated_at": "2025-03-17T20:45:23Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "stlt-baby-bet",
@@ -322,7 +654,9 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-11-19T22:53:08Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "powerbi-included-certified-extentions",
@@ -332,7 +666,9 @@
       "forks": 2,
       "language": "MATLAB",
       "updated_at": "2024-11-18T17:44:40Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "publish-resume-pro",
@@ -342,7 +678,9 @@
       "forks": 0,
       "language": "",
       "updated_at": "2024-11-09T13:43:29Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "stlt-login-form-test-app",
@@ -352,7 +690,9 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-11-08T22:24:37Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "stlt-doodles",
@@ -362,7 +702,9 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-10-14T14:39:16Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "stlt-address-autofill",
@@ -372,7 +714,9 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-10-14T12:54:51Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "stlt-gfc-explorer",
@@ -382,7 +726,9 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-10-12T20:38:00Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "stlt-protein-calc",
@@ -392,7 +738,9 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-10-06T19:22:00Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "stlt-csv-explorer",
@@ -402,7 +750,21 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-10-06T18:29:19Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "streamlit-analytics2",
+      "description": "👀 Track & visualize user interactions with your streamlit app",
+      "url": "https://github.com/sgoley/streamlit-analytics2",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2024-09-22T17:51:20Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "stlt-market-matrix",
@@ -412,7 +774,141 @@
       "forks": 0,
       "language": "Python",
       "updated_at": "2024-09-13T11:52:15Z",
-      "default_branch": "main"
+      "default_branch": "main",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "dbt-expectations",
+      "description": "Port(ish) of Great Expectations to dbt test macros",
+      "url": "https://github.com/sgoley/dbt-expectations",
+      "stars": 0,
+      "forks": 0,
+      "language": "Shell",
+      "updated_at": "2024-07-02T21:52:33Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "amethyst",
+      "description": "📓 obsidian-compatible notes theme for hugo, built from quartz and hugo-book",
+      "url": "https://github.com/sgoley/amethyst",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2024-06-20T19:39:57Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "st-paywall",
+      "description": "A python package for creating subscription Streamlit apps",
+      "url": "https://github.com/sgoley/st-paywall",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2024-05-09T15:24:21Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "pytvlwcharts",
+      "description": "An Experimental Python Wrapper For Tradingview's Lightweight-Charts To Be Used In Notebook Environments (Google Colab).",
+      "url": "https://github.com/sgoley/pytvlwcharts",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2024-04-05T15:50:40Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "fastquant",
+      "description": "fastquant — Backtest and optimize your ML trading strategies with only 3 lines of code!",
+      "url": "https://github.com/sgoley/fastquant",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2023-09-15T10:23:58Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "bigquery-utils",
+      "description": "Useful scripts, udfs, views, and other utilities for migration and data warehouse operations in BigQuery.",
+      "url": "https://github.com/sgoley/bigquery-utils",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2023-02-16T21:46:20Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "dbt-cloud-action",
+      "description": "This action lets you trigger a job run on dbt Cloud.",
+      "url": "https://github.com/sgoley/dbt-cloud-action",
+      "stars": 0,
+      "forks": 0,
+      "language": "JavaScript",
+      "updated_at": "2023-02-01T22:05:47Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "kdb",
+      "description": "kdb+ Database Utils and Examples",
+      "url": "https://github.com/sgoley/kdb",
+      "stars": 0,
+      "forks": 0,
+      "language": "JavaScript",
+      "updated_at": "2022-10-22T14:16:17Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "dash-sample-apps",
+      "description": "Open-source demos hosted on Dash Gallery",
+      "url": "https://github.com/sgoley/dash-sample-apps",
+      "stars": 0,
+      "forks": 0,
+      "language": "Jupyter Notebook",
+      "updated_at": "2022-10-22T14:14:54Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "shiny-examples",
+      "description": "",
+      "url": "https://github.com/sgoley/shiny-examples",
+      "stars": 0,
+      "forks": 0,
+      "language": "JavaScript",
+      "updated_at": "2022-10-22T14:12:37Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "PowerBI-Developer-Samples",
+      "description": "A collection of Power BI samples for developer use.",
+      "url": "https://github.com/sgoley/PowerBI-Developer-Samples",
+      "stars": 1,
+      "forks": 0,
+      "language": "JavaScript",
+      "updated_at": "2022-10-22T14:12:11Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "LookML-Syntax-Highlighter",
@@ -422,7 +918,93 @@
       "forks": 3,
       "language": "LookML",
       "updated_at": "2021-09-09T13:29:41Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "dbtplyr",
+      "description": "dbt package mimicking dplyr select-helpers semantics",
+      "url": "https://github.com/sgoley/dbtplyr",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2021-09-05T16:24:53Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "barchart",
+      "description": "The unofficial API of barchart.com",
+      "url": "https://github.com/sgoley/barchart",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2021-05-14T07:04:52Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "dbt-init",
+      "description": "A dbt-init script for consulting projects",
+      "url": "https://github.com/sgoley/dbt-init",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2021-02-23T22:55:44Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "Options_Data_Science",
+      "description": "Collecting, analyzing, visualizing & paper trading options market data",
+      "url": "https://github.com/sgoley/Options_Data_Science",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2021-02-13T09:58:51Z",
+      "default_branch": "main",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "vscode-dbt",
+      "description": "VSCode Snippets Package for dbt-flavoured SQL",
+      "url": "https://github.com/sgoley/vscode-dbt",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2021-02-07T21:02:37Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "DirectQuery-for-ODBC-in-PowerBI",
+      "description": " Direct Query for PostgreSQL via ODBC with SSL",
+      "url": "https://github.com/sgoley/DirectQuery-for-ODBC-in-PowerBI",
+      "stars": 14,
+      "forks": 8,
+      "language": "HTML",
+      "updated_at": "2020-11-21T14:35:26Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "PBIConnectors",
+      "description": "The Microsoft Power BI custom connector support-project",
+      "url": "https://github.com/sgoley/PBIConnectors",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2020-06-13T20:20:48Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "Market-Matrix",
@@ -432,7 +1014,9 @@
       "forks": 0,
       "language": "R",
       "updated_at": "2020-06-02T04:58:35Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
     },
     {
       "name": "SHPPT-Data-Stack",
@@ -442,7 +1026,93 @@
       "forks": 0,
       "language": "HCL",
       "updated_at": "2020-06-01T12:54:45Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "StockAnalytics",
+      "description": "This project is to develop tools for investment decision-making and make investment analysis using data science techniques.",
+      "url": "https://github.com/sgoley/StockAnalytics",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2020-05-26T00:42:57Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "WallhavenApi",
+      "description": "Wallhaven API for Python",
+      "url": "https://github.com/sgoley/WallhavenApi",
+      "stars": 0,
+      "forks": 0,
+      "language": "Python",
+      "updated_at": "2020-04-30T02:55:42Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "au-packages",
+      "description": "Template repository for Chocolatey Automatic Package Updater Module",
+      "url": "https://github.com/sgoley/au-packages",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2020-04-20T04:08:52Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "tap-ringcentral",
+      "description": "Singer.io tap for RingCentral",
+      "url": "https://github.com/sgoley/tap-ringcentral",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2020-03-03T16:03:49Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "universal-analytics-python",
+      "description": "Universal Analytics Python module",
+      "url": "https://github.com/sgoley/universal-analytics-python",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2020-02-28T22:06:58Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "vscode-looker",
+      "description": "A Visual Studio Code extension to assist with developing LookML.",
+      "url": "https://github.com/sgoley/vscode-looker",
+      "stars": 1,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2020-01-22T13:01:39Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "functions",
+      "description": "Serverless ETL using cloud functions https://fivetran.com/docs/functions",
+      "url": "https://github.com/sgoley/functions",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2019-10-15T17:28:43Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "OnPremiseDataGatewayHAMgmt",
@@ -452,7 +1122,21 @@
       "forks": 0,
       "language": "PowerShell",
       "updated_at": "2019-05-01T20:26:44Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "galib",
+      "description": "A simple library to talk to Google Analytics and send hits via the Measurement Protocol",
+      "url": "https://github.com/sgoley/galib",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2019-02-12T03:30:26Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "GraphAPI",
@@ -462,7 +1146,81 @@
       "forks": 0,
       "language": "Objective-C",
       "updated_at": "2018-12-30T03:21:48Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "dash-stock-tickers-demo-app",
+      "description": "Dash Demo App - Stock Tickers",
+      "url": "https://github.com/sgoley/dash-stock-tickers-demo-app",
+      "stars": 0,
+      "forks": 0,
+      "language": "Python",
+      "updated_at": "2018-09-04T14:31:27Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "salesforcer",
+      "description": "This R package connects the Salesforce APIs from R using tidy principles.",
+      "url": "https://github.com/sgoley/salesforcer",
+      "stars": 0,
+      "forks": 0,
+      "language": "R",
+      "updated_at": "2018-08-22T01:18:19Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "DataCamp",
+      "description": "DataCamp data-science courses",
+      "url": "https://github.com/sgoley/DataCamp",
+      "stars": 0,
+      "forks": 0,
+      "language": "Python",
+      "updated_at": "2018-07-23T23:50:08Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "postgres",
+      "description": "Postgres utility package for dbt (getdbt.com)",
+      "url": "https://github.com/sgoley/postgres",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2018-03-29T20:17:28Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "dash-technical-charting",
+      "description": "Powerful technical charting app/interface in pure Python",
+      "url": "https://github.com/sgoley/dash-technical-charting",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2018-03-02T03:04:09Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "ga4-measurement-protocol",
+      "description": "A Python implementation of Google Analytics Measurement Protocol",
+      "url": "https://github.com/sgoley/ga4-measurement-protocol",
+      "stars": 0,
+      "forks": 0,
+      "language": "",
+      "updated_at": "2017-05-16T23:38:00Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
     },
     {
       "name": "BTC-Market-Cap",
@@ -472,12 +1230,38 @@
       "forks": 0,
       "language": "",
       "updated_at": "2017-04-19T02:16:43Z",
-      "default_branch": "master"
+      "default_branch": "master",
+      "fork": false,
+      "archived": false
+    },
+    {
+      "name": "shiny-apps",
+      "description": "Some ideas",
+      "url": "https://github.com/sgoley/shiny-apps",
+      "stars": 0,
+      "forks": 0,
+      "language": "R",
+      "updated_at": "2016-12-02T16:35:40Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
+    },
+    {
+      "name": "FiveOnceInYourLife",
+      "description": "Local osx dialog box phishing using osascript. Easier than keylogging on osx. Simply ask for the passwords you want.",
+      "url": "https://github.com/sgoley/FiveOnceInYourLife",
+      "stars": 0,
+      "forks": 0,
+      "language": "Python",
+      "updated_at": "2014-10-06T20:13:55Z",
+      "default_branch": "master",
+      "fork": true,
+      "archived": false
     }
   ],
   "total_stars": 56,
   "contributions": {
-    "total": 2398,
+    "total": 2402,
     "weeks": [
       [
         {
@@ -2417,7 +3201,7 @@
         {
           "date": "2026-11-03",
           "level": 1,
-          "count": 13
+          "count": 17
         },
         null,
         null,

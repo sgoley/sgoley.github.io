@@ -102,6 +102,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -1017,6 +1021,11 @@ h3 {
   max-width: 72ch;
 }
 
+.gh-card,
+.gh-repo {
+  overflow: hidden;
+}
+
 .gh-card {
   display: flex;
   flex-direction: column;
@@ -1255,6 +1264,30 @@ h3 {
 
 .gh-legend .gh-day {
   display: inline-block;
+}
+
+.gh-search {
+  width: 100%;
+  margin-top: 0.9rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.92rem;
+}
+
+.gh-search:focus {
+  outline: 2px solid var(--accent-border);
+  border-color: var(--accent-border-3);
+}
+
+.gh-count {
+  color: var(--muted);
+  font-size: 0.65em;
+  font-weight: 500;
+  vertical-align: 0.15em;
 }
 
 @media (max-width: 900px) {

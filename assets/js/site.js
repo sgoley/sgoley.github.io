@@ -18,6 +18,7 @@
     if (/\/articles\/posts\/(exp-|edu\.html)/.test(path)) return "experience";
     if (path.endsWith("/experience.html") || path.endsWith("/about.html")) return "experience";
     if (path.endsWith("/articles.html") || path.includes("/articles/posts/")) return "writing";
+    if (path.endsWith("/repositories.html")) return "repos";
     if (path.endsWith("/ask.html")) return "ask";
     if (
       path.endsWith("/index.html") ||
@@ -521,8 +522,33 @@
     }
   }
 
+  const repoSearch = document.querySelector("[data-repo-search]");
+  if (repoSearch) {
+    const tagBtns = [...document.querySelectorAll(".tag[data-filter]")];
+    const repoCards = [...document.querySelectorAll("[data-repo-list] .article-card")];
+    let activeTag = "all";
+    const applyRepoFilter = () => {
+      const q = repoSearch.value.trim().toLowerCase();
+      repoCards.forEach((card) => {
+        const tags = (card.getAttribute("data-tags") || "").split(/\s+/);
+        const tagMatch = activeTag === "all" || tags.includes(activeTag);
+        const textMatch = !q || (card.getAttribute("data-search") || "").includes(q);
+        card.toggleAttribute("hidden", !(tagMatch && textMatch));
+      });
+    };
+    repoSearch.addEventListener("input", applyRepoFilter);
+    tagBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tagBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeTag = btn.dataset.filter;
+        applyRepoFilter();
+      });
+    });
+  }
+
   const tagButtons = document.querySelectorAll(".tag[data-filter]");
-  if (tagButtons.length > 0) {
+  if (tagButtons.length > 0 && !repoSearch) {
     tagButtons.forEach((button) => {
       button.addEventListener("click", () => {
         tagButtons.forEach((btn) => btn.classList.remove("active"));
