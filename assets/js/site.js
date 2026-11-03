@@ -96,14 +96,14 @@
         let s = str.replace(/`([^`]+)`/g, (_, code) => {
           const idx = inlineCode.length;
           inlineCode.push(`<code>${code}</code>`);
-          return `@@INLINE_CODE_${idx}@@`;
+          return `@@INLINECODE${idx}@@`;
         });
 
         const links = [];
         s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]+|#[^\s)]+)\)/g, (_, label, url) => {
           const idx = links.length;
           links.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
-          return `@@LINK_${idx}@@`;
+          return `@@LINK${idx}@@`;
         });
 
         s = s.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
@@ -114,17 +114,19 @@
           }
           const idx = links.length;
           links.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
-          return `@@LINK_${idx}@@${trailing}`;
+          return `@@LINK${idx}@@${trailing}`;
         });
 
+        s = s.replace(/\*\*\*([^*]+)\*\*\*/g, "<strong><em>$1</em></strong>");
+        s = s.replace(/___([^_]+)___/g, "<strong><em>$1</em></strong>");
         s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-        s = s.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+        s = s.replace(/(^|[^\w])__([^_]+)__([^\w]|$)/g, "$1<strong>$2</strong>$3");
         s = s.replace(/(^|[^\*])\*([^*]+)\*([^\*]|$)/g, "$1<em>$2</em>$3");
-        s = s.replace(/(^|[^_])_([^_]+)_([^_]|$)/g, "$1<em>$2</em>$3");
+        s = s.replace(/(^|[^\w])_([^_]+)_([^\w]|$)/g, "$1<em>$2</em>$3");
         s = s.replace(/~~([^~]+)~~/g, "<del>$1</del>");
 
-        s = s.replace(/@@LINK_(\d+)@@/g, (_, idx) => links[Number(idx)] || "");
-        s = s.replace(/@@INLINE_CODE_(\d+)@@/g, (_, idx) => inlineCode[Number(idx)] || "");
+        s = s.replace(/@@LINK(\d+)@@/g, (_, idx) => links[Number(idx)] || "");
+        s = s.replace(/@@INLINECODE(\d+)@@/g, (_, idx) => inlineCode[Number(idx)] || "");
         return s;
       };
 
