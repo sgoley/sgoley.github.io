@@ -916,7 +916,7 @@ def render_site_footer(prefix: str = "") -> str:
     </div>
   </footer>
 
-  <script src="{prefix}assets/js/site.js"></script>"""
+  <script src="{prefix}assets/js/site.js?v=2"></script>"""
 
 
 def _page_shell(
