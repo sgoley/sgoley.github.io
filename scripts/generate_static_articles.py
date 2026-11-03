@@ -1363,10 +1363,15 @@ def render_work_page(projects: List[StaticDoc], profile: Dict[str, Any]) -> str:
       <section class="gh-readme">
         <div class="gh-readme-head">{_ICON_REPO}<span>sgoley</span><span class="gh-sep">/</span><strong>README.md</strong></div>
         <div class="gh-readme-body">
-          <h2>Data, analytics, and AI systems</h2>
-          <p>Four public projects to open first. The rest are grouped by what you can do with them —
-          live apps, installable packages, and write-ups. Stars, languages, CI status, and the
-          contribution graph on this page are real data pulled from github.com/sgoley at build time.</p>
+          <h2>A workbench, rendered as a GitHub profile</h2>
+          <p>This site presents my work the way GitHub would — but it isn't GitHub, and the site itself is a repo too.
+          <strong>Pinned</strong> holds the four projects worth opening first; the shelves below group the rest by what you
+          can do with them: live apps, installable packages, and write-ups.
+          <strong>Repositories</strong> lists every public repo on github.com/sgoley with a one-line explainer each —
+          searchable and filterable by language.
+          <strong>Experience</strong> and <strong>Writing</strong> are the résumé and essays; <strong>Ask</strong> is a chat
+          box that answers questions using this site's own content.
+          Every star count, language, CI chip, and green square is real data pulled from the GitHub API at build time.</p>
         </div>
       </section>
 
@@ -1399,14 +1404,44 @@ def _repo_doc_map(
     return mapping
 
 
+_REPO_EXPLAINERS = {
+    "sgoley.github.io": "Source for this site — markdown content in, generated pages and a GitHub-powered profile out.",
+    "sgoley": "The README shown at the top of github.com/sgoley.",
+    "bqrest": "A thin Go client for calling BigQuery's REST API without the full SDK.",
+    "skills": "Skill specs for decision simulations and Tailscale operations, installed as one package.",
+    "lake-sort": "Sorts dropzone files into a partitioned lake or Iceberg table, as a job an orchestrator can call.",
+    "interactive-docs-chat-template": "Starter template for embedding an LLM chat box into a docs or static site.",
+    "simple-contact": "A static contact-card page.",
+    "personal-contact": "A static personal contact page.",
+    "home-slice-mcp": "An MCP server exposing homelab service status and tools to an assistant.",
+    "llm-exports-mcp": "An MCP server that turns LLM chat exports into a queryable database.",
+    "ccdb-sdk": "A small Python SDK for a card-database API.",
+    "publish-resume-pro": "Publishes a résumé as a formatted page.",
+    "stlt-lottery-heatmap": "Streamlit doodle: lottery draw frequencies as a heatmap.",
+    "stlt-baby-kcal": "Streamlit doodle: baby feeding and calorie tracker.",
+    "stlt-baby-bet": "Streamlit doodle: a friendly bet tracker for baby stats.",
+    "stlt-login-form-test-app": "Test app for the st-login-form Streamlit auth component.",
+    "stlt-doodles": "Grab-bag of small Streamlit visualizations.",
+    "stlt-address-autofill": "Streamlit doodle: address autocomplete backed by a geocoding API.",
+    "stlt-gfc-explorer": "Streamlit explorer for a public dataset.",
+    "stlt-protein-calc": "Streamlit doodle: protein and macro calculator.",
+    "stlt-csv-explorer": "Streamlit doodle: drop in a CSV and explore it.",
+    "stlt-market-matrix": "Streamlit re-creation of the stock-market returns matrix.",
+    "shppt-data-stack": "Example modern data stack built for a demo company.",
+}
+
+
 def _repo_explainer(repo: Dict[str, Any], doc: StaticDoc | None) -> str:
+    override = _REPO_EXPLAINERS.get(str(repo.get("name") or "").lower())
+    if override:
+        return override
     if doc is not None:
         return str(doc.metadata.get("outcome") or doc.excerpt or "")
     desc = str(repo.get("description") or "").strip()
     if desc:
         return desc
     if repo.get("fork"):
-        return "Forked repository."
+        return "Forked repository — see upstream for details."
     return "No description on GitHub yet."
 
 
