@@ -1364,14 +1364,14 @@ def render_work_page(projects: List[StaticDoc], profile: Dict[str, Any]) -> str:
         <div class="gh-readme-head">{_ICON_REPO}<span>sgoley</span><span class="gh-sep">/</span><strong>README.md</strong></div>
         <div class="gh-readme-body">
           <h2>A workbench, rendered as a GitHub profile</h2>
-          <p>This site presents my work the way GitHub would — but it isn't GitHub, and the site itself is a repo too.
-          <strong>Pinned</strong> holds the four projects worth opening first; the shelves below group the rest by what you
-          can do with them: live apps, installable packages, and write-ups.
-          <strong>Repositories</strong> lists every public repo on github.com/sgoley with a one-line explainer each —
-          searchable and filterable by language.
-          <strong>Experience</strong> and <strong>Writing</strong> are the résumé and essays; <strong>Ask</strong> is a chat
-          box that answers questions using this site's own content.
-          Every star count, language, CI chip, and green square is real data pulled from the GitHub API at build time.</p>
+          <p>This site presents my work the way GitHub would — but it isn't GitHub, and the site itself is a repo too.</p>
+          <ul class="gh-readme-list">
+            <li>📌 <strong>Pinned</strong> — the four projects worth opening first; shelves below group the rest: live apps, packages, write-ups.</li>
+            <li>🗃️ <strong>Repositories</strong> — every public repo on github.com/sgoley with a one-line explainer, searchable and filterable.</li>
+            <li>💼 <strong>Experience</strong> &amp; <strong>Writing</strong> — the résumé and the essays.</li>
+            <li>💬 <strong>Ask</strong> — a chat box that answers questions using this site's own content.</li>
+            <li>🟩 <strong>Real data</strong> — every star, language, CI chip, and green square comes from the GitHub API at build time.</li>
+          </ul>
         </div>
       </section>
 

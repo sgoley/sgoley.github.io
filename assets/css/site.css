@@ -1021,6 +1021,20 @@ h3 {
   max-width: 72ch;
 }
 
+.gh-readme-list {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+  color: var(--muted);
+  max-width: 72ch;
+}
+
+.gh-readme-list strong {
+  color: var(--ink);
+}
+
 .gh-card,
 .gh-repo {
   overflow: hidden;
