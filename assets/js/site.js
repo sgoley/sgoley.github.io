@@ -630,6 +630,21 @@
     });
   }
 
+  const navMenu = document.querySelector(".nav-menu");
+  if (navMenu) {
+    const mobileNav = window.matchMedia("(max-width: 900px)");
+    if (mobileNav.matches) navMenu.open = false;
+    mobileNav.addEventListener("change", (event) => {
+      if (!event.matches) navMenu.open = true;
+    });
+    document.addEventListener("click", (event) => {
+      if (navMenu.open && !navMenu.contains(event.target)) navMenu.open = false;
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") navMenu.open = false;
+    });
+  }
+
   const nav = document.querySelector(".nav-cluster") || document.querySelector(".site-nav");
   if (nav) {
     const toggle = document.createElement("button");

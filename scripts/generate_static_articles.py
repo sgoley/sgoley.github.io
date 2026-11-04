@@ -893,13 +893,16 @@ def render_site_header(prefix: str = "") -> str:
     <div class="container nav-wrap">
       <a class="brand" href="{prefix}index.html">Scott Goley</a>
       <div class="nav-cluster">
-        <nav class="site-nav" aria-label="Main navigation">
-          <a data-nav="work" href="{prefix}index.html">Work</a>
-          <a data-nav="repos" href="{prefix}repositories.html">Repositories</a>
-          <a data-nav="experience" href="{prefix}experience.html">Experience</a>
-          <a data-nav="writing" href="{prefix}articles.html">Writing</a>
-          <a data-nav="ask" href="{prefix}ask.html">Ask</a>
-        </nav>
+        <details class="nav-menu" open>
+          <summary aria-label="Menu"><svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75Zm0 5A.75.75 0 0 1 1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1-.75-.75Z"/></svg></summary>
+          <nav class="site-nav" aria-label="Main navigation">
+            <a data-nav="work" href="{prefix}index.html">Work</a>
+            <a data-nav="repos" href="{prefix}repositories.html">Repositories</a>
+            <a data-nav="experience" href="{prefix}experience.html">Experience</a>
+            <a data-nav="writing" href="{prefix}articles.html">Writing</a>
+            <a data-nav="ask" href="{prefix}ask.html">Ask</a>
+          </nav>
+        </details>
         <nav class="site-links" aria-label="Profiles">
           <a href="{GITHUB_URL}">GitHub</a>
           <a href="{LINKEDIN_URL}">LinkedIn</a>
@@ -916,7 +919,7 @@ def render_site_footer(prefix: str = "") -> str:
     </div>
   </footer>
 
-  <script src="{prefix}assets/js/site.js?v=2"></script>"""
+  <script src="{prefix}assets/js/site.js?v=3"></script>"""
 
 
 def _page_shell(
