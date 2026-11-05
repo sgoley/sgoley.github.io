@@ -9,6 +9,7 @@ part: Built
 outcome: A native iOS client for Airflow health, run details, and confirmed DAG triggers, including an offline demo.
 proof_label: Live
 proof_url: /AirflowRunbook/
+repo: AirflowRunbook
 ---
 
 Runbook is a native iOS companion for Apache Airflow. Monitor instance health, review DAG run details, and explicitly trigger new runs directly from iPhone and iPad, complete with a synthetic demo workspace for offline evaluation.

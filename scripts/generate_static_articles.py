@@ -740,6 +740,22 @@ def _fetch_latest_run(owner: str, repo: str, default_branch: str) -> Dict[str, A
     }
 
 
+def _slim_repo(repo: Dict[str, Any]) -> Dict[str, Any]:
+    return {
+        "name": repo.get("name") or "",
+        "description": repo.get("description") or "",
+        "url": repo.get("html_url") or "",
+        "stars": repo.get("stargazers_count") or 0,
+        "forks": repo.get("forks_count") or 0,
+        "language": repo.get("language") or "",
+        "updated_at": repo.get("pushed_at") or repo.get("updated_at") or "",
+        "default_branch": repo.get("default_branch") or "main",
+        "fork": bool(repo.get("fork")),
+        "archived": bool(repo.get("archived")),
+        "private": bool(repo.get("private")),
+    }
+
+
 def _fetch_github_profile(
     username: str, ci_repo_names: set[str] | None = None
 ) -> Dict[str, Any]:
@@ -757,25 +773,20 @@ def _fetch_github_profile(
         if len(batch) < 100:
             break
 
-    slim_repos = []
-    for repo in repos:
-        slim_repos.append(
-            {
-                "name": repo.get("name") or "",
-                "description": repo.get("description") or "",
-                "url": repo.get("html_url") or "",
-                "stars": repo.get("stargazers_count") or 0,
-                "forks": repo.get("forks_count") or 0,
-                "language": repo.get("language") or "",
-                "updated_at": repo.get("pushed_at") or repo.get("updated_at") or "",
-                "default_branch": repo.get("default_branch") or "main",
-                "fork": bool(repo.get("fork")),
-                "archived": bool(repo.get("archived")),
-            }
-        )
+    slim_repos = [_slim_repo(repo) for repo in repos]
 
     wanted = ci_repo_names or set()
-    for repo in slim_repos:
+    present = {repo["name"].lower() for repo in slim_repos}
+    private_repos = []
+    for name in wanted - present:
+        try:
+            repo = _gh_request(f"https://api.github.com/repos/{username}/{name}")
+        except (OSError, urllib.error.URLError, json.JSONDecodeError):
+            continue
+        if repo.get("name"):
+            private_repos.append(_slim_repo(repo))
+
+    for repo in slim_repos + private_repos:
         if repo["name"].lower() in wanted:
             repo["latest_run"] = _fetch_latest_run(
                 username, repo["name"], repo["default_branch"]
@@ -798,6 +809,7 @@ def _fetch_github_profile(
             "html_url": user.get("html_url") or GITHUB_URL,
         },
         "repos": slim_repos,
+        "private_repos": private_repos,
         "total_stars": sum(r["stars"] for r in slim_repos if not r["fork"]),
         "contributions": _fetch_contributions(username),
     }
@@ -813,8 +825,20 @@ def _load_or_fetch_github_profile(
         print(f"GitHub fetch failed ({exc}); using cached profile if present.")
         if cache_path.exists():
             return json.loads(cache_path.read_text(encoding="utf-8"))
-        return {"generated_at": "", "user": {}, "repos": [], "total_stars": 0,
-                "contributions": {"total": 0, "weeks": []}}
+        return {"generated_at": "", "user": {}, "repos": [], "private_repos": [],
+                "total_stars": 0, "contributions": {"total": 0, "weeks": []}}
+
+    # keep private repo data the fresh fetch cannot see without a token
+    wanted = ci_repo_names or set()
+    fetched = {r["name"].lower() for r in profile.get("private_repos") or []}
+    if wanted - fetched and cache_path.exists():
+        try:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            cached = {}
+        for repo in cached.get("private_repos") or []:
+            if str(repo.get("name") or "").lower() in wanted - fetched:
+                profile.setdefault("private_repos", []).append(repo)
 
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(
@@ -824,9 +848,10 @@ def _load_or_fetch_github_profile(
 
 
 def _repo_lookup(profile: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    repos = (profile.get("repos") or []) + (profile.get("private_repos") or [])
     return {
         str(repo.get("name", "")).lower(): repo
-        for repo in profile.get("repos") or []
+        for repo in repos
         if repo.get("name")
     }
 
@@ -1110,7 +1135,7 @@ def _doc_repo(doc: StaticDoc, repos: Dict[str, Dict[str, Any]]) -> Dict[str, Any
 
 def _doc_badge(doc: StaticDoc, repo: Dict[str, Any] | None) -> str:
     if repo is not None:
-        return "Public"
+        return "Private" if repo.get("private") else "Public"
     label = str(doc.metadata.get("proof_label") or "").lower()
     if label in {"live", "diagram"}:
         return "Site"

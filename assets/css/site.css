@@ -1104,7 +1104,6 @@ h3 {
 
 .gh-badge {
   flex: none;
-  margin-left: auto;
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.1rem 0.55rem;
